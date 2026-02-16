@@ -27,7 +27,8 @@ const ArticleDetailPage = () => {
   const [popular, setPopular] = useState([]);
   const [globalSettings, setGlobalSettings] = useState(null);
 
-  const locale = language === 'bn' ? 'bn' : 'en';
+  // Use URL params lang first, fall back to context language
+  const locale = params?.lang || language === 'bn' ? 'bn' : 'en';
 
   const t = {
     bn: {
@@ -72,25 +73,31 @@ const ArticleDetailPage = () => {
 
   useEffect(() => {
     async function fetchArticle() {
+      if (!params?.slug) {
+        console.warn('params.slug not yet available');
+        return;
+      }
+
       try {
+        console.log(`[Article] Fetching slug="${params.slug}" with locale="${locale}"`);
         const articleData = await getArticleBySlug(params.slug, locale);
         
         if (articleData) {
+          console.log(`[Article] Found article:`, articleData.id, articleData.slug);
           setArticle(articleData);
         } else {
+          console.warn(`[Article] Not found for slug="${params.slug}" locale="${locale}"`);
           setError(currentT.notFound);
         }
       } catch (err) {
-        console.error('Error fetching article:', err);
+        console.error('[Article] Fetch error:', err.message);
         setError('Failed to load article');
       } finally {
         setLoading(false);
       }
     }
 
-    if (params?.slug) {
-      fetchArticle();
-    }
+    fetchArticle();
   }, [params?.slug, locale]);
 
   // Fetch sidebar data (most viewed + popular)
