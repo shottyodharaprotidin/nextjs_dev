@@ -35,6 +35,8 @@ const YoutubeVideo = () => {
 
   useEffect(() => {
     async function fetchVideos() {
+      setLoading(true);
+      setVideos([]);
       try {
         const response = await getYoutubeVideos(5, locale);
         if (response?.data?.length > 0) {

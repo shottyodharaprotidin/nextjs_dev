@@ -5,7 +5,6 @@ export async function getPopularTags(limit = 20, locale = 'bn') {
   try {
     const queryParams = new URLSearchParams({
       'pagination[limit]': limit,
-      'sort': 'articleCount:desc',
       'locale': locale,
     });
 

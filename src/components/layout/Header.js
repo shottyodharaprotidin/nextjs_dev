@@ -19,7 +19,6 @@ const Header = () => {
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     const [globalSettings, setGlobalSettings] = useState(null);
-    const [currentTheme, setCurrentTheme] = useState('light');
     const path = usePathname();
 
     const t = {
@@ -46,57 +45,40 @@ const Header = () => {
     const currentT = t[language] || t.bn;
     const locale = language === 'bn' ? 'bn' : 'en';
 
-    // Determine which logo to use based on current theme
-    const isDarkMode = currentTheme === 'skin-dark';
-    const logoUrl = globalSettings
-        ? getStrapiMedia(isDarkMode ? globalSettings.logoDark : globalSettings.logoLight)
-        : isDarkMode ? '/logo-dark.png' : '/logo-white.png';
-    const fallbackLogoUrl = isDarkMode ? '/logo-dark.png' : '/logo-white.png';
+    // Monitor theme changes is no longer needed for the logo as it's handled by CSS
+    // but we keep it if other components need it, or remove it if not.
+    // In this case, only the logo was using it.
 
-    // Monitor theme changes
+
+    // Fetch categories from Strapi
     useEffect(() => {
-        // Set initial theme
-        if (typeof document !== 'undefined') {
-            const theme = document.documentElement.getAttribute('data-theme') || 'light';
-            setCurrentTheme(theme);
-
-            // Listen for theme changes
-            const observer = new MutationObserver((mutations) => {
-                mutations.forEach((mutation) => {
-                    if (mutation.attributeName === 'data-theme') {
-                        const newTheme = document.documentElement.getAttribute('data-theme') || 'light';
-                        setCurrentTheme(newTheme);
-                    }
-                });
-            });
-
-            observer.observe(document.documentElement, {
-                attributes: true,
-                attributeFilter: ['data-theme']
-            });
-
-            return () => observer.disconnect();
-        }
-    }, []);
-
-    // Fetch categories and global settings from Strapi
-    useEffect(() => {
-        async function fetchData() {
+        async function fetchCategories() {
             setLoading(true);
             try {
-                const [categoriesData, globalData] = await Promise.all([
-                    getCategories(locale),
-                    getGlobalSettings(locale),
-                ]);
-                setCategories(categoriesData?.data || []);
-                setGlobalSettings(globalData?.data || null);
+                const response = await getCategories(locale);
+                setCategories(response?.data || []);
             } catch (error) {
-                console.error('Error fetching header data:', error);
+                console.error('Error fetching categories:', error);
             } finally {
                 setLoading(false);
             }
         }
-        fetchData();
+        fetchCategories();
+    }, [language]);
+
+    // Fetch global settings separately (non-blocking for nav)
+    useEffect(() => {
+        async function fetchGlobal() {
+            try {
+                const response = await getGlobalSettings(locale);
+                if (response?.data) {
+                    setGlobalSettings(response.data);
+                }
+            } catch (error) {
+                console.error('Error fetching global settings:', error);
+            }
+        }
+        fetchGlobal();
     }, [language]);
    
     const toggleSidebar = () => {
@@ -196,8 +178,15 @@ const Header = () => {
                                     {/* Start logo */}
                                     <Link href={`/${language}`} className="header-logo">
                                         <img
-                                            src={logoUrl !== '/default.jpg' ? logoUrl : fallbackLogoUrl}
-                                            className="img-fluid"
+                                            src="/logo-white.png"
+                                            className="img-fluid logo-light-img"
+                                            alt={globalSettings?.siteName || 'Logo'}
+                                            width={206}
+                                            height={67}
+                                        />
+                                        <img
+                                            src="/logo-dark.png"
+                                            className="img-fluid logo-dark-img"
                                             alt={globalSettings?.siteName || 'Logo'}
                                             width={206}
                                             height={67}
@@ -246,8 +235,15 @@ const Header = () => {
                         {/* Start Navbar Brand*/}
                         <Link className="navbar-brand d-md-none" href={`/${language}`}>
                             <img
-                                src={logoUrl !== '/default.jpg' ? logoUrl : fallbackLogoUrl}
-                                className="img-fluid"
+                                src="/logo-white.png"
+                                className="img-fluid logo-light-img"
+                                alt={globalSettings?.siteName || 'Logo'}
+                                width={206}
+                                height={67}
+                            />
+                            <img
+                                src="/logo-dark.png"
+                                className="img-fluid logo-dark-img"
                                 alt={globalSettings?.siteName || 'Logo'}
                                 width={206}
                                 height={67}
@@ -343,7 +339,20 @@ const Header = () => {
                     <div className="d-flex flex-column h-100">
                         <div className="">
                             <Link href={`/${language}`} className="d-inline-block my-3">
-                                <img src={logoUrl !== '/default.jpg' ? logoUrl : fallbackLogoUrl} alt={globalSettings?.siteName || 'Logo'} width={178} height={58} />
+                                <img
+                                    src="/logo-white.png"
+                                    className="img-fluid logo-light-img"
+                                    alt={globalSettings?.siteName || 'Logo'}
+                                    width={178}
+                                    height={58}
+                                />
+                                <img
+                                    src="/logo-dark.png"
+                                    className="img-fluid logo-dark-img"
+                                    alt={globalSettings?.siteName || 'Logo'}
+                                    width={178}
+                                    height={58}
+                                />
                             </Link>
                             <p>
                                 {currentT.sidebarIntro}

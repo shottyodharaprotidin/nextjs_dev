@@ -8,6 +8,7 @@ import Skeleton from "@/components/skeleton";
 const Tags = () => {
     const [tags, setTags] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(false);
 
     useEffect(() => {
         async function fetchData() {
@@ -16,6 +17,7 @@ const Tags = () => {
                 setTags(response?.data || []);
             } catch (error) {
                 console.error("Error fetching tags:", error);
+                setError(true);
             } finally {
                 setLoading(false);
             }
@@ -33,8 +35,8 @@ const Tags = () => {
             </div>
             <div className="panel_body">
                 <div className="tags-inner d-flex flex-wrap gap-2">
-                    {[1,2,3,4,5,6,7,8,9,10].map(i => (
-                       <Skeleton key={i} style={{ width: `${Math.floor(Math.random() * 50) + 60}px`, height: '30px', borderRadius: '4px' }} />
+                    {[1,2,3,4,5,6].map(i => (
+                       <Skeleton key={i} style={{ width: `${Math.floor(Math.random() * 40) + 50}px`, height: '25px', borderRadius: '4px' }} />
                     ))}
                 </div>
             </div>
@@ -42,7 +44,7 @@ const Tags = () => {
        );
     }
 
-    if (!tags.length) return null;
+    if (error || !tags.length) return null;
 
     return (
         <div className="panel_inner mb-0">

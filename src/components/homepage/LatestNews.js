@@ -35,6 +35,8 @@ const MainNewsSection = ({ categorySlug }) => {
     if (!isLoaded) return;
     
     async function fetchMainNews() {
+      setLoading(true);
+      setArticles([]);
       try {
         let response;
         if (categorySlug) {

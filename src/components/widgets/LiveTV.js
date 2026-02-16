@@ -1,14 +1,17 @@
-"use client";
+import { useState, useEffect } from "react";
 import { useLanguage } from "@/context/LanguageContext";
+import { getGlobalSettings } from "@/services/globalService";
 
 const LiveTV = () => {
     const { language } = useLanguage();
+    const [liveTvUrl, setLiveTvUrl] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     const t = {
-        hi: {
-            titleStrong: 'लाइव',
-            titleRest: 'टीवी (Live TV)',
-            live: 'लाइव'
+        bn: {
+            titleStrong: 'লাইভ',
+            titleRest: 'টিভি (Live TV)',
+            live: 'সরাসরি'
         },
         en: {
             titleStrong: 'Live',
@@ -17,7 +20,32 @@ const LiveTV = () => {
         }
     };
 
-    const currentT = t[language] || t.hi;
+    const currentT = t[language] || t.bn;
+    const locale = language === 'bn' ? 'bn' : 'en';
+
+    useEffect(() => {
+        async function fetchLiveTV() {
+            setLoading(true);
+            setLiveTvUrl(null);
+            try {
+                const response = await getGlobalSettings(locale);
+                if (response?.data?.liveTvUrl) {
+                    setLiveTvUrl(response.data.liveTvUrl);
+                }
+            } catch (error) {
+                console.error("Error fetching Live TV URL:", error);
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchLiveTV();
+    }, [locale]);
+
+    if (loading) {
+        return <div className="p-3 bg-light rounded mb-4" style={{ height: '200px' }}>Loading Live TV...</div>;
+    }
+
+    if (!liveTvUrl) return null;
 
     return (
         <div className="panel_inner review-inner">
@@ -30,7 +58,7 @@ const LiveTV = () => {
                 <div className="live-tv-container position-relative overflow-hidden" style={{ paddingTop: '56.25%' }}>
                     <iframe
                         className="position-absolute top-0 start-0 w-100 h-100"
-                        src="https://www.youtube.com/embed/live_stream?channel=UCv_X8G99_Fj_U8Xz_e7KxKg" // Placeholder news channel
+                        src={liveTvUrl}
                         title="Live TV"
                         frameBorder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

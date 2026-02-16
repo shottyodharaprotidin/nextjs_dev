@@ -31,6 +31,8 @@ const TrendingTopics = () => {
 
   useEffect(() => {
     async function fetchData() {
+      setLoading(true);
+      setCategories([]);
       try {
         const response = await getTrendingCategories(5, locale);
         setCategories(response?.data || []);
