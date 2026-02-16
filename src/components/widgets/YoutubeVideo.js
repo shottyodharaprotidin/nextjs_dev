@@ -137,7 +137,7 @@ const YoutubeVideo = () => {
               style={{ display: 'block' }}
               frameBorder="0"
               allowFullScreen
-              title="YouTube Video Player"
+              title="YouTube Video Player - Today's top video stories"
               width="640"
               height="360"
               src={`https://www.youtube.com/embed/${currentVideo.id}?autoplay=1`}
@@ -146,6 +146,8 @@ const YoutubeVideo = () => {
             <div
               className="youtube-facade"
               onClick={handlePlayClick}
+              aria-label="Play video"
+              role="button"
                 style={{
                   position: 'absolute',
                   top: 0,

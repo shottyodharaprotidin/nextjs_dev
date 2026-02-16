@@ -53,6 +53,7 @@ export default function RootLayout({ children }) {
   return (
     <html suppressHydrationWarning>
       <head>
+        <link rel="preconnect" href="https://i.ytimg.com" />
         <link rel="preload" as="image" href="/assets/images/bg-shape.png" />
         <script
           dangerouslySetInnerHTML={{

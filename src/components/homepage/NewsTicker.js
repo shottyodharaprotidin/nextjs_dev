@@ -116,8 +116,8 @@ const NewsTicker = () => {
             768: {
               nav: true,
               navText: [
-                "<i class='ti ti-angle-left'></i>",
-                "<i class='ti ti-angle-right'></i>"
+                "<i class='ti ti-angle-left' aria-label='Previous'></i>",
+                "<i class='ti ti-angle-right' aria-label='Next'></i>"
               ],
             }
           }}>

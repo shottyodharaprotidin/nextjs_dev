@@ -47,8 +47,8 @@ const HomeCenterSlider = ({ articles = [] }) => {
     autoplayHoverPause: true,
     nav: true,
     navText: [
-      `<i class='ti ti-angle-left'></i>`,
-      `<i class='ti ti-angle-right'></i>`
+      `<i class='ti ti-angle-left' aria-label='Previous'></i>`,
+      `<i class='ti ti-angle-right' aria-label='Next'></i>`
     ]
   }
 
@@ -82,11 +82,11 @@ const HomeCenterSlider = ({ articles = [] }) => {
               </Link>
               <div className="post-text">
                 <span className="post-category">{categoryName}</span>
-                <h2>
+                <h3>
                   <Link href={`/article/${slug}`}>
                     {title}
                   </Link>
-                </h2>
+                </h3>
                 <ul className="align-items-center authar-info d-flex flex-wrap gap-1">
                   <li>
                     {currentT.by} <span className="editor-name">{authorName}</span>

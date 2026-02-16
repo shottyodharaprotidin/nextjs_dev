@@ -177,19 +177,21 @@ const Header = () => {
                                 <div className="align-items-center d-flex gap-3">
                                     {/* Start logo */}
                                     <Link href={`/${language}`} className="header-logo">
-                                        <img
+                                        <Image
                                             src="/logo-white.png"
                                             className="img-fluid logo-light-img"
                                             alt={globalSettings?.siteName || 'Logo'}
-                                            width={206}
+                                            width={251}
                                             height={67}
+                                            priority
                                         />
-                                        <img
+                                        <Image
                                             src="/logo-dark.png"
                                             className="img-fluid logo-dark-img"
                                             alt={globalSettings?.siteName || 'Logo'}
-                                            width={206}
+                                            width={251}
                                             height={67}
+                                            priority
                                         />
                                     </Link>
                                     {/* Dark/Light Mode Toggle - Moved to right side */}
@@ -234,19 +236,21 @@ const Header = () => {
                     <div className="container position-relative">
                         {/* Start Navbar Brand*/}
                         <Link className="navbar-brand d-md-none" href={`/${language}`}>
-                            <img
+                            <Image
                                 src="/logo-white.png"
                                 className="img-fluid logo-light-img"
                                 alt={globalSettings?.siteName || 'Logo'}
-                                width={206}
+                                width={251}
                                 height={67}
+                                priority
                             />
-                            <img
+                            <Image
                                 src="/logo-dark.png"
                                 className="img-fluid logo-dark-img"
                                 alt={globalSettings?.siteName || 'Logo'}
-                                width={206}
+                                width={251}
                                 height={67}
+                                priority
                             />
                         </Link>
                         {/* End Navbar Brand*/}
@@ -339,14 +343,14 @@ const Header = () => {
                     <div className="d-flex flex-column h-100">
                         <div className="">
                             <Link href={`/${language}`} className="d-inline-block my-3">
-                                <img
+                                <Image
                                     src="/logo-white.png"
                                     className="img-fluid logo-light-img"
                                     alt={globalSettings?.siteName || 'Logo'}
                                     width={178}
                                     height={58}
                                 />
-                                <img
+                                <Image
                                     src="/logo-dark.png"
                                     className="img-fluid logo-dark-img"
                                     alt={globalSettings?.siteName || 'Logo'}

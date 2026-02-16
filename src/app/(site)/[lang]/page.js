@@ -166,11 +166,11 @@ export default function Home() {
                                   </div>
                                 )}
                                 <div className={getStrapiMedia(data.cover) ? 'col-8' : 'col-12'}>
-                                  <h5 className="posts-title" style={{ fontSize: '14px', lineHeight: '1.4' }}>
+                                  <h3 className="posts-title" style={{ fontSize: '14px', lineHeight: '1.4' }}>
                                     <Link href={`/article/${data.slug}`}>
                                       {data.title}
                                     </Link>
-                                  </h5>
+                                  </h3>
                                   <ul className="align-items-center authar-info d-flex flex-wrap gap-1">
                                     <li>
                                       <span className="post-category">

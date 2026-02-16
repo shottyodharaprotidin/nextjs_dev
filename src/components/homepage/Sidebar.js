@@ -146,6 +146,8 @@ const SidebarTabs = ({ categorySlug }) => {
                                             src={imageUrl}
                                             alt={data.title}
                                             className="rounded"
+                                            width={60}
+                                            height={50}
                                             style={{ width: '60px', height: '50px', objectFit: 'cover' }}
                                         />
                                     </Link>

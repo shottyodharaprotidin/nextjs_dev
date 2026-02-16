@@ -118,6 +118,8 @@ const LatestReviews = () => {
               src={getStrapiMedia(firstData.cover)}
               alt={firstData.title}
               className="img-fluid w-100"
+              width={500}
+              height={300}
             />
           </Link>
           <div className="reatting">
@@ -152,6 +154,8 @@ const LatestReviews = () => {
                     src={getStrapiMedia(data.cover)}
                     alt={data.title}
                     className="img-fluid"
+                    width={100}
+                    height={75}
                   />
                 </Link>
               </div>

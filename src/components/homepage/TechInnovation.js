@@ -91,6 +91,8 @@ const TechInnovation = () => {
               src={getStrapiMedia(firstData.cover)}
               alt={firstData.title}
               className="img-fluid w-100"
+              width={500}
+              height={300}
             />
           </Link>
           <h5>
@@ -121,6 +123,8 @@ const TechInnovation = () => {
                     src={getStrapiMedia(data.cover)}
                     alt={data.title}
                     className="rounded"
+                    width={70}
+                    height={55}
                     style={{ width: '70px', height: '55px', objectFit: 'cover' }}
                   />
                 </Link>
