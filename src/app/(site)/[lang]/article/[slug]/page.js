@@ -78,12 +78,11 @@ const ArticleDetailPage = () => {
         if (articleData) {
           setArticle(articleData);
         } else {
-          console.warn(`Article not found for slug: ${params.slug}, locale: ${locale}`);
           setError(currentT.notFound);
         }
       } catch (err) {
         console.error('Error fetching article:', err);
-        setError(`Failed to load article: ${err.message}`);
+        setError('Failed to load article');
       } finally {
         setLoading(false);
       }
@@ -92,7 +91,7 @@ const ArticleDetailPage = () => {
     if (params?.slug) {
       fetchArticle();
     }
-  }, [params?.slug, locale, currentT.notFound]);
+  }, [params?.slug, locale]);
 
   // Fetch sidebar data (most viewed + popular)
   useEffect(() => {
