@@ -5,6 +5,7 @@ import { getStrapiMedia, formatDate } from "@/lib/strapi";
 import { getEditorPicks } from "@/services/articleService";
 import Skeleton from "@/components/skeleton";
 import { useLanguage } from "@/context/LanguageContext";
+import ImageWithFallback from "@/components/ui/ImageWithFallback";
 
 const EditorsPick = () => {
   const { language } = useLanguage();
@@ -90,8 +91,8 @@ const EditorsPick = () => {
         {/* First Article (Large) */}
         <div className="border-bottom">
           <Link href={`/article/${firstData.slug}`} className="d-block mb-3">
-            <img
-              src={getStrapiMedia(firstData.cover) || "https://placehold.co/340x215"}
+            <ImageWithFallback
+              src={getStrapiMedia(firstData.cover)}
               alt={firstData.title}
               className="img-fluid"
             />
@@ -117,20 +118,17 @@ const EditorsPick = () => {
         {/* Other Articles (List) */}
         {otherArticles.map((article, index) => {
           const data = article.attributes || article;
-          const imageUrl = getStrapiMedia(data.cover);
           return (
             <div key={article.id} className={`py-3 ${index !== otherArticles.length - 1 ? 'border-bottom' : ''}`}>
               <div className="d-flex gap-2 align-items-start">
-                {imageUrl && (
-                  <Link href={`/article/${data.slug}`} className="flex-shrink-0">
-                    <img
-                      src={imageUrl}
-                      alt={data.title}
-                      className="rounded"
-                      style={{ width: '70px', height: '55px', objectFit: 'cover' }}
-                    />
-                  </Link>
-                )}
+                <Link href={`/article/${data.slug}`} className="flex-shrink-0">
+                  <ImageWithFallback
+                    src={getStrapiMedia(data.cover)}
+                    alt={data.title}
+                    className="rounded"
+                    style={{ width: '70px', height: '55px', objectFit: 'cover' }}
+                  />
+                </Link>
                 <div>
                   <h6 className="posts-title" style={{ fontSize: '13px', lineHeight: '1.4', marginBottom: '4px' }}>
                     <Link href={`/article/${data.slug}`}>

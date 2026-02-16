@@ -4,6 +4,7 @@ import Link from "next/link";
 import { getStrapiMedia, formatDate } from "@/lib/strapi";
 import { getArticlesByCategory } from "@/services/articleService";
 import Skeleton from "@/components/skeleton";
+import ImageWithFallback from "@/components/ui/ImageWithFallback";
 import { useLanguage } from "@/context/LanguageContext";
 
 const SpecialReports = () => {
@@ -23,7 +24,7 @@ const SpecialReports = () => {
     };
 
     const currentT = t[language] || t.bn;
-    const locale = language === 'bn' ? 'bn-BD' : 'en';
+    const locale = language === 'bn' ? 'bn' : 'en';
 
     useEffect(() => {
         async function fetchData() {
@@ -99,10 +100,12 @@ const SpecialReports = () => {
                                         {getStrapiMedia(data.cover) && (
                                             <div className="post-img overflow-hidden rounded-3 mb-3">
                                                 <Link href={`/article/${data.slug}`}>
-                                                    <img
+                                                    <ImageWithFallback
                                                         src={getStrapiMedia(data.cover)}
                                                         className="img-fluid"
                                                         alt={data.title}
+                                                        width={400} // Approximate width
+                                                        height={200}
                                                         style={{ width: '100%', height: '200px', objectFit: 'cover' }}
                                                     />
                                                 </Link>

@@ -6,6 +6,7 @@ import { getStrapiMedia, formatDate } from "@/lib/strapi";
 import { getFeaturedArticles, getLatestArticles } from "@/services/articleService";
 import HomeCenterSlider from "./HomeCenterSlider";
 import Skeleton from "@/components/skeleton";
+import ImageWithFallback from "@/components/ui/ImageWithFallback";
 import { useLanguage } from "@/context/LanguageContext";
 
 const HeroSection = ({ categorySlug }) => {
@@ -134,7 +135,7 @@ const HeroSection = ({ categorySlug }) => {
     return (
       <div className={`slider-post ${heightClass}`}>
         <Link href={`/${language}/article/${slug}`} className="news-image">
-          <img
+          <ImageWithFallback
             src={imageUrl}
             alt={title}
             className="img-fluid"

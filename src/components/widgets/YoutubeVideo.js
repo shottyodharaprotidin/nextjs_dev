@@ -3,6 +3,8 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { fetchAPI, getStrapiMedia, formatDate } from "@/lib/strapi";
 import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
+import ImageWithFallback from "@/components/ui/ImageWithFallback";
+import { getYoutubeVideos } from "@/services/articleService";
 
 const YoutubeVideo = () => {
   const { language } = useLanguage();
@@ -34,17 +36,24 @@ const YoutubeVideo = () => {
   useEffect(() => {
     async function fetchVideos() {
       try {
-        const response = await getVideoArticles(5, locale);
+        const response = await getYoutubeVideos(5, locale);
         if (response?.data?.length > 0) {
           const mappedVideos = response.data.map(item => {
             const data = item.attributes || item;
             // Extract YouTube ID from URL
-            const videoId = data.videoUrl?.split('v=')[1]?.split('&')[0] || 
-                           data.videoUrl?.split('youtu.be/')[1] || 
-                           'rqJDO3TWnac'; // fallback
+            // Extract YouTube ID from URL - simplified and robust regex
+            let videoId = 'rqJDO3TWnac';
+            if (data.videoUrl) {
+                const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+                const match = data.videoUrl.match(regExp);
+                if (match && match[2].length === 11) {
+                    videoId = match[2];
+                }
+            }
             return {
               id: videoId,
               title: data.title,
+              slug: data.slug,
               author: data.author?.data?.attributes?.name || currentT.authorFallback,
             };
           });
@@ -97,14 +106,15 @@ const YoutubeVideo = () => {
                     className={selectedVideo === index ? 'selected' : ''}
                     onClick={() => handleThumbnailClick(index)}
                   >
-                    <p className="title">
-                      {video.title}
-                      <small className="author">
-                        <br />
+                    <div className="title">
+                      <span className="text-white text-decoration-none">
+                        {video.title}
+                      </span>
+                      <small className="author d-block text-muted mt-1">
                         {video.author}
                       </small>
-                    </p>
-                    <img
+                    </div>
+                    <ImageWithFallback
                       src={`https://i.ytimg.com/vi/${video.id}/default.jpg`}
                       className="thumb"
                       alt={`Thumbnail ${index + 1}`}

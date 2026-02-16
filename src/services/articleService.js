@@ -153,6 +153,21 @@ export async function getVideoArticles(limit = 6, locale = 'bn') {
   }
 }
 
+export async function getYoutubeVideos(limit = 5, locale = 'bn') {
+  try {
+    const queryParams = new URLSearchParams({
+      'populate': '*',
+      'pagination[limit]': limit,
+      'sort': 'publishedAt:desc',
+      'locale': locale,
+    });
+    return await fetchAPI(`/youtubes?${queryParams}`);
+  } catch (error) {
+    console.error("Error fetching YouTube videos:", error);
+    return { data: [] };
+  }
+}
+
 export async function getEditorPicks(limit = 4, locale = 'bn') {
   try {
     const queryParams = new URLSearchParams({

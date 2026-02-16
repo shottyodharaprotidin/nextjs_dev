@@ -5,6 +5,7 @@ import { getStrapiMedia, formatDate } from "@/lib/strapi";
 import { getReviewArticles } from "@/services/articleService";
 import Skeleton from "@/components/skeleton";
 import { useLanguage } from "@/context/LanguageContext";
+import ImageWithFallback from "@/components/ui/ImageWithFallback";
 
 const LatestReviews = () => {
   const { language } = useLanguage();
@@ -113,8 +114,8 @@ const LatestReviews = () => {
         {/* Featured Review */}
         <div className="more-post">
           <Link href={`/article/${firstData.slug}`} className="news-image">
-            <img
-              src={getStrapiMedia(firstData.cover) || "https://placehold.co/340x215"}
+            <ImageWithFallback
+              src={getStrapiMedia(firstData.cover)}
               alt={firstData.title}
               className="img-fluid w-100"
             />
@@ -147,8 +148,8 @@ const LatestReviews = () => {
             <div key={review.id} className="news-list-item p-0 mb-4">
               <div className="img-wrapper">
                 <Link href={`/article/${data.slug}`} className="thumb">
-                  <img
-                    src={getStrapiMedia(data.cover) || "https://placehold.co/115x85"}
+                  <ImageWithFallback
+                    src={getStrapiMedia(data.cover)}
                     alt={data.title}
                     className="img-fluid"
                   />

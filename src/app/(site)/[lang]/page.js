@@ -18,17 +18,19 @@ const TrendingTopics = dynamic(() => import("@/components/homepage/TrendingNews"
 const SidebarTabs = dynamic(() => import("@/components/homepage/Sidebar"));
 const Tags = dynamic(() => import("@/components/widgets/Tags"));
 const LiveTV = dynamic(() => import("@/components/widgets/LiveTV"));
-const SpecialReports = dynamic(() => import("@/components/homepage/SpecialReports"));
+
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { getStrapiMedia, formatDate } from "@/lib/strapi";
 import { getTrendingNews } from "@/services/articleService";
+import { getGlobalSettings } from "@/services/globalService";
 import { useLanguage } from "@/context/LanguageContext";
 
 export default function Home() {
   const { language, translateNumber } = useLanguage();
   const [topStories, setTopStories] = useState([]);
+  const [globalSettings, setGlobalSettings] = useState(null);
 
   const t = {
     bn: {
@@ -83,16 +85,40 @@ export default function Home() {
   const locale = language === 'bn' ? 'bn' : 'en';
 
   useEffect(() => {
-    async function fetchTopStories() {
+    async function fetchData() {
       try {
-        const response = await getTrendingNews(5, locale);
-        setTopStories(response?.data || []);
+        const [trendingRes, globalRes] = await Promise.all([
+          getTrendingNews(5, locale),
+          getGlobalSettings(locale)
+        ]);
+        setTopStories(trendingRes?.data || []);
+        setGlobalSettings(globalRes?.data?.attributes || globalRes?.data || null);
       } catch (error) {
-        console.error("Failed to fetch top stories", error);
+        console.error("Failed to fetch home data", error);
       }
     }
-    fetchTopStories();
+    fetchData();
   }, [language]);
+
+  // Derived social media data (prioritizes Strapi, fallbacks to hardcoded/ENV)
+  const socialData = {
+    rss: globalSettings?.socialRssSubscribers || 0,
+    fb: globalSettings?.socialFacebookFans || 0,
+    insta: globalSettings?.socialInstagramFollowers || 0,
+    youtube: globalSettings?.socialYoutubeSubscribers || 0,
+    twitter: globalSettings?.socialTwitterFollowers || 0,
+    pint: globalSettings?.socialPinterestFollowers || 0,
+    total: globalSettings?.socialTotalFollowers || '0'
+  };
+
+  const socialLinks = {
+    rss: globalSettings?.socialRssUrl || '#',
+    fb: globalSettings?.socialFacebookUrl || '#',
+    insta: globalSettings?.socialInstagramUrl || '#',
+    youtube: globalSettings?.socialYoutubeUrl || '#',
+    twitter: globalSettings?.socialTwitterUrl || '#',
+    pint: globalSettings?.socialPinterestUrl || '#'
+  };
 
   return (
     <>
@@ -184,51 +210,51 @@ export default function Home() {
                 {/* START SOCIAL COUNTER TEXT */}
                 <div className="align-items-center d-flex fs-6 justify-content-center mb-1 text-center social-counter-total">
                   <i className="fa-solid fa-heart text-primary me-1" /> {currentT.join}{" "}
-                  <span className="fw-bold mx-1">{translateNumber('2.5')}M</span> {currentT.followers}
+                  <span className="fw-bold mx-1">{typeof socialData.total === 'number' ? translateNumber(socialData.total.toLocaleString()) : socialData.total}</span> {currentT.followers}
                 </div>
                 {/* END OF /. SOCIAL COUNTER TEXT */}
                 {/* START SOCIAL ICON */}
                 <div className="social-media-inner">
                   <ul className="g-1 row social-media">
                     <li className="col-4">
-                      <a href="#" className="rss">
+                      <a href={socialLinks.rss} className="rss">
                         <i className="fas fa-rss" />
-                        <div>{translateNumber('2,035')}</div>
+                        <div>{translateNumber(socialData.rss.toLocaleString())}</div>
                         <p>{currentT.social.subscribers}</p>
                       </a>
                     </li>
                     <li className="col-4">
-                      <a href="#" className="fb">
+                      <a href={socialLinks.fb} className="fb">
                         <i className="fab fa-facebook-f" />
-                        <div>{translateNumber('3,794')}</div>
+                        <div>{translateNumber(socialData.fb.toLocaleString())}</div>
                         <p>{currentT.social.fans}</p>
                       </a>
                     </li>
                     <li className="col-4">
-                      <a href="#" className="insta">
+                      <a href={socialLinks.insta} className="insta">
                         <i className="fab fa-instagram" />
-                        <div>{translateNumber('941')}</div>
+                        <div>{translateNumber(socialData.insta.toLocaleString())}</div>
                         <p>{currentT.social.followers}</p>
                       </a>
                     </li>
                     <li className="col-4">
-                      <a href="#" className="you_tube">
+                      <a href={socialLinks.youtube} className="you_tube">
                         <i className="fab fa-youtube" />
-                        <div>{translateNumber('7,820')}</div>
+                        <div>{translateNumber(socialData.youtube.toLocaleString())}</div>
                         <p>{currentT.social.subscribers}</p>
                       </a>
                     </li>
                     <li className="col-4">
-                      <a href="#" className="twitter">
+                      <a href={socialLinks.twitter} className="twitter">
                         <i className="fab fa-twitter" />
-                        <div>{translateNumber('1,562')}</div>
+                        <div>{translateNumber(socialData.twitter.toLocaleString())}</div>
                         <p>{currentT.social.followers}</p>
                       </a>
                     </li>
                     <li className="col-4">
-                      <a href="#" className="pint">
+                      <a href={socialLinks.pint} className="pint">
                         <i className="fab fa-pinterest-p" />
-                        <div>{translateNumber('1,310')}</div>
+                        <div>{translateNumber(socialData.pint.toLocaleString())}</div>
                         <p>{currentT.social.followers}</p>
                       </a>
                     </li>
@@ -263,7 +289,7 @@ export default function Home() {
           </div>
         </div>
         {/* END OF /. YOUTUBE VIDEO */}
-        <SpecialReports />
+
         <section className="articles-wrapper">
           <div className="container">
             <div className="row gx-lg-5">

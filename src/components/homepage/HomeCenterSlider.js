@@ -5,6 +5,7 @@ import "owl.carousel/dist/assets/owl.carousel.css";
 import "owl.carousel/dist/assets/owl.theme.default.css";
 import 'animate.css/animate.css'
 import { useLanguage } from "@/context/LanguageContext";
+import ImageWithFallback from "@/components/ui/ImageWithFallback";
 
 if (typeof window !== "undefined") {
     window.$ = window.jQuery = require("jquery");
@@ -69,17 +70,15 @@ const HomeCenterSlider = ({ articles = [] }) => {
           <div key={article.id} className="item">
             <div className="slider-post post-height-1">
               <Link href={`/article/${slug}`} className="news-image">
-                {imageUrl && (
-                  <img
-                    src={imageUrl}
-                    alt={title}
-                    className="img-fluid"
-                    width={800}
-                    height={450}
-                    fetchPriority="high"
-                    style={{ height: '100%', objectFit: 'cover' }} 
-                  />
-                )}
+                <ImageWithFallback
+                  src={imageUrl}
+                  alt={title}
+                  className="img-fluid"
+                  width={800}
+                  height={450}
+                  fetchPriority="high"
+                  style={{ height: '100%', objectFit: 'cover' }} 
+                />
               </Link>
               <div className="post-text">
                 <span className="post-category">{categoryName}</span>

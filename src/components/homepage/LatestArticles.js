@@ -5,6 +5,7 @@ import Link from "next/link";
 import { getStrapiMedia, formatDate } from "@/lib/strapi";
 import { getLatestArticles } from "@/services/articleService";
 import Skeleton from "@/components/skeleton";
+import ImageWithFallback from "@/components/ui/ImageWithFallback";
 import { useLanguage } from "@/context/LanguageContext";
 
 const LatestArticles = ({ categorySlug }) => {
@@ -155,10 +156,12 @@ const LatestArticles = ({ categorySlug }) => {
                   <div className="col-md-5 col-sm-6">
                     <figure className="mb-0">
                       <Link href={`/article/${slug}`}>
-                        <img
+                        <ImageWithFallback
                           src={imageUrl}
                           alt={title}
                           className="img-fluid"
+                          width={400} // Approximate width
+                          height={200}
                           style={{ width: '100%', height: '200px', objectFit: 'cover' }}
                         />
                       </Link>

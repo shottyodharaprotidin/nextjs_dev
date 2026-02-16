@@ -38,6 +38,7 @@ const OwlCarousel = dynamic(() => import("react-owl-carousel"), {
 
 
 import { useLanguage } from "@/context/LanguageContext";
+import ImageWithFallback from "@/components/ui/ImageWithFallback";
 
 const HomeFeatureCarousal = () => {
   const { language } = useLanguage();
@@ -118,22 +119,19 @@ const HomeFeatureCarousal = () => {
 
         return (
           <div key={article.id} className="news-list-item">
-            {imageUrl && (
-              <div className="img-wrapper">
-                <Link href={`/article/${slug}`} className="thumb">
-                  <img
-                    src={imageUrl}
-                    alt={title}
-                    className="img-fluid"
-                    width={115}
-                    height={85}
-                    loading="lazy"
-                    style={{ height: '85px', objectFit: 'cover' }}
-                  />
-                  {/* Optional: Add icon logic based on article type */}
-                </Link>
-              </div>
-            )}
+            <div className="img-wrapper">
+              <Link href={`/article/${slug}`} className="thumb">
+                <ImageWithFallback
+                  src={imageUrl}
+                  alt={title}
+                  className="img-fluid"
+                  width={115}
+                  height={85}
+                  loading="lazy"
+                  style={{ height: '85px', objectFit: 'cover' }}
+                />
+              </Link>
+            </div>
             <div className="post-info-2">
               <span className="post-category">{categoryName}</span>
               <h5 className="mb-0">

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { getStrapiMedia, formatDate } from "@/lib/strapi";
 import { getFeaturedArticles, getArticlesByCategorySlug } from "@/services/articleService";
 import Skeleton from "@/components/skeleton";
+import ImageWithFallback from "@/components/ui/ImageWithFallback";
 import { useLanguage } from "@/context/LanguageContext";
 
 const MainNewsSection = ({ categorySlug }) => {
@@ -102,7 +103,7 @@ const MainNewsSection = ({ categorySlug }) => {
         <figure>
           <Link href={`/article/${slug}`}>
             {imageUrl && (
-            <img
+            <ImageWithFallback
               src={imageUrl}
               width={557}
               height={352}
@@ -176,10 +177,12 @@ const MainNewsSection = ({ categorySlug }) => {
                 <div className="grid-item mb-0">
                   <div className="grid-item-img">
                     <Link href={`/article/${slug}`}>
-                      <img
+                      <ImageWithFallback
                         src={imageUrl}
                         className="img-fluid"
                         alt={title}
+                        width={300} // Approximate width for grid item
+                        height={125}
                         style={{ width: '100%', height: '125px', objectFit: 'cover' }}
                       />
                       {isVideo && (

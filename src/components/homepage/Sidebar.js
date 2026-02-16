@@ -5,6 +5,7 @@ import { getStrapiMedia, formatDate } from "@/lib/strapi";
 import { getArticlesByCategoryEnhanced, getMostViewedArticles, getPopularArticles } from "@/services/articleService";
 import Skeleton from "@/components/skeleton";
 import { useLanguage } from "@/context/LanguageContext";
+import ImageWithFallback from "@/components/ui/ImageWithFallback";
 
 const SidebarTabs = ({ categorySlug }) => {
     const { language, translateNumber } = useLanguage();
@@ -12,6 +13,7 @@ const SidebarTabs = ({ categorySlug }) => {
     const [mostViewed, setMostViewed] = useState([]);
     const [popular, setPopular] = useState([]);
     const [loading, setLoading] = useState(true);
+    const locale = language === 'bn' ? 'bn' : 'en';
 
     const t = {
     bn: {
@@ -37,11 +39,11 @@ const SidebarTabs = ({ categorySlug }) => {
                 let viewedPromise, popularPromise;
 
                 if (categorySlug) {
-                    viewedPromise = getArticlesByCategoryEnhanced(categorySlug, 5, { sort: 'viewCount:desc' });
-                    popularPromise = getArticlesByCategoryEnhanced(categorySlug, 5, { sort: 'likes:desc' });
+                    viewedPromise = getArticlesByCategoryEnhanced(categorySlug, 5, { sort: 'viewCount:desc' }, locale);
+                    popularPromise = getArticlesByCategoryEnhanced(categorySlug, 5, { sort: 'likes:desc' }, locale);
                 } else {
-                    viewedPromise = getMostViewedArticles(5);
-                    popularPromise = getPopularArticles(5);
+                    viewedPromise = getMostViewedArticles(5, locale);
+                    popularPromise = getPopularArticles(5, locale);
                 }
 
                 const [viewedRes, popularRes] = await Promise.all([
@@ -58,7 +60,7 @@ const SidebarTabs = ({ categorySlug }) => {
             }
         }
         fetchData();
-    }, [categorySlug]);
+    }, [categorySlug, language]);
 
     const renderSkeletonList = () => (
         <div className="most-viewed">
@@ -95,7 +97,7 @@ const SidebarTabs = ({ categorySlug }) => {
                             <div className="d-flex gap-2 align-items-start flex-grow-1">
                                 {imageUrl && (
                                     <Link href={`/article/${data.slug}`} className="flex-shrink-0">
-                                        <img
+                                        <ImageWithFallback
                                             src={imageUrl}
                                             alt={data.title}
                                             className="rounded"
@@ -140,7 +142,7 @@ const SidebarTabs = ({ categorySlug }) => {
                             <div className="d-flex gap-2 align-items-start">
                                 {imageUrl && (
                                     <Link href={`/article/${data.slug}`} className="flex-shrink-0">
-                                        <img
+                                        <ImageWithFallback
                                             src={imageUrl}
                                             alt={data.title}
                                             className="rounded"

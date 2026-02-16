@@ -11,6 +11,7 @@ import { getArticleBySlug, incrementViewCount, getMostViewedArticles, getPopular
 import { getGlobalSettings } from '@/services/globalService';
 import { getStrapiMedia, formatDate } from '@/lib/strapi';
 import Skeleton from '@/components/skeleton';
+import ImageWithFallback from '@/components/ui/ImageWithFallback';
 import { useLanguage } from '@/context/LanguageContext';
 
 // Force dynamic rendering to avoid build issues with client-only libraries
@@ -185,7 +186,7 @@ const ArticleDetailPage = () => {
           <div className="news-list-item" key={item.id}>
             <div className="img-wrapper">
               <Link href={`/${language}/article/${itemSlug}`} className="thumb">
-                <img src={itemImage} alt={itemData.title} className="img-fluid" />
+                <ImageWithFallback src={itemImage} alt={itemData.title} className="img-fluid" width={80} height={60} />
               </Link>
             </div>
             <div className="post-info-2">
@@ -258,17 +259,40 @@ const ArticleDetailPage = () => {
                   <div className="post_details_block">
                     {imageUrl && (
                       <figure className="social-icon mb-4">
-                        <Image
+                        <ImageWithFallback
                           src={imageUrl}
                           width={800}
                           height={600}
                           className="img-fluid w-100"
                           alt={title}
-                          style={{ borderRadius: '5px' }}
+                          style={{ borderRadius: '5px', width: '100%', height: 'auto' }}
                           priority
                         />
                       </figure>
                     )}
+
+                    {/* YouTube Video Embed */}
+                    {(() => {
+                        const getEmbedUrl = (url) => {
+                            if (!url) return null;
+                            const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+                            const match = url.match(regExp);
+                            return (match && match[2].length === 11) ? `https://www.youtube.com/embed/${match[2]}` : null;
+                        };
+                        const embedUrl = getEmbedUrl(data.videoUrl);
+                        return embedUrl && (
+                            <div className="mb-4 position-relative" style={{ paddingBottom: '56.25%', height: 0 }}>
+                                <iframe
+                                    src={embedUrl}
+                                    title="YouTube video player"
+                                    frameBorder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen
+                                    className="position-absolute top-0 start-0 w-100 h-100 rounded"
+                                ></iframe>
+                            </div>
+                        );
+                    })()}
 
                     {/* Excerpt */}
                     {excerpt && (
@@ -283,6 +307,16 @@ const ArticleDetailPage = () => {
                       dangerouslySetInnerHTML={{ __html: content }}
                       style={{ fontSize: '1.1rem', lineHeight: '1.8' }}
                     />
+
+                    {/* Tags */}
+                    {data.tags && data.tags.data && data.tags.data.length > 0 && (
+                        <div className="mb-4">
+                            <i className="fas fa-tags text-muted me-2"></i>
+                            {data.tags.data.map((tag) => (
+                                <span key={tag.id} className="badge bg-light text-dark me-1 border">{tag.attributes?.name || tag.name}</span>
+                            ))}
+                        </div>
+                    )}
 
                     {/* Article Bottom Share */}
                     <div className="mt-5 border-top pt-4">

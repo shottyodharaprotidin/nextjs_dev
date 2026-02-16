@@ -14,6 +14,7 @@ const Footer = () => {
   const [recentPosts, setRecentPosts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentTheme, setCurrentTheme] = useState('light');
 
   const t = {
     bn: {
@@ -27,7 +28,7 @@ const Footer = () => {
       privacyPolicy: 'গোপনীয়তা নীতি',
       faq: 'সাধারণ জিজ্ঞাসা',
       epaper: 'ই-পেপার',
-      copyright: 'কপিরাইট @ ২০২৬ আই-নিউজ ইনক'
+      copyright: 'কপিরাইট @ ২০২৬ সত্যধারা প্রতিদিন'
     },
     en: {
       placeholder: 'Enter your email address',
@@ -40,12 +41,40 @@ const Footer = () => {
       privacyPolicy: 'Privacy Policy',
       faq: 'FAQ',
       epaper: 'E-Paper',
-      copyright: 'Copyright @ 2026 i-News Inc'
+      copyright: 'Copyright @ 2026 Shottyodhara Protidin'
     }
   };
 
   const currentT = t[language] || t.bn;
   const locale = language === 'bn' ? 'bn' : 'en';
+
+  // Determine logo based on current theme
+  const isDarkMode = currentTheme === 'skin-dark';
+  const logoUrl = isDarkMode ? '/logo-dark.png' : '/logo-white.png';
+
+  // Monitor theme changes
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      const theme = document.documentElement.getAttribute('data-theme') || 'light';
+      setCurrentTheme(theme);
+
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.attributeName === 'data-theme') {
+            const newTheme = document.documentElement.getAttribute('data-theme') || 'light';
+            setCurrentTheme(newTheme);
+          }
+        });
+      });
+
+      observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['data-theme']
+      });
+
+      return () => observer.disconnect();
+    }
+  }, []);
 
   useEffect(() => {
     async function fetchData() {
@@ -77,7 +106,7 @@ const Footer = () => {
           <div className="g-3 row">
             <div className="col-md-6">
               <img
-                src="/assets/images/logo-white.png"
+                src={logoUrl}
                 alt="footer logo"
                 className="img-fluid"
               />

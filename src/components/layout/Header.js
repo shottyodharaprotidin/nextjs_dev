@@ -19,6 +19,7 @@ const Header = () => {
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     const [globalSettings, setGlobalSettings] = useState(null);
+    const [currentTheme, setCurrentTheme] = useState('light');
     const path = usePathname();
 
     const t = {
@@ -45,12 +46,38 @@ const Header = () => {
     const currentT = t[language] || t.bn;
     const locale = language === 'bn' ? 'bn' : 'en';
 
-    // Determine which logo to use based on theme
-    const isDarkMode = typeof document !== 'undefined' && document.documentElement.getAttribute('data-theme') === 'dark';
+    // Determine which logo to use based on current theme
+    const isDarkMode = currentTheme === 'skin-dark';
     const logoUrl = globalSettings
         ? getStrapiMedia(isDarkMode ? globalSettings.logoDark : globalSettings.logoLight)
-        : '/assets/images/logo-white.png';
-    const fallbackLogoUrl = '/assets/images/logo-white.png';
+        : isDarkMode ? '/logo-dark.png' : '/logo-white.png';
+    const fallbackLogoUrl = isDarkMode ? '/logo-dark.png' : '/logo-white.png';
+
+    // Monitor theme changes
+    useEffect(() => {
+        // Set initial theme
+        if (typeof document !== 'undefined') {
+            const theme = document.documentElement.getAttribute('data-theme') || 'light';
+            setCurrentTheme(theme);
+
+            // Listen for theme changes
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.attributeName === 'data-theme') {
+                        const newTheme = document.documentElement.getAttribute('data-theme') || 'light';
+                        setCurrentTheme(newTheme);
+                    }
+                });
+            });
+
+            observer.observe(document.documentElement, {
+                attributes: true,
+                attributeFilter: ['data-theme']
+            });
+
+            return () => observer.disconnect();
+        }
+    }, []);
 
     // Fetch categories and global settings from Strapi
     useEffect(() => {
@@ -200,16 +227,17 @@ const Header = () => {
                             <i className="ti ti-close" />
                         </Link>
                         <div id="fullscreen-search-wrapper">
-                            <form method="get" id="fullscreen-searchform">
+                            <form method="get" id="fullscreen-searchform" action={`/${language}/search`}>
                                 <input
                                     type="text"
+                                    name="q"
                                     defaultValue=""
                                     placeholder={currentT.searchPlaceholder}
                                     id="fullscreen-search-input"
                                 />
-                                <i className="ti ti-search fullscreen-search-icon">
-                                    <input value="" type="submit" />
-                                </i>
+                                <button type="submit" className="search-btn-overlay" style={{ background: 'none', border: 'none' }}>
+                                    <i className="ti ti-search fullscreen-search-icon" />
+                                </button>
                             </form>
                         </div>
                     </div>
@@ -279,14 +307,14 @@ const Header = () => {
                         <div className="d-flex align-items-center flex-nowrap ms-auto gap-2">
                             <div className="language-toggle d-flex gap-1 align-items-center me-2">
                                 <button 
-                                    className={`btn btn-sm ${language === 'bn' ? 'btn-primary' : 'btn-outline-secondary text-white'}`}
+                                    className={`btn btn-sm ${language === 'bn' ? 'btn-danger' : 'btn-outline-secondary'}`}
                                     onClick={() => language !== 'bn' && toggleLanguage()}
                                     style={{ fontSize: '10px', padding: '2px 5px' }}
                                 >
                                     বাংলা
                                 </button>
                                 <button 
-                                    className={`btn btn-sm ${language === 'en' ? 'btn-primary' : 'btn-outline-secondary text-white'}`}
+                                    className={`btn btn-sm ${language === 'en' ? 'btn-danger' : 'btn-outline-secondary'}`}
                                     onClick={() => language !== 'en' && toggleLanguage()}
                                     style={{ fontSize: '10px', padding: '2px 5px' }}
                                 >

@@ -40,9 +40,7 @@ export function middleware(request) {
 
 export const config = {
   matcher: [
-    // Skip all internal paths (_next)
-    '/((?!_next|assets|favicon.ico).*)',
-    // Optional: only run on root (/)
-    // '/'
+    // Skip all internal paths (_next), static assets, and common file extensions
+    '/((?!_next|assets|favicon\\.ico|.*\\.(?:jpg|jpeg|png|gif|svg|webp|ico|webmanifest)).*)',
   ],
 };

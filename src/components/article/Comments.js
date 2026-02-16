@@ -52,6 +52,14 @@ const Comments = ({ articleSlug, articleDocumentId }) => {
       setLoading(false);
     }
     if (articleSlug) load();
+
+    // Load saved name and email from localStorage
+    if (typeof window !== 'undefined') {
+      const savedName = localStorage.getItem('commenterName');
+      const savedEmail = localStorage.getItem('commenterEmail');
+      if (savedName) setAuthorName(savedName);
+      if (savedEmail) setAuthorEmail(savedEmail);
+    }
   }, [articleSlug]);
 
   const handleSubmit = async (e) => {
@@ -62,6 +70,14 @@ const Comments = ({ articleSlug, articleDocumentId }) => {
     setFlash(null);
 
     try {
+      // Save name and email to localStorage for future comments
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('commenterName', authorName.trim());
+        if (authorEmail.trim()) {
+          localStorage.setItem('commenterEmail', authorEmail.trim());
+        }
+      }
+
       await createComment(articleDocumentId, authorName.trim(), authorEmail.trim(), content.trim());
       setFlash({ type: 'success', msg: labels.success });
       setContent('');

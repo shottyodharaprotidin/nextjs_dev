@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { fetchAPI, getStrapiMedia, formatDate } from "@/lib/strapi";
+import { getPopularTags } from "@/services/tagService";
 import Skeleton from "@/components/skeleton";
 
 const Tags = () => {
