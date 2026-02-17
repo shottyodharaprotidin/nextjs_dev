@@ -15,7 +15,7 @@ const page = () => {
                 {/* START PAGE HEADER */}
                 <section
                     className="inner-head bg-img"
-                    data-image-src="assets/images/about-bg.jpg"
+                    data-image-src="/default.jpg"
                 >
                     <div className="container position-relative">
                         <div className="row">
@@ -75,7 +75,7 @@ const page = () => {
                                 <figure className="member">
                                     {" "}
                                     <img
-                                        src="assets/images/team/1.png"
+                                        src="/default.jpg"
                                         className="img-fluid"
                                         alt="Image"
                                     />
@@ -113,7 +113,7 @@ const page = () => {
                                 <figure className="member">
                                     {" "}
                                     <img
-                                        src="assets/images/team/2.png"
+                                        src="/default.jpg"
                                         className="img-fluid"
                                         alt="Image"
                                     />
@@ -151,7 +151,7 @@ const page = () => {
                                 <figure className="member">
                                     {" "}
                                     <img
-                                        src="assets/images/team/3.png"
+                                        src="/default.jpg"
                                         className="img-fluid"
                                         alt="Image"
                                     />
@@ -189,7 +189,7 @@ const page = () => {
                                 <figure className="member">
                                     {" "}
                                     <img
-                                        src="assets/images/team/4.png"
+                                        src="/default.jpg"
                                         className="img-fluid"
                                         alt="Image"
                                     />
@@ -258,7 +258,7 @@ const page = () => {
                                         <div className="grid-item-img">
                                             <Link href="#">
                                                 <img
-                                                    src="assets/images/218x150-1.jpg"
+                                                    src="/default.jpg"
                                                     className="img-fluid"
                                                     alt=""
                                                 />
@@ -287,7 +287,7 @@ const page = () => {
                                         <div className="grid-item-img">
                                             <Link href="#">
                                                 <img
-                                                    src="assets/images/218x150-2.jpg"
+                                                    src="/default.jpg"
                                                     className="img-fluid"
                                                     alt=""
                                                 />
@@ -317,7 +317,7 @@ const page = () => {
                                         <div className="grid-item-img">
                                             <Link href="#">
                                                 <img
-                                                    src="assets/images/218x150-3.jpg"
+                                                    src="/default.jpg"
                                                     className="img-fluid"
                                                     alt=""
                                                 />
@@ -346,7 +346,7 @@ const page = () => {
                                         <div className="grid-item-img">
                                             <Link href="#">
                                                 <img
-                                                    src="assets/images/218x150-4.jpg"
+                                                    src="/default.jpg"
                                                     className="img-fluid"
                                                     alt=""
                                                 />

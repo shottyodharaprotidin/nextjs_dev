@@ -47,7 +47,7 @@ const FeatureCarousal = () => {
             <div className="featured-post">
                 <a href="#" className="news-image">
                     <img
-                        src="assets/images/featured-620x370-1.jpg"
+                        src="/default.jpg"
                         alt=""
                         className="img-fluid"
                     />
@@ -80,7 +80,7 @@ const FeatureCarousal = () => {
             <div className="featured-post">
                 <a href="#" className="news-image">
                     <img
-                        src="assets/images/featured-620x370-2.jpg"
+                        src="/default.jpg"
                         alt=""
                         className="img-fluid"
                     />
@@ -113,7 +113,7 @@ const FeatureCarousal = () => {
             <div className="featured-post">
                 <a href="#" className="news-image">
                     <img
-                        src="assets/images/featured-620x370-3.jpg"
+                        src="/default.jpg"
                         alt=""
                         className="img-fluid"
                     />
@@ -146,7 +146,7 @@ const FeatureCarousal = () => {
             <div className="featured-post">
                 <a href="#" className="news-image">
                     <img
-                        src="assets/images/featured-620x370-4.jpg"
+                        src="/default.jpg"
                         alt=""
                         className="img-fluid"
                     />
@@ -179,7 +179,7 @@ const FeatureCarousal = () => {
             <div className="featured-post">
                 <a href="#" className="news-image">
                     <img
-                        src="assets/images/featured-620x370-5.jpg"
+                        src="/default.jpg"
                         alt=""
                         className="img-fluid"
                     />

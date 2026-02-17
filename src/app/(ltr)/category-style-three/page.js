@@ -52,7 +52,7 @@ const page = () => {
                                         <div className="slider-post post-height-2">
                                             <Link href="#" className="news-image">
                                                 <img
-                                                    src="assets/images/slider-260x230-7.jpg"
+                                                    src="/default.jpg"
                                                     alt=""
                                                     className="img-fluid"
                                                 />
@@ -77,7 +77,7 @@ const page = () => {
                                         <div className="slider-post post-height-2">
                                             <Link href="#" className="news-image">
                                                 <img
-                                                    src="assets/images/slider-260x230-8.jpg"
+                                                    src="/default.jpg"
                                                     alt=""
                                                     className="img-fluid"
                                                 />
@@ -102,7 +102,7 @@ const page = () => {
                                         <div className="slider-post post-height-2">
                                             <Link href="#" className="news-image">
                                                 <img
-                                                    src="assets/images/slider-260x230-9.jpg"
+                                                    src="/default.jpg"
                                                     alt=""
                                                     className="img-fluid"
                                                 />
@@ -127,7 +127,7 @@ const page = () => {
                                         <div className="slider-post post-height-2">
                                             <Link href="#" className="news-image">
                                                 <img
-                                                    src="assets/images/slider-260x230-10.jpg"
+                                                    src="/default.jpg"
                                                     alt=""
                                                     className="img-fluid"
                                                 />
@@ -167,7 +167,7 @@ const page = () => {
                                                 <figure className="posts-thumb">
                                                     <span className="post-category">National</span>
                                                     <Link href="#">
-                                                        <img src="assets/images/378x270-1.jpg" alt="" />
+                                                        <img src="/default.jpg" alt="" />
                                                     </Link>
                                                 </figure>
                                                 <div className="posts-inner">
@@ -200,7 +200,7 @@ const page = () => {
                                                     <div className="post-author">
                                                         <figure className="d-md-inline-block d-none post-author-avatar">
                                                             <img
-                                                                src="assets/images/avatar-1.jpg"
+                                                                src="/default.jpg"
                                                                 alt="Post Author Avatar"
                                                             />
                                                         </figure>
@@ -233,7 +233,7 @@ const page = () => {
                                                 <figure className="posts-thumb">
                                                     <span className="post-category">Tavel</span>
                                                     <Link href="#">
-                                                        <img src="assets/images/378x270-2.jpg" alt="" />
+                                                        <img src="/default.jpg" alt="" />
                                                     </Link>
                                                 </figure>
                                                 <div className="posts-inner">
@@ -266,7 +266,7 @@ const page = () => {
                                                     <div className="post-author">
                                                         <figure className="d-md-inline-block d-none post-author-avatar">
                                                             <img
-                                                                src="assets/images/avatar-1.jpg"
+                                                                src="/default.jpg"
                                                                 alt="Post Author Avatar"
                                                             />
                                                         </figure>
@@ -299,7 +299,7 @@ const page = () => {
                                                 <figure className="posts-thumb">
                                                     <span className="post-category">Fashion</span>
                                                     <Link href="#">
-                                                        <img src="assets/images/378x270-3.jpg" alt="" />
+                                                        <img src="/default.jpg" alt="" />
                                                     </Link>
                                                 </figure>
                                                 <div className="posts-inner">
@@ -332,7 +332,7 @@ const page = () => {
                                                     <div className="post-author">
                                                         <figure className="d-md-inline-block d-none post-author-avatar">
                                                             <img
-                                                                src="assets/images/avatar-1.jpg"
+                                                                src="/default.jpg"
                                                                 alt="Post Author Avatar"
                                                             />
                                                         </figure>
@@ -365,7 +365,7 @@ const page = () => {
                                                 <figure className="posts-thumb">
                                                     <span className="post-category">Technology</span>
                                                     <Link href="#">
-                                                        <img src="assets/images/378x270-4.jpg" alt="" />
+                                                        <img src="/default.jpg" alt="" />
                                                     </Link>
                                                 </figure>
                                                 <div className="posts-inner">
@@ -398,7 +398,7 @@ const page = () => {
                                                     <div className="post-author">
                                                         <figure className="d-md-inline-block d-none post-author-avatar">
                                                             <img
-                                                                src="assets/images/avatar-1.jpg"
+                                                                src="/default.jpg"
                                                                 alt="Post Author Avatar"
                                                             />
                                                         </figure>
@@ -431,7 +431,7 @@ const page = () => {
                                                 <figure className="posts-thumb">
                                                     <span className="post-category">Photography</span>
                                                     <Link href="#">
-                                                        <img src="assets/images/378x270-5.jpg" alt="" />
+                                                        <img src="/default.jpg" alt="" />
                                                     </Link>
                                                 </figure>
                                                 <div className="posts-inner">
@@ -464,7 +464,7 @@ const page = () => {
                                                     <div className="post-author">
                                                         <figure className="d-md-inline-block d-none post-author-avatar">
                                                             <img
-                                                                src="assets/images/avatar-1.jpg"
+                                                                src="/default.jpg"
                                                                 alt="Post Author Avatar"
                                                             />
                                                         </figure>
@@ -497,7 +497,7 @@ const page = () => {
                                                 <figure className="posts-thumb">
                                                     <span className="post-category">Business</span>
                                                     <Link href="#">
-                                                        <img src="assets/images/378x270-6.jpg" alt="" />
+                                                        <img src="/default.jpg" alt="" />
                                                     </Link>
                                                 </figure>
                                                 <div className="posts-inner">
@@ -530,7 +530,7 @@ const page = () => {
                                                     <div className="post-author">
                                                         <figure className="d-md-inline-block d-none post-author-avatar">
                                                             <img
-                                                                src="assets/images/avatar-1.jpg"
+                                                                src="/default.jpg"
                                                                 alt="Post Author Avatar"
                                                             />
                                                         </figure>
@@ -623,7 +623,7 @@ const page = () => {
                                 {/* START ADVERTISEMENT */}
                                 <div className="add-inner">
                                     <img
-                                        src="assets/images/add320x270-1.jpg"
+                                        src="/default.jpg"
                                         className="img-fluid"
                                         alt=""
                                     />

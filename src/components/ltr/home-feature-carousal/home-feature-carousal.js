@@ -1,8 +1,11 @@
 
 import dynamic from "next/dynamic";
+import Link from "next/link";
+import { getStrapiMedia } from "@/lib/strapi";
 import "owl.carousel/dist/assets/owl.carousel.css";
 import "owl.carousel/dist/assets/owl.theme.default.css";
 import 'animate.css/animate.css'
+import React from 'react';
 
 if (typeof window !== "undefined") {
   window.$ = window.jQuery = require("jquery");
@@ -14,7 +17,39 @@ const OwlCarousel = dynamic(() => import("react-owl-carousel"), {
 
 
 
-const HomeFeatureCarousal = () => {
+const HomeFeatureCarousal = ({ data = [], isLoading = false }) => {
+  // If loading, show placeholders
+  if (isLoading) {
+     const placeholders = [
+      { id: 1, attributes: { title: 'Loading featured articles...', slug: '#', category: { data: { attributes: { name: 'News' } } }, cover: { data: { attributes: { url: '/default.jpg' } } } } },
+      { id: 2, attributes: { title: 'Please wait...', slug: '#', category: { data: { attributes: { name: 'Sports' } } }, cover: { data: { attributes: { url: '/default.jpg' } } } } },
+      { id: 3, attributes: { title: 'Loading content...', slug: '#', category: { data: { attributes: { name: 'Travel' } } }, cover: { data: { attributes: { url: '/default.jpg' } } } } },
+      { id: 4, attributes: { title: 'Fetching data...', slug: '#', category: { data: { attributes: { name: 'Business' } } }, cover: { data: { attributes: { url: '/default.jpg' } } } } }
+    ];
+    
+    return (
+      <OwlCarousel className="owl-theme featured-carousel"
+        loop={true}
+        margin={10}
+        nav={false}
+        dots={false}
+        responsive={{
+          0: { items: 1, autoplay: true },
+          576: { items: 2 },
+          768: { items: 2.5 },
+          992: { items: 3.5 },
+          1200: { items: 4 }
+        }}
+      >
+        {placeholders.map((article, index) => renderItem(article, index, true))}
+      </OwlCarousel>
+    );
+  }
+
+  // If not loading and no data, don't show anything
+  if (data.length === 0) {
+    return null;
+  }
   
   return (
     <OwlCarousel className="owl-theme featured-carousel"
@@ -41,96 +76,44 @@ const HomeFeatureCarousal = () => {
         }
       }}
     >
-      <div className="news-list-item">
-        <div className="img-wrapper">
-          <a href="#" className="thumb">
-            <img
-              src="assets/images/115x85-8.jpg"
-              alt=""
-              className="img-fluid"
-            />
-            <div className="link-icon">
-              <i className="fa fa-camera" />
-            </div>
-          </a>
-        </div>
-        <div className="post-info-2">
-          <span className="post-category">Fashion</span>
-          <h5 className="mb-0">
-            <a href="#" className="title">
-              Lorem ipsum dolor sit amet, consectetur adipiscing.
-            </a>
-          </h5>
-        </div>
-      </div>
-      <div className="news-list-item">
-        <div className="img-wrapper">
-          <a href="#" className="thumb">
-            <img
-              src="assets/images/115x85-9.jpg"
-              alt=""
-              className="img-fluid"
-            />
-            <div className="link-icon">
-              <i className="fa fa-camera" />
-            </div>
-          </a>
-        </div>
-        <div className="post-info-2">
-          <span className="post-category">Sports</span>
-          <h5 className="mb-0">
-            <a href="#" className="title">
-              Proin quis massa tincidunt justo cursus dapibus.
-            </a>
-          </h5>
-        </div>
-      </div>
-      <div className="news-list-item">
-        <div className="img-wrapper">
-          <a href="#" className="thumb">
-            <img
-              src="assets/images/115x85-3.jpg"
-              alt=""
-              className="img-fluid"
-            />
-            <div className="link-icon">
-              <i className="fa fa-camera" />
-            </div>
-          </a>
-        </div>
-        <div className="post-info-2">
-          <span className="post-category">Travel</span>
-          <h5 className="mb-0">
-            <a href="#" className="title">
-              Nulla hendrerit dui in erat varius vestibulum.
-            </a>
-          </h5>
-        </div>
-      </div>
-      <div className="news-list-item">
-        <div className="img-wrapper">
-          <a href="#" className="thumb">
-            <img
-              src="assets/images/115x85-10.jpg"
-              alt=""
-              className="img-fluid"
-            />
-            <div className="link-icon">
-              <i className="fa fa-camera" />
-            </div>
-          </a>
-        </div>
-        <div className="post-info-2">
-          <span className="post-category">Business</span>
-          <h5 className="mb-0">
-            <a href="#" className="title">
-              Maecenas dictum lacus in bibendum commodo.
-            </a>
-          </h5>
-        </div>
-      </div>
+      {data.map((article, index) => renderItem(article, index))}
     </OwlCarousel>
   );
 };
+
+const renderItem = (article, index, isPlaceholder = false) => {
+  const articleData = article.attributes || article;
+  const imageUrl = getStrapiMedia(articleData.cover);
+  const category = articleData.category?.data?.attributes?.name || articleData.category?.name || "সংবাদ";
+  const slug = articleData.slug;
+  const title = articleData.title;
+
+  return (
+    <div key={article.id || index} className="news-list-item">
+      <div className="img-wrapper">
+        <Link href={isPlaceholder ? '#' : `/bn/article/${slug}`} className="thumb">
+          <img
+            src={imageUrl}
+            alt={title}
+            className="img-fluid"
+            onError={(e) => e.target.src = '/default.jpg'}
+          />
+          <div className="link-icon">
+            <i className="fa fa-camera" />
+          </div>
+        </Link>
+      </div>
+      <div className="post-info-2">
+        <span className="post-category">{category}</span>
+        <h5 className="mb-0">
+          <Link href={isPlaceholder ? '#' : `/bn/article/${slug}`} className="title">
+            {title}
+          </Link>
+        </h5>
+      </div>
+    </div>
+  );
+};
+
 
 export default HomeFeatureCarousal;

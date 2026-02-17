@@ -37,7 +37,7 @@ const PopularPostSlider = () => {
                             <figure>
                                 <a href="">
                                     <img
-                                        src="assets/images/340x215-1.jpg"
+                                        src="/default.jpg"
                                         height={242}
                                         width={345}
                                         alt=""
@@ -79,7 +79,7 @@ const PopularPostSlider = () => {
                                 <div className="img-wrapper">
                                     <a href="#" className="thumb">
                                         <img
-                                            src="assets/images/115x85-1.jpg"
+                                            src="/default.jpg"
                                             alt=""
                                             className="img-fluid"
                                         />
@@ -111,7 +111,7 @@ const PopularPostSlider = () => {
                                 <div className="img-wrapper">
                                     <a href="#" className="thumb">
                                         <img
-                                            src="assets/images/115x85-2.jpg"
+                                            src="/default.jpg"
                                             alt=""
                                             className="img-fluid"
                                         />
@@ -143,7 +143,7 @@ const PopularPostSlider = () => {
                                 <div className="img-wrapper">
                                     <a href="#" className="thumb">
                                         <img
-                                            src="assets/images/115x85-3.jpg"
+                                            src="/default.jpg"
                                             alt=""
                                             className="img-fluid"
                                         />
@@ -176,7 +176,7 @@ const PopularPostSlider = () => {
                                 <div className="img-wrapper">
                                     <a href="#" className="thumb">
                                         <img
-                                            src="assets/images/115x85-4.jpg"
+                                            src="/default.jpg"
                                             alt=""
                                             className="img-fluid"
                                         />
@@ -216,7 +216,7 @@ const PopularPostSlider = () => {
                             <figure>
                                 <a href="">
                                     <img
-                                        src="assets/images/340x215-2.jpg"
+                                        src="/default.jpg"
                                         height={242}
                                         width={345}
                                         alt=""
@@ -259,7 +259,7 @@ const PopularPostSlider = () => {
                                 <div className="img-wrapper">
                                     <a href="#" className="thumb">
                                         <img
-                                            src="assets/images/115x85-4.jpg"
+                                            src="/default.jpg"
                                             alt=""
                                             className="img-fluid"
                                         />
@@ -291,7 +291,7 @@ const PopularPostSlider = () => {
                                 <div className="img-wrapper">
                                     <a href="#" className="thumb">
                                         <img
-                                            src="assets/images/115x85-3.jpg"
+                                            src="/default.jpg"
                                             alt=""
                                             className="img-fluid"
                                         />
@@ -323,7 +323,7 @@ const PopularPostSlider = () => {
                                 <div className="img-wrapper">
                                     <a href="#" className="thumb">
                                         <img
-                                            src="assets/images/115x85-2.jpg"
+                                            src="/default.jpg"
                                             alt=""
                                             className="img-fluid"
                                         />
@@ -355,7 +355,7 @@ const PopularPostSlider = () => {
                                 <div className="img-wrapper">
                                     <a href="#" className="thumb">
                                         <img
-                                            src="assets/images/115x85-1.jpg"
+                                            src="/default.jpg"
                                             alt=""
                                             className="img-fluid"
                                         />

@@ -36,7 +36,7 @@ const LeftCarousalTwo = () => {
             <div className="slider-post post-height-1">
                 <a href="#" className="news-image">
                     <img
-                        src="assets/images/slider-695x460-1.jpg"
+                        src="/default.jpg"
                         alt=""
                         className="img-fluid"
                     />
@@ -70,7 +70,7 @@ const LeftCarousalTwo = () => {
             <div className="slider-post post-height-1">
                 <a href="#" className="news-image">
                     <img
-                        src="assets/images/slider-695x460-2.jpg"
+                        src="/default.jpg"
                         alt=""
                         className="img-fluid"
                     />
@@ -102,7 +102,7 @@ const LeftCarousalTwo = () => {
             <div className="slider-post post-height-1">
                 <a href="#" className="news-image">
                     <img
-                        src="assets/images/slider-695x460-3.jpg"
+                        src="/default.jpg"
                         alt=""
                         className="img-fluid"
                     />
@@ -134,7 +134,7 @@ const LeftCarousalTwo = () => {
             <div className="slider-post post-height-1">
                 <a href="#" className="news-image">
                     <img
-                        src="assets/images/slider-695x460-4.jpg"
+                        src="/default.jpg"
                         alt=""
                         className="img-fluid"
                     />
@@ -166,7 +166,7 @@ const LeftCarousalTwo = () => {
             <div className="slider-post post-height-1">
                 <a href="#" className="news-image">
                     <img
-                        src="assets/images/slider-695x460-5.jpg"
+                        src="/default.jpg"
                         alt=""
                         className="img-fluid"
                     />

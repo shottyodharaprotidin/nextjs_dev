@@ -12,7 +12,7 @@ const page = () => {
                 {/* START PAGE HEADER */}
                 <section
                     className="inner-head bg-img"
-                    data-image-src="assets/images/faq-bg.jpg"
+                    data-image-src="/default.jpg"
                 >
                     <div className="container position-relative">
                         <div className="row">

@@ -33,7 +33,7 @@ const NewsCarousal = () => {
                             <div className="more-post">
                               <a href="#" className="news-image">
                                 <img
-                                  src="assets/images/620x370-1.jpg"
+                                  src="/default.jpg"
                                   alt=""
                                   className="img-fluid"
                                 />
@@ -66,7 +66,7 @@ const NewsCarousal = () => {
                             <div className="more-post">
                               <a href="#" className="news-image">
                                 <img
-                                  src="assets/images/620x370-2.jpg"
+                                  src="/default.jpg"
                                   alt=""
                                   className="img-fluid"
                                 />
@@ -103,7 +103,7 @@ const NewsCarousal = () => {
                             <div className="more-post">
                               <a href="#" className="news-image">
                                 <img
-                                  src="assets/images/620x370-3.jpg"
+                                  src="/default.jpg"
                                   alt=""
                                   className="img-fluid"
                                 />
@@ -138,7 +138,7 @@ const NewsCarousal = () => {
                             <div className="more-post">
                               <a href="#" className="news-image">
                                 <img
-                                  src="assets/images/620x370-4.jpg"
+                                  src="/default.jpg"
                                   alt=""
                                   className="img-fluid"
                                 />
@@ -174,7 +174,7 @@ const NewsCarousal = () => {
                             <div className="more-post">
                               <a href="#" className="news-image">
                                 <img
-                                  src="assets/images/620x370-5.jpg"
+                                  src="/default.jpg"
                                   alt=""
                                   className="img-fluid"
                                 />
@@ -207,7 +207,7 @@ const NewsCarousal = () => {
                             <div className="more-post">
                               <a href="#" className="news-image">
                                 <img
-                                  src="assets/images/620x370-6.jpg"
+                                  src="/default.jpg"
                                   alt=""
                                   className="img-fluid"
                                 />
@@ -244,7 +244,7 @@ const NewsCarousal = () => {
                             <div className="more-post">
                               <a href="#" className="news-image">
                                 <img
-                                  src="assets/images/620x370-7.jpg"
+                                  src="/default.jpg"
                                   alt=""
                                   className="img-fluid"
                                 />
@@ -279,7 +279,7 @@ const NewsCarousal = () => {
                             <div className="more-post">
                               <a href="#" className="news-image">
                                 <img
-                                  src="assets/images/620x370-8.jpg"
+                                  src="/default.jpg"
                                   alt=""
                                   className="img-fluid"
                                 />

@@ -55,7 +55,7 @@ function GoogleMapComponents() {
         <MarkerF
         position={center}
         icon={{
-          url: 'assets/images/marker.png', // Replace with the path to your custom marker image
+          url: '/default.jpg', // Replace with the path to your custom marker image
           scaledSize: new window.google.maps.Size(40, 40), // Adjust the size as needed
         }}
       />

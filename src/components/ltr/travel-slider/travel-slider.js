@@ -38,7 +38,7 @@ const TravelSlider = () => {
                         <figure>
                             <a href="">
                                 <img
-                                    src="assets/images/340x215-3.jpg"
+                                    src="/default.jpg"
                                     height={242}
                                     width={345}
                                     alt=""
@@ -82,7 +82,7 @@ const TravelSlider = () => {
                                     <div className="grid-item-img">
                                         <a href="#">
                                             <img
-                                                src="assets/images/165x110-1.jpg"
+                                                src="/default.jpg"
                                                 className="img-fluid"
                                                 alt=""
                                             />
@@ -110,7 +110,7 @@ const TravelSlider = () => {
                                     <div className="grid-item-img">
                                         <a href="#">
                                             <img
-                                                src="assets/images/165x110-2.jpg"
+                                                src="/default.jpg"
                                                 className="img-fluid"
                                                 alt=""
                                             />
@@ -138,7 +138,7 @@ const TravelSlider = () => {
                                     <div className="grid-item-img">
                                         <a href="#">
                                             <img
-                                                src="assets/images/165x110-3.jpg"
+                                                src="/default.jpg"
                                                 className="img-fluid"
                                                 alt=""
                                             />
@@ -166,7 +166,7 @@ const TravelSlider = () => {
                                     <div className="grid-item-img">
                                         <a href="#">
                                             <img
-                                                src="assets/images/165x110-4.jpg"
+                                                src="/default.jpg"
                                                 className="img-fluid"
                                                 alt=""
                                             />
@@ -202,7 +202,7 @@ const TravelSlider = () => {
                         <figure>
                             <a href="">
                                 <img
-                                    src="assets/images/340x215-4.jpg"
+                                    src="/default.jpg"
                                     height={242}
                                     width={345}
                                     alt=""
@@ -246,7 +246,7 @@ const TravelSlider = () => {
                                     <div className="grid-item-img">
                                         <a href="#">
                                             <img
-                                                src="assets/images/165x110-5.jpg"
+                                                src="/default.jpg"
                                                 className="img-fluid"
                                                 alt=""
                                             />
@@ -274,7 +274,7 @@ const TravelSlider = () => {
                                     <div className="grid-item-img">
                                         <a href="#">
                                             <img
-                                                src="assets/images/165x110-6.jpg"
+                                                src="/default.jpg"
                                                 className="img-fluid"
                                                 alt=""
                                             />
@@ -302,7 +302,7 @@ const TravelSlider = () => {
                                     <div className="grid-item-img">
                                         <a href="#">
                                             <img
-                                                src="assets/images/165x110-7.jpg"
+                                                src="/default.jpg"
                                                 className="img-fluid"
                                                 alt=""
                                             />
@@ -330,7 +330,7 @@ const TravelSlider = () => {
                                     <div className="grid-item-img">
                                         <a href="#">
                                             <img
-                                                src="assets/images/165x110-8.jpg"
+                                                src="/default.jpg"
                                                 className="img-fluid"
                                                 alt=""
                                             />

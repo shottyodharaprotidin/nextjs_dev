@@ -46,7 +46,7 @@ const page = () => {
                     <div className="post_details_block">
                       <figure className="social-icon">
                         <img
-                          src="assets/images/details-690x460-1.jpg"
+                          src="/default.jpg"
                           className="img-fluid"
                           alt=""
                         />
@@ -143,7 +143,7 @@ const page = () => {
                       </p>
                       <figure className="align-left">
                         <img
-                          src="assets/images/details-300x362-1.jpg"
+                          src="/default.jpg"
                           alt=""
                           width={300}
                           height={362}
@@ -290,7 +290,7 @@ const page = () => {
                         <div className="comment-main-level">
                           {/* Avatar */}
                           <div className="comment-avatar">
-                            <img src="assets/images/avatar-1.jpg" alt="" />
+                            <img src="/default.jpg" alt="" />
                           </div>
                           <div className="comment-box">
                             <div className="comment-content">
@@ -322,7 +322,7 @@ const page = () => {
                           <li>
                             {/* Avatar */}
                             <div className="comment-avatar">
-                              <img src="assets/images/avatar-1.jpg" alt="" />
+                              <img src="/default.jpg" alt="" />
                             </div>
                             <div className="comment-box">
                               <div className="comment-content">
@@ -353,7 +353,7 @@ const page = () => {
                           <li>
                             {/* Avatar */}
                             <div className="comment-avatar">
-                              <img src="assets/images/avatar-1.jpg" alt="" />
+                              <img src="/default.jpg" alt="" />
                             </div>
                             <div className="comment-box">
                               <div className="comment-content">
@@ -387,7 +387,7 @@ const page = () => {
                         <div className="comment-main-level">
                           {/* Avatar */}
                           <div className="comment-avatar">
-                            <img src="assets/images/avatar-1.jpg" alt="" />
+                            <img src="/default.jpg" alt="" />
                           </div>
                           <div className="comment-box">
                             <div className="comment-content">
@@ -500,7 +500,7 @@ const page = () => {
                   {/* START ADVERTISEMENT */}
                   <div className="add-inner">
                     <img
-                      src="assets/images/add320x270-1.jpg"
+                      src="/default.jpg"
                       className="img-fluid"
                       alt=""
                     />

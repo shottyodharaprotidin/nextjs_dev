@@ -1,4 +1,6 @@
 import dynamic from "next/dynamic";
+import Link from "next/link";
+import { getStrapiMedia } from "@/lib/strapi";
 import "owl.carousel/dist/assets/owl.carousel.css";
 import "owl.carousel/dist/assets/owl.theme.default.css";
 import 'animate.css/animate.css'
@@ -9,7 +11,28 @@ if (typeof window !== "undefined") {
   const OwlCarousel = dynamic(() => import("react-owl-carousel"), {
     ssr: false,
   })
-const HomeCenterSlider = () => {
+const HomeCenterSlider = ({ data = [], isLoading = false }) => {
+  
+  if (isLoading) {
+    const placeholders = [
+      { id: 1, attributes: { title: 'Loading popular articles...', slug: '#', category: { data: { attributes: { name: 'News' } } }, cover: { data: { attributes: { url: '/default.jpg' } } }, author: { data: { attributes: { name: 'Loading...' } } }, createdAt: '2024-01-01' } },
+      { id: 2, attributes: { title: 'Please wait while fetching data from server...', slug: '#', category: { data: { attributes: { name: 'Politics' } } }, cover: { data: { attributes: { url: '/default.jpg' } } }, author: { data: { attributes: { name: 'Loading...' } } }, createdAt: '2024-01-01' } }
+    ];
+    
+    return (
+      <OwlCarousel id="owl-slider" className="owl-theme" {...optionEight}>
+        {placeholders.map((article, index) => renderItem(article, index, true))}
+      </OwlCarousel>
+    );
+  }
+
+  // If no data, don't show anything
+  if (data.length === 0) {
+    return null;
+  }
+  
+  const displayData = data.slice(0, 5);
+
 
   const optionEight = {
     loop: true,
@@ -28,153 +51,66 @@ const HomeCenterSlider = () => {
   }
     return (
         <OwlCarousel id="owl-slider" className="owl-theme" {...optionEight}>
-        {/* Slider item one */}
-        <div className="item">
-          <div className="slider-post post-height-1">
-            <a href="#" className="news-image">
-              <img
-                src="assets/images/masonry/slider/01.jpg"
-                alt=""
-                className="img-fluid"
-              />
-            </a>
-            <div className="post-text">
-              <span className="post-category">Business</span>
-              <h2>
-                <a href="#">
-                  It is a long established fact that a reader will be
-                  distracted by the readable content of a page when
-                  looking at its layout.
-                </a>
-              </h2>
-              <ul className="align-items-center authar-info d-flex flex-wrap gap-1">
-                <li>
-                  By <span className="editor-name">David hall</span>
-                </li>
-                <li>Aug 16, 2023</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        {/* /.Slider item one */}
-        {/* Slider item two */}
-        <div className="item">
-          <div className="slider-post post-height-1">
-            <a href="#" className="news-image">
-              <img
-                src="assets/images/masonry/slider/02.jpg"
-                alt=""
-                className="img-fluid"
-              />
-            </a>
-            <div className="post-text">
-              <span className="post-category">Politics</span>
-              <h2>
-                <a href="#">
-                  There are many variations of passages of Lorem Ipsum
-                  available, but the majority have suffered alteration
-                  in some form, by injected humour, or randomised words.
-                </a>
-              </h2>
-              <ul className="align-items-center authar-info d-flex flex-wrap gap-1">
-                <li>
-                  By <span className="editor-name">David hall</span>
-                </li>
-                <li>Aug 16, 2023</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        {/* /.Slider item two */}
-        {/* Slider item three */}
-        <div className="item">
-          <div className="slider-post post-height-1">
-            <a href="#" className="news-image">
-              <img
-                src="assets/images/masonry/slider/03.jpg"
-                alt=""
-                className="img-fluid"
-              />
-            </a>
-            <div className="post-text">
-              <span className="post-category">Photography</span>
-              <h2>
-                <a href="#">
-                  All the Lorem Ipsum generators on the Internet tend to
-                  repeat predefined chunks as necessary, making this the
-                  first true generator on the Internet.
-                </a>
-              </h2>
-              <ul className="align-items-center authar-info d-flex flex-wrap gap-1">
-                <li>
-                  By <span className="editor-name">David hall</span>
-                </li>
-                <li>Aug 16, 2023</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        {/* /.Slider item three */}
-        {/* Slider item four */}
-        <div className="item">
-          <div className="slider-post post-height-1">
-            <a href="#" className="news-image">
-              <img
-                src="assets/images/masonry/slider/04.jpg"
-                alt=""
-                className="img-fluid"
-              />
-            </a>
-            <div className="post-text">
-              <span className="post-category">Travel</span>
-              <h2>
-                <a href="#">
-                  Various versions have evolved over the years,
-                  sometimes by accident, sometimes on purpose (injected
-                  humour and the like).
-                </a>
-              </h2>
-              <ul className="align-items-center authar-info d-flex flex-wrap gap-1">
-                <li>
-                  By <span className="editor-name">David hall</span>
-                </li>
-                <li>Aug 16, 2023</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        {/* /.Slider item four */}
-        {/* Slider item five */}
-        <div className="item">
-          <div className="slider-post post-height-1">
-            <a href="#" className="news-image">
-              <img
-                src="assets/images/masonry/slider/05.jpg"
-                alt=""
-                className="img-fluid"
-              />
-            </a>
-            <div className="post-text">
-              <span className="post-category">Business</span>
-              <h2>
-                <a href="#">
-                  {" "}
-                  It was popularised in the 1960s with the release of
-                  Letraset sheets containing Lorem Ipsum passages
-                </a>
-              </h2>
-              <ul className="align-items-center authar-info d-flex flex-wrap gap-1">
-                <li>
-                  By <span className="editor-name">David hall</span>
-                </li>
-                <li>Aug 16, 2023</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        {/* /.Slider item five */}
+        {displayData.map((article, index) => renderItem(article, index))}
       </OwlCarousel>
     );
+};
+
+const optionEight = {
+    loop: true,
+    items: 1,
+    dots: true,
+    animateOut: 'fadeOut',
+    animateIn: 'fadeIn',
+    autoplay: true,
+    autoplayTimeout: 4000, 
+    autoplayHoverPause: true,
+    nav: true,
+    navText: [
+      `<i class='ti ti-angle-left'></i>`,
+      `<i class='ti ti-angle-right'></i>`
+    ]
+};
+
+const renderItem = (article, index, isPlaceholder = false) => {
+  const articleData = article.attributes || article;
+  const imageUrl = getStrapiMedia(articleData.cover);
+  const category = articleData.category?.data?.attributes?.name || articleData.category?.name || "সংবাদ";
+  const slug = articleData.slug;
+  const title = articleData.title;
+  const authorName = articleData.author?.data?.attributes?.name || articleData.author?.name || "সম্পাদক";
+  const date = new Date(articleData.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+
+  return (
+    <div className="item" key={article.id || index}>
+      <div className="slider-post post-height-1">
+        <Link href={isPlaceholder ? '#' : `/bn/article/${slug}`} className="news-image">
+          <img 
+            src={imageUrl} 
+            alt={title} 
+            className="img-fluid" 
+            onError={(e) => e.target.src = '/default.jpg'}
+          />
+        </Link>
+        <div className="post-text">
+          <span className="post-category">{category}</span>
+          <h1>
+            <Link href={isPlaceholder ? '#' : `/bn/article/${slug}`}>{title}</Link>
+          </h1>
+          <ul className="align-items-center authar-info d-flex flex-wrap gap-1">
+            <li className="post-atuthor-list">
+              <div className="post-atuthor">
+                <span>
+                  By <Link href="#">{authorName}</Link>
+                </span>
+              </div>
+            </li>
+            <li className="post-date">{date}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default HomeCenterSlider;

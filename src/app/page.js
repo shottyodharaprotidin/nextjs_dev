@@ -12,14 +12,47 @@ import PollWidget from "@/components/ltr/poll-widget/poll";
 import HomeFeatureCarousal from "@/components/ltr/home-feature-carousal/home-feature-carousal";
 import HomeCenterSlider from "@/components/ltr/home-center-slider/home-center-slider";
 import Tags from "@/components/ltr/tags/tags";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { getFeaturedArticles, getPopularArticles, getTrendingNews, getLatestArticles } from "@/services/articleService";
 export default function Home() {
+  const locale = 'bn';
+  
+  // State untuk menyimpan data dari API
+  const [featured, setFeatured] = useState([]);
+  const [popular, setPopular] = useState([]);
+  const [trending, setTrending] = useState([]);
+  const [latest, setLatest] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    // Your logic for setting dir attribute using JavaScript
-    // For example:
+    // Remove RTL direction
     document.documentElement.removeAttribute('dir', 'rtl');
+    
+    // Fetch data dari API
+    async function fetchData() {
+      try {
+        const [featuredRes, popularRes, trendingRes, latestRes] = await Promise.all([
+          getFeaturedArticles(10, locale),
+          getPopularArticles(10, locale),
+          getTrendingNews(15, locale),
+          getLatestArticles(1, 20, locale)
+        ]);
+
+        setFeatured(featuredRes?.data || []);
+        setPopular(popularRes?.data || []);
+        setTrending(trendingRes?.data || []);
+        setLatest(latestRes?.data || []);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setLoading(false);
+      }
+    }
+
+    fetchData();
   }, []);
+
   {/* *** ADD AND REMOVE CLASS ON BODY TAG *** */ }
   useRemoveBodyClass(['home-nine'], ['home-six', 'home-seven', 'home-two', 'boxed-layout', 'layout-rtl']);
   {/* *** IMPORT BACKGROUND IMAGE *** */ }
@@ -29,15 +62,15 @@ export default function Home() {
       {/* *** START PAGE MAIN CONTENT *** */}
       <main className="page_main_wrapper">
         {/* START NEWSTRICKER */}
-        <NewsTicker />
+        <NewsTicker data={trending} isLoading={loading} />
         {/*  END OF /. NEWSTRICKER */}
         {/* START FEATURE SECTION */}
         <div
           className="bg-img feature-section py-4 py-lg-3 py-xl-4"
-          data-image-src="assets/images/bg-shape.png"
+          data-image-src="/default.jpg"
         >
           <div className="container">
-            <HomeFeatureCarousal />
+            <HomeFeatureCarousal data={featured} isLoading={loading} />
           </div>
         </div>
         {/* END OF /. FEATURE SECTION */}
@@ -51,7 +84,7 @@ export default function Home() {
                     <div className="slider-post post-height-4">
                       <Link href="/" className="news-image">
                         <img
-                          src="assets/images/masonry/06.jpg"
+                          src="/default.jpg"
                           alt=""
                           className="img-fluid"
                         />
@@ -77,7 +110,7 @@ export default function Home() {
                     <div className="slider-post post-height-4">
                       <Link href="/" className="news-image">
                         <img
-                          src="assets/images/masonry/05.jpg"
+                          src="/default.jpg"
                           alt=""
                           className="img-fluid"
                         />
@@ -103,7 +136,7 @@ export default function Home() {
                     <div className="slider-post post-height-4">
                       <Link href="/" className="news-image">
                         <img
-                          src="assets/images/masonry/04.jpg"
+                          src="/default.jpg"
                           alt=""
                           className="img-fluid"
                         />
@@ -129,7 +162,7 @@ export default function Home() {
               </div>
               <div className="col-md-6 col-xxl-4 thm-padding">
                 <div className="slider-wrapper">
-                  <HomeCenterSlider />
+                  <HomeCenterSlider data={popular} />
                 </div>
               </div>
               <div className="col-md-6 col-xxl-4 thm-padding">
@@ -138,7 +171,7 @@ export default function Home() {
                     <div className="slider-post post-height-2">
                       <Link href="/" className="news-image">
                         <img
-                          src="assets/images/masonry/03.jpg"
+                          src="/default.jpg"
                           alt=""
                           className="img-fluid"
                         />
@@ -164,7 +197,7 @@ export default function Home() {
                     <div className="slider-post post-height-2">
                       <a href="#" className="news-image">
                         <img
-                          src="assets/images/masonry/01.jpg"
+                          src="/default.jpg"
                           alt=""
                           className="img-fluid"
                         />
@@ -190,7 +223,7 @@ export default function Home() {
                     <div className="slider-post post-height-2">
                       <a href="#" className="news-image">
                         <img
-                          src="assets/images/masonry/02.jpg"
+                          src="/default.jpg"
                           alt=""
                           className="img-fluid"
                         />
@@ -485,7 +518,7 @@ export default function Home() {
                       <figure>
                         <a href="">
                           <img
-                            src="assets/images/557x352-1.jpg"
+                            src="/default.jpg"
                             width={345}
                             alt=""
                             className="img-fluid"
@@ -525,7 +558,7 @@ export default function Home() {
                         <div className="grid-item-img">
                           <a href="#">
                             <img
-                              src="assets/images/187x125-1.jpg"
+                              src="/default.jpg"
                               className="img-fluid"
                               alt=""
                             />
@@ -549,7 +582,7 @@ export default function Home() {
                         <div className="grid-item-img">
                           <a href="#">
                             <img
-                              src="assets/images/187x125-2.jpg"
+                              src="/default.jpg"
                               className="img-fluid"
                               alt=""
                             />
@@ -574,7 +607,7 @@ export default function Home() {
                         <div className="grid-item-img">
                           <a href="#">
                             <img
-                              src="assets/images/187x125-3.jpg"
+                              src="/default.jpg"
                               className="img-fluid"
                               alt=""
                             />
@@ -598,7 +631,7 @@ export default function Home() {
                         <div className="grid-item-img">
                           <a href="#">
                             <img
-                              src="assets/images/187x125-4.jpg"
+                              src="/default.jpg"
                               className="img-fluid"
                               alt=""
                             />
@@ -622,7 +655,7 @@ export default function Home() {
                         <div className="grid-item-img">
                           <a href="#">
                             <img
-                              src="assets/images/187x125-5.jpg"
+                              src="/default.jpg"
                               className="img-fluid"
                               alt=""
                             />
@@ -647,7 +680,7 @@ export default function Home() {
                         <div className="grid-item-img">
                           <a href="#">
                             <img
-                              src="assets/images/187x125-6.jpg"
+                              src="/default.jpg"
                               className="img-fluid"
                               alt=""
                             />
@@ -671,7 +704,7 @@ export default function Home() {
                 {/* START ADVERTISEMENT */}
                 <div className="add-inner">
                   <img
-                    src="assets/images/add728x90-1.jpg"
+                    src="/default.jpg"
                     className="img-fluid"
                     alt=""
                   />
@@ -749,7 +782,7 @@ export default function Home() {
                     {/* Category item */}
                     <div
                       className="text-center mb-2 card-bg-scale position-relative overflow-hidden bg-dark-overlay bg-img p-3"
-                      data-image-src="assets/images/1000x750-1.jpg"
+                      data-image-src="/default.jpg"
                     >
                       <a
                         href="#"
@@ -761,7 +794,7 @@ export default function Home() {
                     {/* Category item */}
                     <div
                       className="text-center mb-2 card-bg-scale position-relative overflow-hidden bg-dark-overlay bg-img p-3"
-                      data-image-src="assets/images/1000x750-2.jpg"
+                      data-image-src="/default.jpg"
                     >
                       <a
                         href="#"
@@ -773,7 +806,7 @@ export default function Home() {
                     {/* Category item */}
                     <div
                       className="text-center mb-2 card-bg-scale position-relative overflow-hidden bg-dark-overlay bg-img p-3"
-                      data-image-src="assets/images/1000x750-3.jpg"
+                      data-image-src="/default.jpg"
                     >
                       <a
                         href="#"
@@ -785,7 +818,7 @@ export default function Home() {
                     {/* Category item */}
                     <div
                       className="text-center mb-2 card-bg-scale position-relative overflow-hidden bg-dark-overlay bg-img p-3"
-                      data-image-src="assets/images/1000x750-4.jpg"
+                      data-image-src="/default.jpg"
                     >
                       <a
                         href="#"
@@ -797,7 +830,7 @@ export default function Home() {
                     {/* Category item */}
                     <div
                       className="text-center mb-2 card-bg-scale position-relative overflow-hidden bg-dark-overlay bg-img p-3"
-                      data-image-src="assets/images/1000x750-5.jpg"
+                      data-image-src="/default.jpg"
                     >
                       <a
                         href="#"
@@ -826,7 +859,7 @@ export default function Home() {
                     <div className="more-post">
                       <a href="#" className="news-image">
                         <img
-                          src="assets/images/340x215-12.jpg"
+                          src="/default.jpg"
                           alt=""
                           className="img-fluid w-100"
                         />
@@ -856,7 +889,7 @@ export default function Home() {
                         <div className="img-wrapper">
                           <a href="#" className="thumb">
                             <img
-                              src="assets/images/115x85-5.jpg"
+                              src="/default.jpg"
                               alt=""
                               className="img-fluid"
                             />
@@ -885,7 +918,7 @@ export default function Home() {
                         <div className="img-wrapper">
                           <a href="#" className="thumb">
                             <img
-                              src="assets/images/115x85-6.jpg"
+                              src="/default.jpg"
                               alt=""
                               className="img-fluid"
                             />
@@ -913,7 +946,7 @@ export default function Home() {
                         <div className="img-wrapper">
                           <a href="#" className="thumb">
                             <img
-                              src="assets/images/115x85-7.jpg"
+                              src="/default.jpg"
                               alt=""
                               className="img-fluid"
                             />
@@ -978,7 +1011,7 @@ export default function Home() {
                       <div className="border-bottom">
                         <a href="#" className="d-block mb-3">
                           <img
-                            src="assets/images/340x215-12.jpg"
+                            src="/default.jpg"
                             alt=""
                             className="img-fluid w-100"
                           />
@@ -1044,7 +1077,7 @@ export default function Home() {
                       <div className="border-bottom">
                         <a href="#" className="d-block mb-3">
                           <img
-                            src="assets/images/340x215-4.jpg"
+                            src="/default.jpg"
                             alt=""
                             className="img-fluid"
                           />
@@ -1122,7 +1155,7 @@ export default function Home() {
                           </div>
                           <a href="#" className="thumb">
                             <img
-                              src="assets/images/218x150-1.jpg"
+                              src="/default.jpg"
                               alt=""
                               className="img-fluid w-100"
                             />
@@ -1159,7 +1192,7 @@ export default function Home() {
                           </div>
                           <a href="#" className="thumb">
                             <img
-                              src="assets/images/218x150-2.jpg"
+                              src="/default.jpg"
                               alt=""
                               className="img-fluid w-100"
                             />
@@ -1196,7 +1229,7 @@ export default function Home() {
                           </div>
                           <a href="#" className="thumb">
                             <img
-                              src="assets/images/218x150-3.jpg"
+                              src="/default.jpg"
                               alt=""
                               className="img-fluid w-100"
                             />
@@ -1233,7 +1266,7 @@ export default function Home() {
                           </div>
                           <a href="#" className="thumb">
                             <img
-                              src="assets/images/218x150-4.jpg"
+                              src="/default.jpg"
                               alt=""
                               className="img-fluid w-100"
                             />
@@ -1270,7 +1303,7 @@ export default function Home() {
                           </div>
                           <a href="#" className="thumb">
                             <img
-                              src="assets/images/218x150-5.jpg"
+                              src="/default.jpg"
                               alt=""
                               className="img-fluid w-100"
                             />
@@ -1376,7 +1409,7 @@ export default function Home() {
                   {/* START ADVERTISEMENT */}
                   <div className="add-inner mb-0">
                     <img
-                      src="assets/images/add728x90-2.jpg"
+                      src="/default.jpg"
                       className="img-fluid"
                       alt=""
                     />
@@ -1486,7 +1519,7 @@ export default function Home() {
                   {/* START ADVERTISEMENT */}
                   <div className="add-inner">
                     <img
-                      src="assets/images/add320x270-1.jpg"
+                      src="/default.jpg"
                       className="img-fluid"
                       alt=""
                     />

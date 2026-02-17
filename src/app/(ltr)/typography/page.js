@@ -319,7 +319,7 @@ const page = () => {
                                 {/* START ADVERTISEMENT */}
                                 <div className="add-inner">
                                     <img
-                                        src="assets/images/add320x270-1.jpg"
+                                        src="/default.jpg"
                                         className="img-fluid"
                                         alt=""
                                     />

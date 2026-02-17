@@ -15,7 +15,7 @@ const LatestArticles = () => {
                 <div className="img-wrapper">
                     <a href="#" className="thumb">
                         <img
-                            src="assets/images/218x150-1.jpg"
+                            src="/default.jpg"
                             alt=""
                             className="img-fluid w-100 object-fit-cover"
                         />
@@ -51,7 +51,7 @@ const LatestArticles = () => {
                 <div className="img-wrapper">
                     <a href="#" className="thumb">
                         <img
-                            src="assets/images/218x150-2.jpg"
+                            src="/default.jpg"
                             alt=""
                             className="img-fluid w-100 object-fit-cover"
                         />
@@ -87,7 +87,7 @@ const LatestArticles = () => {
                 <div className="img-wrapper">
                     <a href="#" className="thumb">
                         <img
-                            src="assets/images/218x150-3.jpg"
+                            src="/default.jpg"
                             alt=""
                             className="img-fluid w-100 object-fit-cover"
                         />
@@ -123,7 +123,7 @@ const LatestArticles = () => {
                 <div className="img-wrapper">
                     <a href="#" className="thumb">
                         <img
-                            src="assets/images/218x150-4.jpg"
+                            src="/default.jpg"
                             alt=""
                             className="img-fluid w-100 object-fit-cover"
                         />
@@ -159,7 +159,7 @@ const LatestArticles = () => {
                 <div className="img-wrapper">
                     <a href="#" className="thumb">
                         <img
-                            src="assets/images/340x215-1.jpg"
+                            src="/default.jpg"
                             alt=""
                             className="img-fluid w-100 object-fit-cover"
                         />

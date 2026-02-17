@@ -55,7 +55,7 @@ const page = () => {
                                         <div className="slider-post post-height-2">
                                             <a href="#" className="news-image">
                                                 <img
-                                                    src="assets/images/slider-260x230-7.jpg"
+                                                    src="/default.jpg"
                                                     alt=""
                                                     className="img-fluid"
                                                 />
@@ -80,7 +80,7 @@ const page = () => {
                                         <div className="slider-post post-height-2">
                                             <a href="#" className="news-image">
                                                 <img
-                                                    src="assets/images/slider-260x230-8.jpg"
+                                                    src="/default.jpg"
                                                     alt=""
                                                     className="img-fluid"
                                                 />
@@ -105,7 +105,7 @@ const page = () => {
                                         <div className="slider-post post-height-2">
                                             <a href="#" className="news-image">
                                                 <img
-                                                    src="assets/images/slider-260x230-9.jpg"
+                                                    src="/default.jpg"
                                                     alt=""
                                                     className="img-fluid"
                                                 />
@@ -130,7 +130,7 @@ const page = () => {
                                         <div className="slider-post post-height-2">
                                             <a href="#" className="news-image">
                                                 <img
-                                                    src="assets/images/slider-260x230-10.jpg"
+                                                    src="/default.jpg"
                                                     alt=""
                                                     className="img-fluid"
                                                 />
@@ -171,7 +171,7 @@ const page = () => {
                                                     <figure>
                                                         <a href="">
                                                             <img
-                                                                src="assets/images/340x215-1.jpg"
+                                                                src="/default.jpg"
                                                                 height={242}
                                                                 width={345}
                                                                 alt=""
@@ -206,7 +206,7 @@ const page = () => {
                                                     <figure>
                                                         <a href="">
                                                             <img
-                                                                src="assets/images/340x215-11.jpg"
+                                                                src="/default.jpg"
                                                                 height={242}
                                                                 width={345}
                                                                 alt=""
@@ -241,7 +241,7 @@ const page = () => {
                                                     <figure>
                                                         <a href="">
                                                             <img
-                                                                src="assets/images/340x215-3.jpg"
+                                                                src="/default.jpg"
                                                                 height={242}
                                                                 width={345}
                                                                 alt=""
@@ -275,7 +275,7 @@ const page = () => {
                                                     <figure>
                                                         <a href="">
                                                             <img
-                                                                src="assets/images/340x215-4.jpg"
+                                                                src="/default.jpg"
                                                                 height={242}
                                                                 width={345}
                                                                 alt=""
@@ -309,7 +309,7 @@ const page = () => {
                                                     <figure>
                                                         <a href="">
                                                             <img
-                                                                src="assets/images/340x215-5.jpg"
+                                                                src="/default.jpg"
                                                                 height={242}
                                                                 width={345}
                                                                 alt=""
@@ -343,7 +343,7 @@ const page = () => {
                                                     <figure>
                                                         <a href="">
                                                             <img
-                                                                src="assets/images/340x215-6.jpg"
+                                                                src="/default.jpg"
                                                                 height={242}
                                                                 width={345}
                                                                 alt=""
@@ -377,7 +377,7 @@ const page = () => {
                                                     <figure>
                                                         <a href="">
                                                             <img
-                                                                src="assets/images/340x215-7.jpg"
+                                                                src="/default.jpg"
                                                                 height={242}
                                                                 width={345}
                                                                 alt=""
@@ -412,7 +412,7 @@ const page = () => {
                                                     <figure>
                                                         <a href="">
                                                             <img
-                                                                src="assets/images/340x215-8.jpg"
+                                                                src="/default.jpg"
                                                                 height={242}
                                                                 width={345}
                                                                 alt=""
@@ -447,7 +447,7 @@ const page = () => {
                                                     <figure>
                                                         <a href="">
                                                             <img
-                                                                src="assets/images/340x215-9.jpg"
+                                                                src="/default.jpg"
                                                                 height={242}
                                                                 width={345}
                                                                 alt=""
@@ -481,7 +481,7 @@ const page = () => {
                                                     <figure>
                                                         <a href="">
                                                             <img
-                                                                src="assets/images/340x215-10.jpg"
+                                                                src="/default.jpg"
                                                                 height={242}
                                                                 width={345}
                                                                 alt=""
@@ -613,7 +613,7 @@ const page = () => {
                                 {/* START ADVERTISEMENT */}
                                 <div className="add-inner">
                                     <img
-                                        src="assets/images/add320x270-1.jpg"
+                                        src="/default.jpg"
                                         className="img-fluid"
                                         alt=""
                                     />
