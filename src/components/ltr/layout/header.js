@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
+import { formatDate } from '@/lib/strapi';
 import { WiDayLightning } from 'weather-icons-react';
 import ThemeChanger from '../style-selectors/style-selector';
 const HomeLinks = [
@@ -41,6 +42,14 @@ const Header = () => {
         setSidebarActive(false);
         setOverlayActive(false);
     };
+
+    const [currentDate, setCurrentDate] = useState('');
+
+    useEffect(() => {
+        // Set current date on mount to avoid hydration mismatch
+        // Using bn-BD locale which will be intercepted by our modified formatDate
+        setCurrentDate(formatDate(new Date().toISOString(), 'bn'));
+    }, []);
 
     useEffect(() => {
         const dismissOverlay = document.querySelector('#dismiss');
@@ -257,7 +266,7 @@ const Header = () => {
                                 </div>
                             </div>
                             <div className="col text-end fw-semibold text-uppercase date-text">
-                                Friday, August 4
+                                {currentDate}
                             </div>
                         </div>
                     </div>
@@ -316,6 +325,11 @@ const Header = () => {
                             </button>
                           
                         {/* End Search Button */}
+                        {/* Start Theme Switcher for Mobile */}
+                        <div className="d-lg-none ms-2">
+                            <ThemeChanger />
+                        </div>
+                        {/* End Theme Switcher */}
                         {/* Start Navbar Toggler Buton */}
                         <button
                             className={`navbar-toggler ms-1`}
@@ -685,11 +699,12 @@ const Header = () => {
                         </div>
                         <div className="w-100 w-lg-auto d-none d-lg-flex">
                             {/* Start Search Button */}
-                            <div className='d-flex align-items-center'>
+                            <div className='d-flex align-items-center gap-3'>
                                 <button type="button" className="btn btn-search_two ms-auto" onClick={handleSearchButtonClick} >
                                     <i className="fa fa-search fa-lg" />
                                 </button>
-            
+                                {/* Theme Switcher */}
+                                <ThemeChanger />
                             </div>
                             {/* End Search Button */}
                         </div>

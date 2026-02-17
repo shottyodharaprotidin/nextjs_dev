@@ -15,7 +15,12 @@ const Providers = ({children}) => {
       return <>{children}</>
     }
   return (
-    <ThemeProvider>
+    <ThemeProvider 
+      attribute="data-theme"
+      defaultTheme="light" 
+      themes={['light', 'skin-dark']}
+      enableSystem={false}
+    >
         {children}
     </ThemeProvider>
   )

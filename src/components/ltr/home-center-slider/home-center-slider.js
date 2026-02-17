@@ -7,54 +7,9 @@ import 'animate.css/animate.css'
 if (typeof window !== "undefined") {
     window.$ = window.jQuery = require("jquery");
   }
-  // This is for Next.js. On Rect JS remove this line
   const OwlCarousel = dynamic(() => import("react-owl-carousel"), {
     ssr: false,
   })
-const HomeCenterSlider = ({ data = [], isLoading = false }) => {
-  
-  if (isLoading) {
-    const placeholders = [
-      { id: 1, attributes: { title: 'Loading popular articles...', slug: '#', category: { data: { attributes: { name: 'News' } } }, cover: { data: { attributes: { url: '/default.jpg' } } }, author: { data: { attributes: { name: 'Loading...' } } }, createdAt: '2024-01-01' } },
-      { id: 2, attributes: { title: 'Please wait while fetching data from server...', slug: '#', category: { data: { attributes: { name: 'Politics' } } }, cover: { data: { attributes: { url: '/default.jpg' } } }, author: { data: { attributes: { name: 'Loading...' } } }, createdAt: '2024-01-01' } }
-    ];
-    
-    return (
-      <OwlCarousel id="owl-slider" className="owl-theme" {...optionEight}>
-        {placeholders.map((article, index) => renderItem(article, index, true))}
-      </OwlCarousel>
-    );
-  }
-
-  // If no data, don't show anything
-  if (data.length === 0) {
-    return null;
-  }
-  
-  const displayData = data.slice(0, 5);
-
-
-  const optionEight = {
-    loop: true,
-    items: 1,
-    dots: true,
-    animateOut: 'fadeOut',
-    animateIn: 'fadeIn',
-    autoplay: true,
-    autoplayTimeout: 4000, //Set AutoPlay to 4 seconds
-    autoplayHoverPause: true,
-    nav: true,
-    navText: [
-      `<i class='ti ti-angle-left'></i>`,
-      `<i class='ti ti-angle-right'></i>`
-    ]
-  }
-    return (
-        <OwlCarousel id="owl-slider" className="owl-theme" {...optionEight}>
-        {displayData.map((article, index) => renderItem(article, index))}
-      </OwlCarousel>
-    );
-};
 
 const optionEight = {
     loop: true,
@@ -63,7 +18,7 @@ const optionEight = {
     animateOut: 'fadeOut',
     animateIn: 'fadeIn',
     autoplay: true,
-    autoplayTimeout: 4000, 
+    autoplayTimeout: 4000,
     autoplayHoverPause: true,
     nav: true,
     navText: [
@@ -72,14 +27,29 @@ const optionEight = {
     ]
 };
 
+const HomeCenterSlider = ({ data = [], isLoading = false }) => {
+  // Use data from props (which handles dummy data from parent)
+  const items = data.slice(0, 5);
+
+  if (!isLoading && items.length === 0) return null;
+
+  return (
+    <OwlCarousel key={isLoading ? 'loading' : 'loaded'} id="owl-slider" className="owl-theme" {...optionEight}>
+      {items.map((article, index) => renderItem(article, index, isLoading))}
+    </OwlCarousel>
+  );
+};
+
 const renderItem = (article, index, isPlaceholder = false) => {
   const articleData = article.attributes || article;
   const imageUrl = getStrapiMedia(articleData.cover);
-  const category = articleData.category?.data?.attributes?.name || articleData.category?.name || "সংবাদ";
-  const slug = articleData.slug;
-  const title = articleData.title;
-  const authorName = articleData.author?.data?.attributes?.name || articleData.author?.name || "সম্পাদক";
-  const date = new Date(articleData.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+  // robust access
+  const category = articleData.category?.name || articleData.category?.data?.attributes?.name || "সংবাদ";
+  const slug = articleData.slug || '#';
+  const title = articleData.title || 'Loading...';
+  // robust author access
+  const authorName = articleData.author?.name || articleData.author?.data?.attributes?.name || "সম্পাদক";
+  const date = new Date(articleData.createdAt || articleData.publishedAt).toLocaleDateString('bn-BD', { year: 'numeric', month: 'short', day: 'numeric' });
 
   return (
     <div className="item" key={article.id || index}>

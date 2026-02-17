@@ -5335,6 +5335,7 @@ blockquote.no-sign p {
 /* feature section ---------------- */
 .feature-section {
     background-color: #f8f9fa;
+    background-image: url(/assets/images/bg-shape.png) !important;
 }
 
 /* Sidebar ----------------------- */

@@ -1,45 +1,58 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
-const PollWidget = () => {
+const dummyPoll = {
+    question: 'আপনি কি মনে করেন এই সিদ্ধান্ত সঠিক?',
+    options: [
+        { id: 1, text: 'হ্যাঁ, আমি একমত' },
+        { id: 2, text: 'না, আমি একমত নই' },
+        { id: 3, text: 'মন্তব্য নেই' }
+    ]
+};
+
+const PollWidget = ({ data = null, isLoading = false }) => {
+    const [pollData, setPollData] = useState(dummyPoll);
+
+    useEffect(() => {
+        if (isLoading) {
+            setPollData(dummyPoll);
+        } else if (data) {
+            const p = data.attributes || data;
+            setPollData({
+                question: p.question,
+                options: p.options || []
+            });
+        }
+    }, [data, isLoading]);
+
+    if (!isLoading && !data) return null; // Hide if no poll
+
     return (
         <div className="panel_inner poll-widget">
             <div className="panel_header">
                 <h4>
-                    <strong>Poll</strong>
+                    <strong>জনমত</strong> জরিপ
                 </h4>
             </div>
             <div className="panel_body poll-content">
                 <form method="get" id="home_poll">
-                    <h6>
-                        Is it fair for the WICB to ask for 20% of players' fees to
-                        allow them to participate in overseas T20 leagues?
-                    </h6>
+                    <h6>{pollData.question}</h6>
                     <ul>
-                        <li>
-                            <input
-                                id="poll_5444"
-                                defaultValue={5444}
-                                name="poll"
-                                type="radio"
-                            />
-                            <label htmlFor="poll_5444">
-                                Yes, they have invested in developing talent
-                            </label>
-                        </li>
-                        <li>
-                            <input
-                                id="poll_5445"
-                                defaultValue={5445}
-                                name="poll"
-                                type="radio"
-                            />
-                            <label htmlFor="poll_5445">
-                                No, this is restraint of trade
-                            </label>
-                        </li>
+                        {pollData.options.map((option, index) => (
+                            <li key={option.id || index}>
+                                <input
+                                    id={`poll_${index}`}
+                                    defaultValue={option.text}
+                                    name="poll"
+                                    type="radio"
+                                />
+                                <label htmlFor={`poll_${index}`}>
+                                    {option.text || option.optionText} 
+                                </label>
+                            </li>
+                        ))}
                     </ul>
                     <a href="#" className="btn btn-news">
-                        Submit
+                        ভোট দিন
                     </a>
                 </form>
             </div>

@@ -1,11 +1,46 @@
 
-
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import ScrollToTopUI from '../scroll-to-top/scroll-to-top';
 import { useBackgroundImageLoader } from '../use-background-image/use-background-image';
+import { getLatestArticles } from '@/services/articleService';
+import { getCategories, getTags } from '@/services/globalService';
+import { getStrapiMedia, formatDate, toBengaliNumber } from '@/lib/strapi';
 
 const Footer = () => {
-  
-  useBackgroundImageLoader()
+  useBackgroundImageLoader();
+  const [recentPosts, setRecentPosts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [hotTopics, setHotTopics] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [recentRes, catRes, tagRes] = await Promise.all([
+          getLatestArticles(1, 3), // Fetch 3 recent posts
+          getCategories(6), // Fetch 6 categories (generic)
+          getTags(12) // Fetch 12 tags for hot topics
+        ]);
+
+        setRecentPosts(recentRes?.data || []);
+        setCategories(catRes?.data || []);
+        setHotTopics(tagRes?.data || []);
+      } catch (error) {
+        console.error("Error fetching footer data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Split categories into two columns
+  const midIndex = Math.ceil(categories.length / 2);
+  const leftCategories = categories.slice(0, midIndex);
+  const rightCategories = categories.slice(midIndex);
+
   return (
     <>
        <ScrollToTopUI/>
@@ -25,10 +60,7 @@ const Footer = () => {
             </div>
             <div className="col-md-5">
               <p className="text-white mb-0">
-                It is a long established fact that a reader will be distracted by
-                the readable content of a page when looking at its layout. The point
-                of using Lorem Ipsum is that it has a more-or-less normal
-                distribution of letters, as opposed.
+                সত্যধারা প্রতিদিন - সত্যের সন্ধানে সর্বদা। আমরা নিরপেক্ষ ও বস্তুনিষ্ঠ সংবাদ পরিবেশনে প্রতিশ্রুতিবদ্ধ।
               </p>
             </div>
             <div className="col-md-4">
@@ -38,19 +70,20 @@ const Footer = () => {
                   <input
                     type="email"
                     className="form-control"
-                    placeholder="Enter your email address"
+                    placeholder="আপনার ইমেইল ঠিকানা লিখুন"
                   />
                 </div>
                 <div className="col-12">
                   <button type="submit" className="btn btn-news m-0">
-                    Subscribe
+                    সাবস্ক্রাইব
                   </button>
                 </div>
                 <div className="form-text mt-2 text-white">
-                  By subscribing you agree to our
-                  <a href="#" className="text-decoration-underline text-primary">
-                    Privacy Policy
+                  সাবস্ক্রাইব করার মাধ্যমে আপনি আমাদের
+                  <a href="#" className="text-decoration-underline text-primary ms-1">
+                    গোপনীয়তা নীতি
                   </a>
+                  তে সম্মত হচ্ছেন।
                 </div>
               </form>
             </div>
@@ -60,255 +93,116 @@ const Footer = () => {
             {/* START FOOTER BOX (Qr Code) */}
             <div className="col-sm-6 col-lg-3 footer-box py-4">
               <div className="about-inner text-center">
-                <h5 className="wiget-title">Get My App</h5>
+                <h5 className="wiget-title">অ্যাপ ডাউনলোড করুন</h5>
                 <div className="bg-white mb-3 d-inline-block">
                   {/* Start Qr Code Image */}
                   <img
                     src="assets/images/qr-code.png"
                     className="figure-img img-fluid mb-0"
                     height={146}
-                    width={146}
+                    width={146} // Keep number as prop, display is image
                     alt="..."
                   />
                   {/* /. End Qr Code Image */}
                 </div>
-                <p>Scan qr code and download the app for your mobile. </p>
+                <p>কিউআর কোড স্ক্যান করুন এবং আমাদের অ্যাপ ডাউনলোড করুন।</p>
               </div>
             </div>
             {/*  END OF /. FOOTER BOX (Qr Code) */}
-            {/* START FOOTER BOX (Twitter feeds) */}
+            
+            {/* START FOOTER BOX (Social Contact - Was Twitter) */}
             <div className="col-sm-6 col-lg-3 footer-box py-4">
-              <div className="twitter-inner">
-                <h5 className="wiget-title">Twitter feeds</h5>
-                <ul className="margin-top-60">
-                  <li>
-                    Typi non habent claritatem insitam est usus legent is iis qui
-                    facit claritatem. Investigatione{" "}
-                    <a href="https://t.co/erenthemeGHTQ">
-                      https://t.co/erenthemeGHTQ
-                    </a>
-                    <span>
-                      <i className="ti ti-twitter" />
-                      12 days ago
-                    </span>
-                  </li>
-                  <li>
-                    Typi non habent claritatem insitam est usus legent is{" "}
-                    <a href="https://t.co/erenthemeGHTQ">
-                      https://t.co/erenthemeGHTQ
-                    </a>
-                    <span>
-                      <i className="ti ti-twitter" />
-                      10 days ago
-                    </span>
-                  </li>
+               <h5 className="wiget-title">সামাজিক যোগাযোগ</h5>
+                <ul className="list-unstyled m-0 menu-services">
+                    <li><a href="#">ফেসবুক</a></li>
+                    <li><a href="#">টুইটার</a></li>
+                    <li><a href="#">ইউটিউব</a></li>
+                    <li><a href="#">ইনস্টাগ্রাম</a></li>
                 </ul>
-              </div>
             </div>
-            {/* END OF /. FOOTER BOX (Twitter feeds) */}
+            {/* END OF /. FOOTER BOX (Social Contact) */}
+
             {/* START FOOTER BOX (Category) */}
             <div className="col-sm-6 col-lg-3 footer-box py-4">
-              <h5 className="wiget-title">Category</h5>
+              <h5 className="wiget-title">বিভাগ</h5>
               <div className="row">
                 <div className="col-6">
                   <ul className="list-unstyled m-0 menu-services">
-                    <li>
-                      <a href="#">Business</a>
-                    </li>
-                    <li>
-                      <a href="#">LifeStyle</a>
-                    </li>
-                    <li>
-                      <a href="#">Technology</a>
-                    </li>
-                    <li>
-                      <a href="#">Culture</a>
-                    </li>
-                    <li>
-                      <a href="#">Entertainment</a>
-                    </li>
-                    <li>
-                      <a href="#">Support</a>
-                    </li>
-                    <li>
-                      <a href="#">Privacy Policy</a>
-                    </li>
-                    <li>
-                      <a href="#">Newsletter</a>
-                    </li>
+                    {leftCategories.map((cat, i) => (
+                      <li key={i}>
+                        <Link href={`/bn/category/${cat.attributes?.slug || '#'}`}>
+                          {cat.attributes?.name}
+                        </Link>
+                      </li>
+                    ))}
                   </ul>
                 </div>
                 <div className="col-6">
                   <ul className="list-unstyled m-0 menu-services">
-                    <li>
-                      <a href="#">News</a>
-                    </li>
-                    <li>
-                      <a href="#">Career</a>
-                    </li>
-                    <li>
-                      <a href="#">Technology</a>
-                    </li>
-                    <li>
-                      <a href="#">Startups</a>
-                    </li>
-                    <li>
-                      <a href="#">Gadgets</a>
-                    </li>
-                    <li>
-                      <a href="#">Inspiration</a>
-                    </li>
+                    {rightCategories.map((cat, i) => (
+                      <li key={i}>
+                        <Link href={`/bn/category/${cat.attributes?.slug || '#'}`}>
+                          {cat.attributes?.name}
+                        </Link>
+                      </li>
+                    ))}
                   </ul>
                 </div>
               </div>
             </div>
             {/* END OF /. FOOTER BOX (Category) */}
+
             {/* START FOOTER BOX (Recent Post) */}
             <div className="col-sm-6 col-lg-3 footer-box py-4">
-              <h5 className="wiget-title">Recent Post</h5>
+              <h5 className="wiget-title">সাম্প্রতিক পোস্ট</h5>
               <div className="footer-news-grid">
-                <div className="news-list-item">
-                  <div className="img-wrapper">
-                    <a href="#" className="thumb">
-                      <img
-                        src="assets/images/115x85-1.jpg"
-                        alt=""
-                        className="img-fluid"
-                      />
-                      <div className="link-icon">
-                        <i className="fa fa-camera" />
+                {recentPosts.map((post, i) => {
+                  const p = post.attributes || post;
+                  const img = getStrapiMedia(p.cover);
+                  const date = formatDate(p.createdAt || p.publishedAt);
+                  // Manually convert date numbers if formatDate doesn't do it fully or just in case
+                  // formatDate usually respects locale 'bn-BD' which handles numbers.
+                  
+                  return (
+                    <div className="news-list-item" key={i}>
+                      <div className="img-wrapper">
+                        <Link href={`/bn/article/${p.slug}`} className="thumb">
+                          <img
+                            src={img}
+                            alt={p.title}
+                            className="img-fluid"
+                            onError={(e) => e.target.src = '/default.jpg'}
+                          />
+                        </Link>
                       </div>
-                    </a>
-                  </div>
-                  <div className="post-info-2">
-                    <h5>
-                      <a href="#" className="title">
-                        Cooking Recipes Anytime And Anywhere
-                      </a>
-                    </h5>
-                    <ul className="align-items-center authar-info d-flex flex-wrap gap-1">
-                      <li>Jan 4, 2021</li>
-                    </ul>
-                  </div>
-                </div>
-                <div className="news-list-item">
-                  <div className="img-wrapper">
-                    <a href="#" className="thumb">
-                      <img
-                        src="assets/images/115x85-2.jpg"
-                        alt=""
-                        className="img-fluid"
-                      />
-                      <div className="link-icon">
-                        <i className="fa fa-camera" />
+                      <div className="post-info-2">
+                        <h5>
+                          <Link href={`/bn/article/${p.slug}`} className="title">
+                            {p.title}
+                          </Link>
+                        </h5>
+                        <ul className="align-items-center authar-info d-flex flex-wrap gap-1">
+                          <li>{date}</li>
+                        </ul>
                       </div>
-                    </a>
-                  </div>
-                  <div className="post-info-2">
-                    <h5>
-                      <a href="#" className="title">
-                        Duis ac arcu porttitor, varius tortor vel, cursus ipsum.
-                      </a>
-                    </h5>
-                    <ul className="align-items-center authar-info d-flex flex-wrap gap-1">
-                      <li>Jan 4, 2021</li>
-                    </ul>
-                  </div>
-                </div>
-                <div className="news-list-item">
-                  <div className="img-wrapper">
-                    <a href="#" className="thumb">
-                      <img
-                        src="assets/images/115x85-3.jpg"
-                        alt=""
-                        className="img-fluid"
-                      />
-                      <div className="link-icon">
-                        <i className="fa fa-camera" />
-                      </div>
-                    </a>
-                  </div>
-                  <div className="post-info-2">
-                    <h5>
-                      <a href="#" className="title">
-                        Quisque nec orci eget libero semper dignissim.
-                      </a>
-                    </h5>
-                    <ul className="align-items-center authar-info d-flex flex-wrap gap-1">
-                      <li>Jan 4, 2021</li>
-                    </ul>
-                  </div>
-                </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
             {/* END OF /. FOOTER BOX (Recent Post) */}
+
           </div>
           {/* START HOT TOPICS */}
-          <h5 className="wiget-title">Hot topics</h5>
+          <h5 className="wiget-title">জনপ্রিয় টপিক</h5>
           <ul className="lh-lg list-inline mb-0 text-primary-hover hot-topics">
-            <li className="list-inline-item">
-              <a href="#">Media</a>
-            </li>
-            <li className="list-inline-item">
-              <a href="#">NewsCyber</a>
-            </li>
-            <li className="list-inline-item">
-              <a href="#">Half Full</a>
-            </li>
-            <li className="list-inline-item">
-              <a href="#">Covid-19</a>
-            </li>
-            <li className="list-inline-item">
-              <a href="#">Politics</a>
-            </li>
-            <li className="list-inline-item">
-              <a href="#">Opinion</a>
-            </li>
-            <li className="list-inline-item">
-              <a href="#">Entertainment</a>
-            </li>
-            <li className="list-inline-item">
-              <a href="#">Share Market</a>
-            </li>
-            <li className="list-inline-item">
-              <a href="#">Royalist</a>
-            </li>
-            <li className="list-inline-item">
-              <a href="#">Beast Inside</a>
-            </li>
-            <li className="list-inline-item">
-              <a href="#">World</a>
-            </li>
-            <li className="list-inline-item">
-              <a href="#">Newsletters</a>
-            </li>
-            <li className="list-inline-item">
-              <a href="#">Scouted</a>
-            </li>
-            <li className="list-inline-item">
-              <a href="#">Travel</a>
-            </li>
-            <li className="list-inline-item">
-              <a href="#">Auction 2022</a>
-            </li>
-            <li className="list-inline-item">
-              <a href="#">Crossword</a>
-            </li>
-            <li className="list-inline-item">
-              <a href="#">Tech And Auto</a>
-            </li>
-            <li className="list-inline-item">
-              <a href="#">Podcasts</a>
-            </li>
-            <li className="list-inline-item">
-              <a href="#">Protests</a>
-            </li>
-            <li className="list-inline-item">
-              <a href="#">Education</a>
-            </li>
-            <li className="list-inline-item">
-              <a href="#">Sports</a>
-            </li>
+            {hotTopics.map((tag, i) => (
+              <li className="list-inline-item" key={i}>
+                <Link href={`/bn/tag/${tag.attributes?.slug || '#'}`}>
+                   {tag.attributes?.name}
+                </Link>
+              </li>
+            ))}
           </ul>
           {/* END OF /. HOT TOPICS */}
         </div>
@@ -320,24 +214,24 @@ const Footer = () => {
         <div className="container">
           <div className="align-items-center g-1 g-sm-3 row">
             <div className="col text-center text-sm-start">
-              <div className="copy">স্বত্ব: ©️ ২০২৬ সত্যধারা প্রতিদিন</div>
+              <div className="copy">স্বত্ব: ©️ {toBengaliNumber(2026)} সত্যধারা প্রতিদিন</div>
             </div>
             <div className="col-sm-auto">
               <ul className="footer-nav list-unstyled text-center mb-0">
                 <li className="list-inline-item">
-                  <a href="privacy.html">Privacy</a>
+                  <a href="#">গোপনীয়তা</a>
                 </li>
                 <li className="list-inline-item">
-                  <a href="contact.html">Contact</a>
+                  <a href="#">যোগাযোগ</a>
                 </li>
                 <li className="list-inline-item">
-                  <a href="about.html">About</a>
+                  <a href="#">আমাদের সম্পর্কে</a>
                 </li>
                 <li className="list-inline-item">
-                  <a href="#">Donation</a>
+                  <a href="#">অনুদান</a>
                 </li>
                 <li className="list-inline-item">
-                  <a href="faq.html">F.A.Q</a>
+                  <a href="#">প্রশ্নাবলী</a>
                 </li>
               </ul>
             </div>

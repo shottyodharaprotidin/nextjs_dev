@@ -8,7 +8,7 @@ const DatePickerComponents = () => {
 
     return (
         <div>
-            <Calendar onChange={onChange} value={value} />
+            <Calendar onChange={onChange} value={value} locale="bn-BD" />
         </div>
     );
 };

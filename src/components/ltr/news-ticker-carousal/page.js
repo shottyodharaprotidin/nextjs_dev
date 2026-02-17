@@ -14,49 +14,10 @@ const OwlCarousel = dynamic(() => import("react-owl-carousel"), {
   ssr: false,
 });
 
-
 const NewsTicker = ({ data = [], isLoading = false }) => {
-  if (isLoading) {
-    const placeholders = [
-        { id: 1, attributes: { title: 'Loading trending news...', slug: '#' } },
-        { id: 2, attributes: { title: 'Please wait while we fetch the latest updates...', slug: '#' } }
-    ];
-    return (
-        <div className="container">
-          <div className="newstricker_inner">
-            <div className="trending">
-              <strong>ট্রেন্ডিং</strong> এখন
-            </div>
-            <OwlCarousel className="news-ticker owl-theme"
-              loop={true}
-              items={1}
-              dots={false}
-              animateOut='animate__slideOutDown'
-              animateIn='animate__flipInX'
-              autoplay={true}
-              autoplayTimeout={5000}
-              autoplayHoverPause={true}
-              nav={true}
-              navText={[
-                `<i class='fa fa-angle-left'></i>`,
-                `<i class='fa fa-angle-right'></i>`
-              ]}
-            >
-              {placeholders.map((article, index) => (
-                  <div className="item" key={index}>
-                    <p><Link href="#">{article.attributes.title}</Link></p>
-                  </div>
-              ))}
-            </OwlCarousel>
-          </div>
-        </div>
-      );
-  }
+  const items = data;
 
-  // If no data, don't show the ticker section at all
-  if (data.length === 0) {
-    return null;
-  }
+  if (!isLoading && items.length === 0) return null;
 
   return (
     <div className="container">
@@ -64,7 +25,9 @@ const NewsTicker = ({ data = [], isLoading = false }) => {
         <div className="trending">
           <strong>ট্রেন্ডিং</strong> এখন
         </div>
-        <OwlCarousel className="news-ticker owl-theme"
+        <OwlCarousel
+          key={isLoading ? 'loading' : 'loaded'}
+          className="news-ticker owl-theme"
           loop={true}
           items={1}
           dots={false}
@@ -79,15 +42,15 @@ const NewsTicker = ({ data = [], isLoading = false }) => {
             `<i class='fa fa-angle-right'></i>`
           ]}
         >
-          {data.map((article) => {
+          {items.map((article) => {
             const articleData = article.attributes || article;
-            const slug = articleData.slug;
-            const title = articleData.title;
+            const slug = articleData.slug || '#';
+            const title = articleData.title || '';
 
             return (
               <div className="item" key={article.id}>
                 <p>
-                  <Link href={`/bn/article/${slug}`}>{title}</Link>
+                  <Link href={isLoading ? '#' : `/bn/article/${slug}`}>{title}</Link>
                 </p>
               </div>
             );

@@ -10,73 +10,32 @@ import React from 'react';
 if (typeof window !== "undefined") {
   window.$ = window.jQuery = require("jquery");
 }
-// This is for Next.js. On Rect JS remove this line
 const OwlCarousel = dynamic(() => import("react-owl-carousel"), {
   ssr: false,
 });
 
-
-
 const HomeFeatureCarousal = ({ data = [], isLoading = false }) => {
-  // If loading, show placeholders
-  if (isLoading) {
-     const placeholders = [
-      { id: 1, attributes: { title: 'Loading featured articles...', slug: '#', category: { data: { attributes: { name: 'News' } } }, cover: { data: { attributes: { url: '/default.jpg' } } } } },
-      { id: 2, attributes: { title: 'Please wait...', slug: '#', category: { data: { attributes: { name: 'Sports' } } }, cover: { data: { attributes: { url: '/default.jpg' } } } } },
-      { id: 3, attributes: { title: 'Loading content...', slug: '#', category: { data: { attributes: { name: 'Travel' } } }, cover: { data: { attributes: { url: '/default.jpg' } } } } },
-      { id: 4, attributes: { title: 'Fetching data...', slug: '#', category: { data: { attributes: { name: 'Business' } } }, cover: { data: { attributes: { url: '/default.jpg' } } } } }
-    ];
-    
-    return (
-      <OwlCarousel className="owl-theme featured-carousel"
-        loop={true}
-        margin={10}
-        nav={false}
-        dots={false}
-        responsive={{
-          0: { items: 1, autoplay: true },
-          576: { items: 2 },
-          768: { items: 2.5 },
-          992: { items: 3.5 },
-          1200: { items: 4 }
-        }}
-      >
-        {placeholders.map((article, index) => renderItem(article, index, true))}
-      </OwlCarousel>
-    );
-  }
+  const items = data;
 
-  // If not loading and no data, don't show anything
-  if (data.length === 0) {
-    return null;
-  }
+  if (!isLoading && items.length === 0) return null;
   
   return (
-    <OwlCarousel className="owl-theme featured-carousel"
+    <OwlCarousel
+      key={isLoading ? 'loading' : 'loaded'}
+      className="owl-theme featured-carousel"
       loop={true}
       margin={10}
       nav={false}
       dots={false}
       responsive={{
-        0: {
-          items: 1,
-          autoplay: true
-        },
-        576: {
-          items: 2
-        },
-        768: {
-          items: 2.5
-        },
-        992: {
-          items: 3.5
-        },
-        1200: {
-          items: 4
-        }
+        0: { items: 1, autoplay: true },
+        576: { items: 2 },
+        768: { items: 2.5 },
+        992: { items: 3.5 },
+        1200: { items: 4 }
       }}
     >
-      {data.map((article, index) => renderItem(article, index))}
+      {items.map((article, index) => renderItem(article, index, isLoading))}
     </OwlCarousel>
   );
 };
@@ -84,9 +43,10 @@ const HomeFeatureCarousal = ({ data = [], isLoading = false }) => {
 const renderItem = (article, index, isPlaceholder = false) => {
   const articleData = article.attributes || article;
   const imageUrl = getStrapiMedia(articleData.cover);
-  const category = articleData.category?.data?.attributes?.name || articleData.category?.name || "সংবাদ";
-  const slug = articleData.slug;
-  const title = articleData.title;
+  // robust category access
+  const category = articleData.category?.name || articleData.category?.data?.attributes?.name || "সংবাদ";
+  const slug = articleData.slug || '#';
+  const title = articleData.title || 'Loading...';
 
   return (
     <div key={article.id || index} className="news-list-item">

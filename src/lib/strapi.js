@@ -62,6 +62,16 @@ export function getStrapiMedia(media) {
   return fallback;
 }
 
+// Helper to convert English digits to Bengali
+export const toBengaliNumber = (num) => {
+  if (num === null || num === undefined) return '';
+  const englishToBengali = {
+    '0': '০', '1': '১', '2': '২', '3': '৩', '4': '৪',
+    '5': '৫', '6': '৬', '7': '৭', '8': '৮', '9': '৯'
+  };
+  return String(num).replace(/[0-9]/g, (digit) => englishToBengali[digit] || digit);
+};
+
 export function getStrapiLocale(locale) {
   const mapping = {
     'bn': 'bn-BD',
@@ -78,9 +88,16 @@ export function formatDate(dateString, localeArg) {
   const date = new Date(dateString);
   const locale = localeArg || 'bn'; 
   
-  return date.toLocaleDateString(locale, {
+  const formatted = date.toLocaleDateString(locale, {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
   });
+
+  // Force Bengali numerals if locale is 'bn' or 'bn-BD'
+  if (locale.startsWith('bn')) {
+    return toBengaliNumber(formatted);
+  }
+  
+  return formatted;
 }
