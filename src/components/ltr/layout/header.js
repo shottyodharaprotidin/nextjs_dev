@@ -786,7 +786,7 @@ const Header = () => {
                                 </Link>{" "}
                             </p>
                             <Link href="#" className="d-block text-white">
-                                hello@inews.com
+                                hello@shottyodharaprotidin.com
                             </Link>
                         </div>
                     </div>
