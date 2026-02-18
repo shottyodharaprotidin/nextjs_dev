@@ -5,9 +5,9 @@ import { fetchAPI } from "@/lib/strapi";
  * @param {string} locale
  */
 export async function getYoutubeVideos(locale = 'bn') {
-  const data = await fetchAPI(`/youtubes`, {
+  const data = await fetchAPI(`/latest-ytvideo-news`, {
     locale: locale,
-    sort: ['publishedAt:desc'],
+    sort: ['createdAt:desc'],
     populate: '*',
     pagination: {
       limit: 5,

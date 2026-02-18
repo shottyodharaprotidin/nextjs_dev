@@ -55,12 +55,12 @@ const YoutubeVideo = ({ data = [], isLoading = false }) => {
     } else if (data && data.length > 0) {
       const formattedVideos = data.map(item => {
         const v = item.attributes || item;
-        const videoId = getVideoId(v.videoUrl);
+        const videoId = getVideoId(v.youtubeUrl);
         return {
           id: videoId || 'rqJDO3TWnac', // fallback
-          thumbnailUrl: v.thumbnail?.data ? getStrapiMedia(v.thumbnail) : `https://i.ytimg.com/vi/${videoId}/default.jpg`,
+          thumbnailUrl: v.thumbnail?.data ? getStrapiMedia(v.thumbnail?.data?.attributes?.url || v.thumbnail) : `https://i.ytimg.com/vi/${videoId}/default.jpg`,
           title: v.title,
-          author: v.author || 'Youtube',
+          author: 'Youtube',
         };
       });
       setVideos(formattedVideos);

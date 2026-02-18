@@ -177,10 +177,10 @@ export async function getYoutubeVideos(limit = 5, locale = 'bn') {
     const queryParams = new URLSearchParams({
       'populate': '*',
       'pagination[limit]': limit,
-      'sort': 'publishedAt:desc',
+      'sort': 'createdAt:desc',
       'locale': strapiLocale,
     });
-    return await fetchAPI(`/youtubes?${queryParams}`);
+    return await fetchAPI(`/latest-ytvideo-news?${queryParams}`);
   } catch (error) {
     return { data: [] };
   }
