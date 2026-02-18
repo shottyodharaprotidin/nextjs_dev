@@ -5,10 +5,10 @@ import Header from "./header";
 
 
 
-export default function Layout({ children, hideMiddleHeader = false }) {
+export default function Layout({ children, hideMiddleHeader = false, globalSettings }) {
   return (
    <>
-      <Header hideMiddleHeader={hideMiddleHeader}/>
+      <Header hideMiddleHeader={hideMiddleHeader} globalSettings={globalSettings}/>
        {children}
       <Footer/>
    </>

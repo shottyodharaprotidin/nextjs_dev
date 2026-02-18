@@ -29,7 +29,7 @@ const ClientArticleDetail = ({ article, mostViewed, popularNews, globalSettings,
   const videoEmbedUrl = getEmbedUrl(data.videoUrl);
 
   return (
-    <Layout hideMiddleHeader={true}>
+    <Layout hideMiddleHeader={true} globalSettings={globalSettings}>
       {/* *** START PAGE MAIN CONTENT *** */}
       <main className="page_main_wrapper">
         {/* START PAGE TITLE */}

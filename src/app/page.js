@@ -155,7 +155,7 @@ export default function Home() {
   {/* *** IMPORT BACKGROUND IMAGE *** */ }
   useBackgroundImageLoader()
   return (
-    <Layout>
+    <Layout globalSettings={globalSettings}>
       {/* *** START PAGE MAIN CONTENT *** */}
       <main className="page_main_wrapper">
         {/* START NEWSTRICKER */}

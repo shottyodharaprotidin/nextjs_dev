@@ -13,19 +13,21 @@ const ArticleSidebar = ({ mostViewed, popularNews, globalSettings, locale = 'bn'
     <StickyBox offsetTop={100} offsetBottom={20}>
       {/* START ADVERTISEMENT */}
       <div className="add-inner">
-        <img
-          src="/assets/images/add/sidebar.jpg"
-          className="img-fluid"
-          alt=""
-          onError={(e) => e.target.src = '/default.jpg'}
-        />
+        <Link href={globalSettings?.adBannerSidebarLink || '#'} target="_blank">
+            <img
+            src={getStrapiMedia(globalSettings?.adBannerSidebar) || "/assets/images/add/sidebar.jpg"}
+            className="img-fluid"
+            alt="Sidebar Advertisement"
+            onError={(e) => e.target.style.display = 'none'}
+            />
+        </Link>
       </div>
       {/* END OF /. ADVERTISEMENT */}
       
       {/* START SOCIAL COUNTER TEXT */}
       <div className="align-items-center d-flex fs-6 justify-content-center mb-1 text-center social-counter-total">
         <i className="fa-solid fa-heart text-primary me-1" /> {t('joinFollowers')}{" "}
-        <span className="fw-bold mx-1">2.5M</span> {t('followers')}
+        <span className="fw-bold mx-1">{globalSettings?.socialTotalFollowers || '0'}</span> {t('followers')}
       </div>
       {/* END OF /. SOCIAL COUNTER TEXT */}
 
@@ -33,44 +35,44 @@ const ArticleSidebar = ({ mostViewed, popularNews, globalSettings, locale = 'bn'
       <div className="social-media-inner mb-2">
         <ul className="g-1 row social-media">
           <li className="col-4">
-            <Link href="#" className="rss">
+            <Link href={globalSettings?.socialRssUrl || '#'} className="rss" target="_blank">
               <i className="fas fa-rss" />
-              <div>2,035</div>
+              <div>{globalSettings?.socialRssSubscribers || 0}</div>
               <p className="social-text">{t('subscribers')}</p>
             </Link>
           </li>
           <li className="col-4">
-            <Link href="#" className="fb">
+            <Link href={globalSettings?.socialFacebookUrl || '#'} className="fb" target="_blank">
               <i className="fab fa-facebook-f" />
-              <div>3,794</div>
+              <div>{globalSettings?.socialFacebookFans || 0}</div>
               <p className="social-text">{t('fans')}</p>
             </Link>
           </li>
           <li className="col-4">
-            <Link href="#" className="insta">
+            <Link href={globalSettings?.socialInstagramUrl || '#'} className="insta" target="_blank">
               <i className="fab fa-instagram" />
-              <div>941</div>
+              <div>{globalSettings?.socialInstagramFollowers || 0}</div>
               <p className="social-text">{t('followers')}</p>
             </Link>
           </li>
           <li className="col-4">
-            <Link href="#" className="you_tube">
+            <Link href={globalSettings?.socialYoutubeUrl || '#'} className="you_tube" target="_blank">
               <i className="fab fa-youtube" />
-              <div>7,820</div>
+              <div>{globalSettings?.socialYoutubeSubscribers || 0}</div>
               <p className="social-text">{t('subscribers')}</p>
             </Link>
           </li>
           <li className="col-4">
-            <Link href="#" className="twitter">
+            <Link href={globalSettings?.socialTwitterUrl || '#'} className="twitter" target="_blank">
               <i className="fab fa-twitter" />
-              <div>1,562</div>
+              <div>{globalSettings?.socialTwitterFollowers || 0}</div>
               <p className="social-text">{t('followers')}</p>
             </Link>
           </li>
           <li className="col-4">
-            <Link href="#" className="pin">
+            <Link href={globalSettings?.socialPinterestUrl || '#'} className="pin" target="_blank">
               <i className="fab fa-pinterest-p" />
-              <div>1,310</div>
+              <div>{globalSettings?.socialPinterestFollowers || 0}</div>
               <p className="social-text">{t('followers')}</p>
             </Link>
           </li>

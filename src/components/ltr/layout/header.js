@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
-import { formatDate } from '@/lib/strapi';
+import { formatDate, getStrapiMedia } from '@/lib/strapi';
 import { WiDayLightning } from 'weather-icons-react';
 import ThemeChanger from '../style-selectors/style-selector';
 const HomeLinks = [
@@ -27,7 +27,7 @@ const HomeLinks = [
     { href: '/faq', text: 'Faq' },
    
 ];
-const Header = ({ hideMiddleHeader = false }) => {
+const Header = ({ hideMiddleHeader = false, globalSettings }) => {
     const [isSidebarActive, setSidebarActive] = useState(false);
     const [isOverlayActive, setOverlayActive] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -221,11 +221,11 @@ const Header = ({ hideMiddleHeader = false }) => {
                                     </Link>
                                 </div>
                                 <div className="col-sm-8">
-                                    <Link href="#">
+                                    <Link href={globalSettings?.adBannerTopLink || '#'}>
                                         <img
-                                            src="/assets/images/add728x90-1.jpg"
+                                            src={getStrapiMedia(globalSettings?.adBannerTop) || "/assets/images/add728x90-1.jpg"}
                                             className="img-fluid"
-                                            alt=""
+                                            alt="Top Banner"
                                         />
                                     </Link>
                                 </div>
