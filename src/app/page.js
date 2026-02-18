@@ -183,13 +183,13 @@ export default function Home() {
                     return (
                       <div key={a.id || `left-${i}`} className={`${i < 2 ? 'col-6 col-sm-6' : 'col-md-12 col-sm-12 d-md-block d-none'} thm-padding`}>
                         <div className={`slider-post ${heights[i] || 'post-height-4'}`}>
-                          <Link href={a.slug !== '#' ? `/bn/article/${a.slug}` : '#'} className="news-image">
+                          <Link href={a.slug !== '#' ? `/article/${a.slug}` : '#'} className="news-image">
                             <img src={a.image} alt={a.title} className="img-fluid" onError={(e) => e.target.src = '/default.jpg'} />
                           </Link>
                           <div className="post-text">
                             <span className="post-category">{a.category}</span>
                             <h4>
-                              <Link href={a.slug !== '#' ? `/bn/article/${a.slug}` : '#'}>{a.title || 'লোড হচ্ছে...'}</Link>
+                              <Link href={a.slug !== '#' ? `/article/${a.slug}` : '#'}>{a.title || 'লোড হচ্ছে...'}</Link>
                             </h4>
                             <ul className="align-items-center authar-info d-flex flex-wrap gap-1">
                               <li>By <span className="editor-name">{a.author}</span></li>
@@ -205,12 +205,12 @@ export default function Home() {
                     return (
                       <div className="col-md-12 col-sm-12 d-md-block d-none thm-padding">
                         <div className="slider-post post-height-4">
-                          <Link href={`/bn/article/${a.slug}`} className="news-image">
+                          <Link href={`/article/${a.slug}`} className="news-image">
                             <img src={a.image} alt={a.title} className="img-fluid" onError={(e) => e.target.src = '/default.jpg'} />
                           </Link>
                           <div className="post-text">
                             <span className="post-category">{a.category}</span>
-                            <h4><Link href={`/bn/article/${a.slug}`}>{a.title}</Link></h4>
+                            <h4><Link href={`/article/${a.slug}`}>{a.title}</Link></h4>
                             <ul className="align-items-center authar-info d-flex flex-wrap gap-1">
                               <li>By <span className="editor-name">{a.author}</span></li>
                               <li>{fmtDate(a.date)}</li>
@@ -234,12 +234,12 @@ export default function Home() {
                     return (
                       <div key={a.id || `right-${i}`} className={`${i === 0 ? 'col-md-12 col-sm-12 d-md-block d-none' : 'col-6 col-sm-6'} thm-padding`}>
                         <div className={`slider-post ${i === 0 ? 'post-height-2' : 'post-height-2'}`}>
-                          <Link href={`/bn/article/${a.slug}`} className="news-image">
+                          <Link href={`/article/${a.slug}`} className="news-image">
                             <img src={a.image} alt={a.title} className="img-fluid" onError={(e) => e.target.src = '/default.jpg'} />
                           </Link>
                           <div className="post-text">
                             <span className="post-category">{a.category}</span>
-                            <h4><Link href={`/bn/article/${a.slug}`}>{a.title}</Link></h4>
+                            <h4><Link href={`/article/${a.slug}`}>{a.title}</Link></h4>
                             <ul className="align-items-center authar-info d-flex flex-wrap gap-1">
                               <li>By <span className="editor-name">{a.author}</span></li>
                               <li>{fmtDate(a.date)}</li>
@@ -273,7 +273,7 @@ export default function Home() {
                         <li key={a.id || `ts-${i}`} className={`${i === 2 ? 'd-none d-xl-block ' : ''}post-grid`}>
                           <div className="posts-inner px-0">
                             <h6 className="posts-title">
-                              <Link href={`/bn/article/${a.slug}`}>{a.title}</Link>
+                              <Link href={`/article/${a.slug}`}>{a.title}</Link>
                             </h6>
                             <ul className="align-items-center authar-info d-flex flex-wrap gap-1">
                               <li><span className="post-category">{a.category}</span></li>
@@ -310,7 +310,7 @@ export default function Home() {
                               <li key={a.id || `mv-${i}`}>
                                 <span className="count">{String(i + 1).padStart(2, '0')}</span>
                                 <span className="text">
-                                  <Link href={`/bn/article/${a.slug}`}>{a.title}</Link>
+                                  <Link href={`/article/${a.slug}`}>{a.title}</Link>
                                 </span>
                               </li>
                             );
@@ -324,7 +324,7 @@ export default function Home() {
                           const a = getArt(article);
                           return (
                             <div key={a.id || `pn-${i}`} className="p-post">
-                              <h4><Link href={`/bn/article/${a.slug}`}>{a.title}</Link></h4>
+                              <h4><Link href={`/article/${a.slug}`}>{a.title}</Link></h4>
                               <ul className="authar-info d-flex flex-wrap justify-content-center">
                                 <li className="date"><i className="ti ti ti-timer" /> {fmtDate(a.date)}</li>
                               </ul>
@@ -356,12 +356,12 @@ export default function Home() {
                       return (
                         <article>
                           <figure>
-                            <Link href={`/bn/article/${a.slug}`}>
+                            <Link href={`/article/${a.slug}`}>
                               <img src={a.image} width={345} alt={a.title} className="img-fluid" onError={(e) => e.target.src = '/default.jpg'} />
                             </Link>
                           </figure>
                           <div className="post-info">
-                            <h3 className="fs-4"><Link href={`/bn/article/${a.slug}`}>{a.title}</Link></h3>
+                            <h3 className="fs-4"><Link href={`/article/${a.slug}`}>{a.title}</Link></h3>
                             <ul className="align-items-center authar-info d-flex flex-wrap gap-1">
                               <li><span className="post-category mb-0">{a.category}</span></li>
                               <li>By <span className="editor-name">{a.author}</span></li>
@@ -384,12 +384,12 @@ export default function Home() {
                         <div key={a.id || `grid-${i}`} className="col-6 col-md-4 col-sm-6">
                           <div className="grid-item mb-0">
                             <div className="grid-item-img">
-                              <Link href={`/bn/article/${a.slug}`}>
+                              <Link href={`/article/${a.slug}`}>
                                 <img src={a.image} className="img-fluid" alt={a.title} onError={(e) => e.target.src = '/default.jpg'} />
                                 <div className="link-icon"><i className={`fa ${icons[i] || 'fa-camera'}`} /></div>
                               </Link>
                             </div>
-                            <h5><Link href={`/bn/article/${a.slug}`} className="title">{a.title}</Link></h5>
+                            <h5><Link href={`/article/${a.slug}`} className="title">{a.title}</Link></h5>
                             <ul className="align-items-center authar-info d-flex flex-wrap gap-1 mb-0">
                               <li>{fmtDate(a.date)}</li>
                             </ul>
@@ -479,7 +479,7 @@ export default function Home() {
                       const a = getArt(article);
                       return (
                         <div key={a.id || `tt-${i}`} className="text-center mb-2 card-bg-scale position-relative overflow-hidden bg-dark-overlay bg-img p-3" data-image-src={a.image || '/default.jpg'}>
-                          <Link href={`/bn/article/${a.slug}`} className="btn-link fs-5 fw-bold stretched-link text-decoration-none text-white">
+                          <Link href={`/article/${a.slug}`} className="btn-link fs-5 fw-bold stretched-link text-decoration-none text-white">
                             {a.category}
                           </Link>
                         </div>
@@ -502,7 +502,7 @@ export default function Home() {
                       const a = getArt(displayReviews[0]);
                       return (
                         <div className="more-post">
-                          <Link href={a.slug !== '#' ? `/bn/article/${a.slug}` : '#'} className="news-image">
+                          <Link href={a.slug !== '#' ? `/article/${a.slug}` : '#'} className="news-image">
                             <img src={a.image} alt={a.title} className="img-fluid w-100" onError={(e) => e.target.src = '/default.jpg'} />
                           </Link>
                           <div className="reatting">
@@ -524,13 +524,13 @@ export default function Home() {
                         return (
                           <div key={a.id || `rv-${i}`} className={`news-list-item p-0 ${i < 2 ? 'mb-4' : ''}`}>
                             <div className="img-wrapper">
-                              <Link href={a.slug !== '#' ? `/bn/article/${a.slug}` : '#'} className="thumb">
+                              <Link href={a.slug !== '#' ? `/article/${a.slug}` : '#'} className="thumb">
                                 <img src={a.image} alt={a.title} className="img-fluid" onError={(e) => e.target.src = '/default.jpg'} />
                                 <div className="link-icon"><i className={`fa ${i % 2 === 0 ? 'fa-camera' : 'fa-play'}`} /></div>
                               </Link>
                             </div>
                             <div className="post-info-2">
-                              <h5><Link href={a.slug !== '#' ? `/bn/article/${a.slug}` : '#'} className="title">{a.title}</Link></h5>
+                              <h5><Link href={a.slug !== '#' ? `/article/${a.slug}` : '#'} className="title">{a.title}</Link></h5>
                               <div className="reviews-reatting">
                                 <i className="fas fa-star" /><i className="fas fa-star" /><i className="fas fa-star" /><i className="fas fa-star-half-alt" /><i className="far fa-star" />
                               </div>
@@ -578,10 +578,10 @@ export default function Home() {
                         const a = getArt(displayTech[0]);
                         return (
                           <div className="border-bottom">
-                            <Link href={a.slug !== '#' ? `/bn/article/${a.slug}` : '#'} className="d-block mb-3">
+                            <Link href={a.slug !== '#' ? `/article/${a.slug}` : '#'} className="d-block mb-3">
                               <img src={a.image} alt={a.title} className="img-fluid w-100" onError={(e) => e.target.src = '/default.jpg'} />
                             </Link>
-                            <h5><Link href={a.slug !== '#' ? `/bn/article/${a.slug}` : '#'}>{a.title}</Link></h5>
+                            <h5><Link href={a.slug !== '#' ? `/article/${a.slug}` : '#'}>{a.title}</Link></h5>
                             <ul className="align-items-center authar-info d-flex flex-wrap gap-1">
                               <li><span className="post-category mb-0">{a.category}</span></li>
                               <li>{fmtDate(a.date)}</li>
@@ -594,7 +594,7 @@ export default function Home() {
                         const a = getArt(article);
                         return (
                           <div key={a.id || `tech-${i}`} className={`${i < 2 ? 'border-bottom ' : ''}${i === 2 ? 'pb-0 ' : ''}py-3`}>
-                            <h6 className="posts-title"><Link href={a.slug !== '#' ? `/bn/article/${a.slug}` : '#'}>{a.title}</Link></h6>
+                            <h6 className="posts-title"><Link href={a.slug !== '#' ? `/article/${a.slug}` : '#'}>{a.title}</Link></h6>
                             <ul className="align-items-center authar-info d-flex flex-wrap gap-1 mb-0">
                               <li>{fmtDate(a.date)}</li>
                             </ul>
@@ -614,10 +614,10 @@ export default function Home() {
                         const a = getArt(displayEditor[0]);
                         return (
                           <div className="border-bottom">
-                            <Link href={a.slug !== '#' ? `/bn/article/${a.slug}` : '#'} className="d-block mb-3">
+                            <Link href={a.slug !== '#' ? `/article/${a.slug}` : '#'} className="d-block mb-3">
                               <img src={a.image} alt={a.title} className="img-fluid" onError={(e) => e.target.src = '/default.jpg'} />
                             </Link>
-                            <h5><Link href={a.slug !== '#' ? `/bn/article/${a.slug}` : '#'}>{a.title}</Link></h5>
+                            <h5><Link href={a.slug !== '#' ? `/article/${a.slug}` : '#'}>{a.title}</Link></h5>
                             <ul className="align-items-center authar-info d-flex flex-wrap gap-1">
                               <li><span className="post-category mb-0">{a.category}</span></li>
                               <li>{fmtDate(a.date)}</li>
@@ -630,7 +630,7 @@ export default function Home() {
                         const a = getArt(article);
                         return (
                           <div key={a.id || `ep-${i}`} className={`${i < 2 ? 'border-bottom ' : ''}${i === 2 ? 'pb-0 ' : ''}py-3`}>
-                            <h6 className="posts-title"><Link href={a.slug !== '#' ? `/bn/article/${a.slug}` : '#'}>{a.title}</Link></h6>
+                            <h6 className="posts-title"><Link href={a.slug !== '#' ? `/article/${a.slug}` : '#'}>{a.title}</Link></h6>
                             <ul className="align-items-center authar-info d-flex flex-wrap gap-1 mb-0">
                               <li>{fmtDate(a.date)}</li>
                             </ul>
@@ -662,12 +662,12 @@ export default function Home() {
                               <div className="align-items-center bg-primary d-flex justify-content-center position-absolute rounded-circle text-white trending-post z-1">
                                 <i className="fa-solid fa-bolt-lightning" />
                               </div>
-                              <Link href={`/bn/article/${a.slug}`} className="thumb">
+                              <Link href={`/article/${a.slug}`} className="thumb">
                                 <img src={a.image} alt={a.title} className="img-fluid w-100" onError={(e) => e.target.src = '/default.jpg'} />
                               </Link>
                             </div>
                             <div className="post-info-2">
-                              <h4><Link href={`/bn/article/${a.slug}`} className="title">{a.title}</Link></h4>
+                              <h4><Link href={`/article/${a.slug}`} className="title">{a.title}</Link></h4>
                               <ul className="align-items-center authar-info d-flex flex-wrap gap-1">
                                 <li><span className="post-category mb-0">{a.category}</span></li>
                                 <li>By <span className="editor-name">{a.author}</span></li>

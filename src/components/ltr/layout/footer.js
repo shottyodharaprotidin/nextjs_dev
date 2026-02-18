@@ -53,7 +53,7 @@ const Footer = () => {
           <div className="g-3 row">
             <div className="col-md-3">
               <img
-                src="assets/images/logo-white.png"
+                src="/assets/images/logo-white.png"
                 alt="footer logo"
                 className="img-fluid"
               />
@@ -97,11 +97,10 @@ const Footer = () => {
                 <div className="bg-white mb-3 d-inline-block">
                   {/* Start Qr Code Image */}
                   <img
-                    src="assets/images/qr-code.png"
-                    className="figure-img img-fluid mb-0"
-                    height={146}
-                    width={146} // Keep number as prop, display is image
-                    alt="..."
+                    src="/assets/images/qr-code.png"
+                    height={105}
+                    width={105}
+                    alt="Qr Code"
                   />
                   {/* /. End Qr Code Image */}
                 </div>
@@ -166,7 +165,7 @@ const Footer = () => {
                   return (
                     <div className="news-list-item" key={i}>
                       <div className="img-wrapper">
-                        <Link href={`/bn/article/${p.slug}`} className="thumb">
+                        <Link href={`/article/${p.slug}`} className="thumb">
                           <img
                             src={img}
                             alt={p.title}
@@ -177,7 +176,7 @@ const Footer = () => {
                       </div>
                       <div className="post-info-2">
                         <h5>
-                          <Link href={`/bn/article/${p.slug}`} className="title">
+                          <Link href={`/article/${p.slug}`} className="title">
                             {p.title}
                           </Link>
                         </h5>

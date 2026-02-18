@@ -54,7 +54,7 @@ const renderItem = (article, index, isPlaceholder = false) => {
   return (
     <div className="item" key={article.id || index}>
       <div className="slider-post post-height-1">
-        <Link href={isPlaceholder ? '#' : `/bn/article/${slug}`} className="news-image">
+        <Link href={isPlaceholder ? '#' : `/article/${slug}`} className="news-image">
           <img 
             src={imageUrl} 
             alt={title} 
@@ -65,7 +65,7 @@ const renderItem = (article, index, isPlaceholder = false) => {
         <div className="post-text">
           <span className="post-category">{category}</span>
           <h1>
-            <Link href={isPlaceholder ? '#' : `/bn/article/${slug}`}>{title}</Link>
+            <Link href={isPlaceholder ? '#' : `/article/${slug}`}>{title}</Link>
           </h1>
           <ul className="align-items-center authar-info d-flex flex-wrap gap-1">
             <li className="post-atuthor-list">

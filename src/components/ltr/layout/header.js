@@ -27,7 +27,7 @@ const HomeLinks = [
     { href: '/faq', text: 'Faq' },
    
 ];
-const Header = () => {
+const Header = ({ hideMiddleHeader = false }) => {
     const [isSidebarActive, setSidebarActive] = useState(false);
     const [isOverlayActive, setOverlayActive] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -202,6 +202,37 @@ const Header = () => {
                 </div>
                 {/* END OF /. HEADER TOP SECTION */}
                 {/* START MIDDLE SECTION */}
+                {hideMiddleHeader ? (
+                    <div className="d-md-block d-none header-mid">
+                        <div className="container">
+                            <div className="align-items-center row">
+                                <div className="col-sm-4">
+                                    <Link href="/">
+                                        <img
+                                            src="/assets/images/logo.png"
+                                            className="img-fluid header-logo header-logo_dark"
+                                            alt=""
+                                        />
+                                        <img
+                                            src="/assets/images/logo-white.png"
+                                            className="img-fluid header-logo_white"
+                                            alt=""
+                                        />
+                                    </Link>
+                                </div>
+                                <div className="col-sm-8">
+                                    <Link href="#">
+                                        <img
+                                            src="/assets/images/add728x90-1.jpg"
+                                            className="img-fluid"
+                                            alt=""
+                                        />
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                ) : (
                 <div className="d-md-block d-none header-mid">
                     <div className="container">
                         <div className="align-items-center row justify-content-center">
@@ -271,6 +302,7 @@ const Header = () => {
                         </div>
                     </div>
                 </div>
+                )}
                 {/* END OF /. MIDDLE SECTION */}
                 {/* START NAVIGATION */}
                 <nav className="custom-navbar navbar navbar-expand-lg sticky-top flex-column no-logo no-logo">

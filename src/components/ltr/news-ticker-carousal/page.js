@@ -50,7 +50,7 @@ const NewsTicker = ({ data = [], isLoading = false }) => {
             return (
               <div className="item" key={article.id}>
                 <p>
-                  <Link href={isLoading ? '#' : `/bn/article/${slug}`}>{title}</Link>
+                  <Link href={isLoading ? '#' : `/article/${slug}`}>{title}</Link>
                 </p>
               </div>
             );
