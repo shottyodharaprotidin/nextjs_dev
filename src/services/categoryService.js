@@ -19,6 +19,6 @@ export async function getCategories(locale = 'bn') {
 
 export async function getCategoryBySlug(slug, locale = 'bn') {
   const strapiLocale = getStrapiLocale(locale);
-  const data = await fetchAPI(`/categories?filters[slug][$eq]=${encodeURIComponent(slug)}&locale=${strapiLocale}`);
+  const data = await fetchAPI(`/categories?populate=*&filters[slug][$eq]=${encodeURIComponent(slug)}&locale=${strapiLocale}`);
   return data?.data?.[0] || null;
 }

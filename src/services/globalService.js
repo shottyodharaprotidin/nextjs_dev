@@ -4,9 +4,12 @@ import { fetchAPI, getStrapiLocale } from '@/lib/strapi';
 export async function getGlobalSettings(locale = 'bn') {
   const strapiLocale = getStrapiLocale(locale);
   try {
-    return await fetchAPI(`/global?populate=*&locale=${strapiLocale}`);
+    return await fetchAPI(`/global?populate=*&locale=${strapiLocale}`, { silent: true });
   } catch (error) {
-    console.warn("getGlobalSettings failed. Returning empty.", error);
+    // Silent fail for 404/403 as per user request (no global data yet)
+    if (error.status !== 404 && error.status !== 403) {
+      console.warn("getGlobalSettings failed.", error);
+    }
     return { data: null };
   }
 }

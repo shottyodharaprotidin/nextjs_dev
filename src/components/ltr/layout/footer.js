@@ -1,4 +1,5 @@
 
+"use client";
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import ScrollToTopUI from '../scroll-to-top/scroll-to-top';
@@ -46,8 +47,9 @@ const Footer = () => {
        <ScrollToTopUI/>
       {/* *** START FOOTER *** */}
       <footer
+        id="footer"
         className="main-footer bg-img"
-        data-image-src="assets/images/1920x1000-1.jpg"
+        data-image-src="/assets/images/1920x1000-1.jpg"
       >
         <div className="container position-relative z-1">
           <div className="g-3 row">
@@ -129,8 +131,8 @@ const Footer = () => {
                   <ul className="list-unstyled m-0 menu-services">
                     {leftCategories.map((cat, i) => (
                       <li key={i}>
-                        <Link href={`/bn/category/${cat.attributes?.slug || '#'}`}>
-                          {cat.attributes?.name}
+                        <Link href={`/category/${cat.attributes?.slug || cat.slug || '#'}`}>
+                          {cat.attributes?.name || cat.name}
                         </Link>
                       </li>
                     ))}
@@ -140,8 +142,8 @@ const Footer = () => {
                   <ul className="list-unstyled m-0 menu-services">
                     {rightCategories.map((cat, i) => (
                       <li key={i}>
-                        <Link href={`/bn/category/${cat.attributes?.slug || '#'}`}>
-                          {cat.attributes?.name}
+                        <Link href={`/category/${cat.attributes?.slug || cat.slug || '#'}`}>
+                          {cat.attributes?.name || cat.name}
                         </Link>
                       </li>
                     ))}

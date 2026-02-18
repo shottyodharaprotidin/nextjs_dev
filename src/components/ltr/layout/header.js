@@ -1,26 +1,18 @@
 
+"use client";
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { formatDate, getStrapiMedia } from '@/lib/strapi';
+import { getYoutubeVideos } from '@/services/youtubeService';
+import { getInstagramPhotos } from '@/services/instagramService';
 import { WiDayLightning } from 'weather-icons-react';
 import ThemeChanger from '../style-selectors/style-selector';
 const HomeLinks = [
     { href: '/', text: 'Home – Layout 1', badge: 'NEW' },
     { href: '/home-two', text: 'Home – Layout 2', badge: 'POPULAR' },
-    { href: '/home-three', text: 'Home – (Box) Layout 3' },
-    { href: '/home-four', text: 'Home – Layout 4' },
-    { href: '/home-five', text: 'Home – Layout 5' },
-    { href: '/home-six', text: 'Home – Layout 6' },
-    { href: '/home-seven', text: 'Home – Layout 7' },
-    { href: '/home-eight', text: 'Home – Layout 8' },
-    { href: '/home-nine', text: 'Home – Layout 9' },
     { href: '/category-style', text: 'Category - layout 1' },
-    { href: '/category-style-two', text: 'Category - layout 2' },
-    { href: '/category-style-three', text: 'Category - layout 3' },
     { href: '/post-template', text: 'Post - layout 1' },
-    { href: '/post-template-two', text: 'Post - layout 2' },
-    { href: '/post-template-three', text: 'Post - layout 3' },
     { href: '/about', text: 'About Us' },
     { href: '/typography', text: 'Typography' },
     { href: '/contact', text: 'Contact' },
@@ -44,6 +36,30 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
     };
 
     const [currentDate, setCurrentDate] = useState('');
+    const [videos, setVideos] = useState([]);
+
+    const [isLoadingVideos, setIsLoadingVideos] = useState(true);
+    const [instagrams, setInstagrams] = useState([]);
+    const [isLoadingInstagrams, setIsLoadingInstagrams] = useState(true);
+
+    useEffect(() => {
+        setIsLoadingInstagrams(true);
+        getInstagramPhotos(6).then(res => {
+            setInstagrams(res?.data || []);
+        }).finally(() => {
+            setIsLoadingInstagrams(false);
+        });
+    }, []);
+
+    useEffect(() => {
+        // Fetch videos for menu
+        setIsLoadingVideos(true);
+        getYoutubeVideos(5).then(res => {
+             setVideos(res?.data || []);
+        }).finally(() => {
+             setIsLoadingVideos(false);
+        });
+    }, []);
 
     useEffect(() => {
         // Set current date on mount to avoid hydration mismatch
@@ -223,7 +239,7 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
                                 <div className="col-sm-8">
                                     <Link href={globalSettings?.adBannerTopLink || '#'}>
                                         <img
-                                            src={getStrapiMedia(globalSettings?.adBannerTop) || "/assets/images/add728x90-1.jpg"}
+                                            src={getStrapiMedia(globalSettings?.adBannerTop, "/assets/images/add728x90-1.jpg")}
                                             className="img-fluid"
                                             alt="Top Banner"
                                         />
@@ -549,95 +565,48 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
                                     {/* Mega Menu */}
                                     <ul className="dropdown-menu mega-menu p-3 megamenu-content" aria-labelledby="dropdownMenuButton3">
                                         <li className="g-3 row">
-                                            <div className="col-menu-video col-md-3">
-                                                <Link className="video-nav-item" href="#">
-                                                    <div className="img-wrapper">
-                                                        <img
-                                                            src="assets/images/gallery-235x160-1.jpg"
-                                                            alt=""
-                                                            className="img-fluid"
-                                                        />
-                                                        <div className="link-icon">
-                                                            <i className="ti ti-video-camera" />
+                                            {isLoadingVideos ? (
+                                                <>
+                                                    {Array(5).fill(0).map((_, i) => (
+                                                        <div key={i} className="col-menu-video col-md-3">
+                                                            <div className="img-wrapper" style={{ height: '160px', backgroundColor: '#e0e0e0', animation: 'pulse 1.5s infinite ease-in-out', borderRadius: '4px' }}></div>
+                                                            <div className="mt-2" style={{ height: '15px', width: '90%', backgroundColor: '#e0e0e0', animation: 'pulse 1.5s infinite ease-in-out', borderRadius: '4px' }}></div>
+                                                            <div className="mt-1" style={{ height: '15px', width: '60%', backgroundColor: '#e0e0e0', animation: 'pulse 1.5s infinite ease-in-out', borderRadius: '4px' }}></div>
                                                         </div>
+                                                    ))}
+                                                    <style jsx>{`
+                                                        @keyframes pulse {
+                                                            0% { opacity: 0.6; }
+                                                            50% { opacity: 1; }
+                                                            100% { opacity: 0.6; }
+                                                        }
+                                                    `}</style>
+                                                </>
+                                            ) : videos.length > 0 ? videos.slice(0, 5).map((video, index) => {
+                                                const data = video.attributes || video;
+                                                return (
+                                                    <div key={index} className="col-menu-video col-md-3">
+                                                        <a className="video-nav-item d-block" href={data.youtubeUrl || '#'} target="_blank" rel="noopener noreferrer" style={{ display: 'block' }}>
+                                                            <div className="img-wrapper">
+                                                                <img
+                                                                    src={getStrapiMedia(data.thumbnail) || "assets/images/gallery-235x160-1.jpg"}
+                                                                    alt={data.title}
+                                                                    className="img-fluid"
+                                                                    style={{ width: '100%', height: '160px', objectFit: 'cover' }}
+                                                                />
+                                                                <div className="link-icon">
+                                                                    <i className="ti ti-video-camera" />
+                                                                </div>
+                                                            </div>
+                                                            <h4 className="mt-2" style={{ fontSize: '14px', lineHeight: '1.4', color: '#333', whiteSpace: 'normal' }}>
+                                                                {data.title && data.title.length > 60 ? `${data.title.substring(0, 60)}...` : data.title}
+                                                            </h4>
+                                                        </a>
                                                     </div>
-                                                    <h4>
-                                                        It is a long established fact that a reader will be.{" "}
-                                                    </h4>
-                                                </Link>
-                                            </div>
-                                            {/* end col-3 */}
-                                            <div className="col-menu-video col-md-3">
-                                                <Link className="video-nav-item" href="#" >
-                                                    <div className="img-wrapper">
-                                                        <img
-                                                            src="assets/images/gallery-235x160-2.jpg"
-                                                            alt=""
-                                                            className="img-fluid"
-                                                        />
-                                                        <div className="link-icon">
-                                                            <i className="ti ti-video-camera" />
-                                                        </div>
-                                                    </div>
-                                                    <h4>
-                                                        It is a long established fact that a reader will be.{" "}
-                                                    </h4>
-                                                </Link>
-                                            </div>
-                                            {/* end col-3 */}
-                                            <div className="col-menu-video col-md-3">
-                                                <Link className="video-nav-item" href="#">
-                                                    <div className="img-wrapper">
-                                                        <img
-                                                            src="assets/images/gallery-235x160-3.jpg"
-                                                            alt=""
-                                                            className="img-fluid"
-                                                        />
-                                                        <div className="link-icon">
-                                                            <i className="ti ti-video-camera" />
-                                                        </div>
-                                                    </div>
-                                                    <h4>
-                                                        It is a long established fact that a reader will be.{" "}
-                                                    </h4>
-                                                </Link>
-                                            </div>
-                                            <div className="col-menu-video col-md-3">
-                                                <Link className="video-nav-item" href="#">
-                                                    <div className="img-wrapper">
-                                                        <img
-                                                            src="assets/images/gallery-235x160-4.jpg"
-                                                            alt=""
-                                                            className="img-fluid"
-                                                        />
-                                                        <div className="link-icon">
-                                                            <i className="ti ti-video-camera" />
-                                                        </div>
-                                                    </div>
-                                                    <h4>
-                                                        It is a long established fact that a reader will be.{" "}
-                                                    </h4>
-                                                </Link>
-                                            </div>
-                                            {/* end col-3 */}
-                                            <div className="col-menu-video col-md-3">
-                                                <Link className="video-nav-item" href="#">
-                                                    <div className="img-wrapper">
-                                                        <img
-                                                            src="assets/images/gallery-235x160-5.jpg"
-                                                            alt=""
-                                                            className="img-fluid"
-                                                        />
-                                                        <div className="link-icon">
-                                                            <i className="ti ti-video-camera" />
-                                                        </div>
-                                                    </div>
-                                                    <h4>
-                                                        It is a long established fact that a reader will be.{" "}
-                                                    </h4>
-                                                </Link>
-                                            </div>
-                                            {/* end col-3 */}
+                                                );
+                                            }) : (
+                                                <div className="p-3 text-center w-100">No videos available</div>
+                                            )}
                                         </li>
                                     </ul>
                                 </li>
@@ -719,7 +688,7 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
                                                 ))}
                                     </ul>
                                 </li>
-                                {HomeLinks.slice(15, 19).map((link, index) => (
+                                {HomeLinks.slice(4, 8).map((link, index) => (
                                                     <li key={index} className="nav-item">
                                                         <Link className={`nav-link ${path === link.href ? 'active' : ''}`} href={link.href}>
                                                             {link.text} {link.badge && <span className="menu-badge">{link.badge}</span>}
@@ -745,18 +714,22 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
                 </nav>
                 {/* END OF/. NAVIGATION */}
                 {/* START SIDEBAR */}
+                {/* START SIDEBAR */}
                 <nav id="sidebar" className={isSidebarActive ? "active p-4" : "p-4"} >
-                    <div id="dismiss">
+                    <div id="dismiss" onClick={closeSidebar}>
                         <i className="fas fa-arrow-left" />
                     </div>
                     <div className="d-flex flex-column h-100">
                         <div className="">
                             <Link href="/" className="d-inline-block my-3">
-                                <img src="assets/images/logo-white.png" alt="" height={50} />
+                                {globalSettings?.data?.attributes?.favicon?.data ? (
+                                    <img src={getStrapiMedia(globalSettings.data.attributes.favicon)} alt={globalSettings?.data?.attributes?.siteName || "Logo"} height={50} />
+                                ) : (
+                                    <img src="assets/images/logo-white.png" alt="Logo" height={50} />
+                                )}
                             </Link>
                             <p>
-                                It is a long established fact that a reader will be distracted by the
-                                readable content of a page when looking at its layout.
+                                {globalSettings?.data?.attributes?.siteDescription || "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout."}
                             </p>
                         </div>
                         <ul className="nav d-block flex-column my-4">
@@ -781,60 +754,52 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
                                 </Link>
                             </li>
                         </ul>
-                        <h5 className="wiget-title">Instagrams</h5>
-                        <ul className="g-1 insta_thumb list-unstyled p-0 row">
-                            <li className="col-6">
-                                <Link href="#" className="insta_effect d-inline-block position-relative">
-                                    <img
-                                        src="assets/images/instagram-1.jpg"
-                                        className="img-fluid"
-                                        alt=""
-                                    />
-                                </Link>
-                            </li>
-                            <li className="col-6">
-                                <Link href="#" className="insta_effect d-inline-block position-relative">
-                                    <img
-                                        src="assets/images/instagram-2.jpg"
-                                        className="img-fluid"
-                                        alt=""
-                                    />
-                                </Link>
-                            </li>
-                            <li className="col-6">
-                                <Link href="#" className="insta_effect d-inline-block position-relative">
-                                    <img
-                                        src="assets/images/instagram-3.jpg"
-                                        className="img-fluid"
-                                        alt=""
-                                    />
-                                </Link>
-                            </li>
-                            <li className="col-6">
-                                <Link href="#" className="insta_effect d-inline-block position-relative">
-                                    <img
-                                        src="assets/images/instagram-4.jpg"
-                                        className="img-fluid"
-                                        alt=""
-                                    />
-                                </Link>
-                            </li>
-                        </ul>
+                        <h5 className="wiget-title">Instagram</h5>
+                        {isLoadingInstagrams ? (
+                             <ul className="g-1 insta_thumb list-unstyled p-0 row">
+                                {Array(4).fill(0).map((_, i) => (
+                                    <li key={i} className="col-6">
+                                        <div className="insta_effect d-inline-block position-relative" style={{ width: '100%', height: '100px', backgroundColor: '#e0e0e0', animation: 'pulse 1.5s infinite ease-in-out', borderRadius: '4px' }}></div>
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : instagrams.length > 0 ? (
+                            <ul className="g-1 insta_thumb list-unstyled p-0 row">
+                                {instagrams.slice(0, 4).map((item, index) => {
+                                     const imgUrl = getStrapiMedia(item?.attributes?.image);
+                                     return (
+                                        <li key={index} className="col-6">
+                                            <a href={item?.attributes?.link || "#"} target="_blank" rel="noopener noreferrer" className="insta_effect d-inline-block position-relative w-100">
+                                                <img
+                                                    src={imgUrl || "assets/images/instagram-1.jpg"}
+                                                    className="img-fluid w-100"
+                                                    alt="Instagram"
+                                                    style={{ height: '100px', objectFit: 'cover' }}
+                                                />
+                                            </a>
+                                        </li>
+                                     );
+                                })}
+                            </ul>
+                        ) : (
+                             <p>No Instagram posts available.</p>
+                        )}
+                        
                         <div className="mt-auto pb-3">
                             {/* Address */}
-                            <p className="mb-2 fw-bold">New York, USA (HQ)</p>
+                            <p className="mb-2 fw-bold">{globalSettings?.data?.attributes?.siteName || "New York, USA (HQ)"}</p>
                             <address className="mb-0">
-                                1123 Fictional St, San Francisco, CA 94103
+                                {globalSettings?.data?.attributes?.contactAddress || "1123 Fictional St, San Francisco, CA 94103"}
                             </address>
                             <p className="mb-2">
                                 Call:{" "}
-                                <Link href="#" className="text-white">
-                                    <u>(123) 456-7890</u> (Toll-free)
-                                </Link>{" "}
+                                <a href={`tel:${globalSettings?.data?.attributes?.contactPhone}`} className="text-white">
+                                    <u>{globalSettings?.data?.attributes?.contactPhone || "(123) 456-7890"}</u>
+                                </a>{" "}
                             </p>
-                            <Link href="#" className="d-block text-white">
-                                hello@shottyodharaprotidin.com
-                            </Link>
+                            <a href={`mailto:${globalSettings?.data?.attributes?.contactEmail}`} className="d-block text-white">
+                                {globalSettings?.data?.attributes?.contactEmail || "hello@shottyodharaprotidin.com"}
+                            </a>
                         </div>
                     </div>
                 </nav>

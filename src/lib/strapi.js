@@ -16,9 +16,10 @@ export async function fetchAPI(path, options = {}) {
     defaultOptions.headers.Authorization = `Bearer ${API_TOKEN}`;
   }
 
+  const { silent, ...fetchOptions } = options;
   const mergedOptions = {
     ...defaultOptions,
-    ...options,
+    ...fetchOptions,
   };
 
   const requestUrl = `${STRAPI_URL}/api${path}`;
@@ -27,14 +28,18 @@ export async function fetchAPI(path, options = {}) {
     const response = await fetch(requestUrl, mergedOptions);
     
     if (!response.ok) {
-      console.error(`Strapi API Error: ${response.status} ${response.statusText}`);
+      if (!silent) {
+        console.error(`Strapi API Error: ${response.status} ${response.statusText}`);
+      }
       throw new Error(`Failed to fetch from Strapi: ${response.statusText}`);
     }
     
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('Strapi fetch error:', error);
+    if (!silent) {
+      console.error('Strapi fetch error:', error);
+    }
     throw error;
   }
 }
@@ -43,9 +48,7 @@ export async function fetchAPI(path, options = {}) {
  * Helper to get image URL from Strapi media
  * Supports both Strapi 4 (with .data.attributes) and Strapi 5 (flat structure)
  */
-export function getStrapiMedia(media) {
-  const fallback = '/default.jpg';
-  
+export function getStrapiMedia(media, fallback = '/default.jpg') {
   if (!media) return fallback;
   
   // Strapi 5 flat structure

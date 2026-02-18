@@ -16,7 +16,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getFeaturedArticles, getPopularArticles, getTrendingNews, getLatestArticles, getReviewArticles, getArticlesByCategory, getEditorPicks } from "@/services/articleService";
 import { getYoutubeVideos, getActivePoll } from "@/services/mediaService";
-import { getGlobalSettings, getTags } from "@/services/globalService";
+import { getGlobalSettings, getTags, getCategories } from "@/services/globalService";
 import { getStrapiMedia, formatDate, toBengaliNumber } from "@/lib/strapi";
 
 // Helper: get article data (supports both v4 and v5)
@@ -70,6 +70,7 @@ export default function Home() {
   const [techArticles, setTechArticles] = useState([]);
   const [editorPicks, setEditorPicks] = useState([]);
   const [latestReviews, setLatestReviews] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   
   // Pagination state
@@ -114,7 +115,7 @@ export default function Home() {
       try {
 
 
-        const [featuredRes, popularRes, trendingRes, latestRes, youtubeRes, pollRes, globalRes, tagsRes, techRes, editorRes, reviewRes] = await Promise.allSettled([
+        const [featuredRes, popularRes, trendingRes, latestRes, youtubeRes, pollRes, globalRes, tagsRes, techRes, editorRes, reviewRes, categoriesRes] = await Promise.allSettled([
           getFeaturedArticles(10, locale),
           getPopularArticles(10, locale),
           getTrendingNews(15, locale),
@@ -126,6 +127,7 @@ export default function Home() {
           getArticlesByCategory('technology', 4, locale),
           getEditorPicks(5, locale),
           getReviewArticles(7, locale),
+          getCategories(10, locale),
         ]);
 
         setFeatured(featuredRes.value?.data || []);
@@ -140,6 +142,7 @@ export default function Home() {
         setTechArticles(techRes.value?.data || []);
         setEditorPicks(editorRes.value?.data || []);
         setLatestReviews(reviewRes.value?.data || []);
+        setCategories(categoriesRes.value?.data || []);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -475,18 +478,20 @@ export default function Home() {
                     <h4><strong>ট্রেন্ডিং</strong> বিষয়</h4>
                   </div>
                   <div className="panel_body">
-                    {(displayTrending.length > 3 ? displayTrending.slice(3, 8) : []).map((article, i) => {
-                      const a = getArt(article);
+                    {(categories.length > 0 ? categories.slice(0, 5) : (loading ? Array(5).fill(null) : [])).map((cat, i) => {
+                      const catData = cat?.attributes || cat;
+                      const slug = catData?.slug || '#';
+                      const name = catData?.name || '...';
                       return (
-                        <div key={a.id || `tt-${i}`} className="text-center mb-2 card-bg-scale position-relative overflow-hidden bg-dark-overlay bg-img p-3" data-image-src={a.image || '/default.jpg'}>
-                          <Link href={`/article/${a.slug}`} className="btn-link fs-5 fw-bold stretched-link text-decoration-none text-white">
-                            {a.category}
+                        <div key={cat?.id || `tt-${i}`} className="text-center mb-2 card-bg-scale position-relative overflow-hidden bg-dark-overlay bg-img p-3" data-image-src={'/default.jpg'}>
+                          <Link href={slug !== '#' ? `/category/${slug}` : '#'} className="btn-link fs-5 fw-bold stretched-link text-decoration-none text-white">
+                            {name}
                           </Link>
                         </div>
                       );
                     })}
                     <div className="text-center mt-3">
-                      <Link href="#" className="fw-bold text-primary-hover"><u>সব বিভাগ দেখুন</u></Link>
+                      <Link href="#footer" className="fw-bold text-primary-hover"><u>সব বিভাগ দেখুন</u></Link>
                     </div>
                   </div>
                 </div>

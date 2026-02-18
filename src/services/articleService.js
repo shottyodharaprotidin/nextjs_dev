@@ -241,7 +241,8 @@ export async function getArticlesByCategoryEnhanced(categorySlug, limit = 10, op
   const queryParams = new URLSearchParams({
     'filters[category][slug][$eq]': categorySlug,
     'populate': '*', 
-    'pagination[limit]': limit,
+    'pagination[pageSize]': limit,
+    'pagination[page]': options.page || 1,
     'sort': options.sort || 'createdAt:desc',
     'locale': strapiLocale,
   });
