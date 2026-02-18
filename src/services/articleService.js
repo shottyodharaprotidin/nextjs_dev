@@ -4,7 +4,9 @@ import { fetchAPI, getStrapiLocale } from '@/lib/strapi';
 export async function getArticles(params = {}, locale = 'bn') {
   const strapiLocale = getStrapiLocale(locale);
   const defaultParams = {
-    populate: ['cover', 'author', 'category'],
+    'populate[0]': 'cover',
+    'populate[1]': 'author',
+    'populate[2]': 'category',
     sort: ['createdAt:desc'],
     locale: strapiLocale,
   };
@@ -223,7 +225,9 @@ export async function getArticlesByCategory(categorySlug, limit = 10, locale = '
   const strapiLocale = getStrapiLocale(locale);
   const queryParams = new URLSearchParams({
     'filters[category][slug][$eq]': categorySlug,
-    'populate': ['cover', 'author', 'category'],
+    'populate[0]': 'cover',
+    'populate[1]': 'author',
+    'populate[2]': 'category',
     'pagination[limit]': limit,
     'sort': 'createdAt:desc',
     'locale': strapiLocale,
