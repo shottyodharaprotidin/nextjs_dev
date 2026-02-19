@@ -12,11 +12,11 @@ export default async function FaqPage() {
     const translations = {
         en: {
             title: 'Frequently Asked Questions',
-            description: 'Find answers to your common questions about Rasel News.',
+            description: 'Find answers to your common questions.',
         },
         bn: {
             title: 'সচরাচর জিজ্ঞাসিত প্রশ্ন',
-            description: 'রাসেল নিউজ সম্পর্কে আপনার বিভিন্ন প্রশ্নের উত্তর এখানে পাবেন।',
+            description: 'আপনার বিভিন্ন প্রশ্নের উত্তর এখানে পাবেন।',
         }
     };
     const t = translations[locale] || translations.bn;
