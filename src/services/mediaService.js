@@ -5,14 +5,14 @@ import { fetchAPI } from "@/lib/strapi";
  * @param {string} locale
  */
 export async function getYoutubeVideos(locale = 'bn') {
-  const data = await fetchAPI(`/latest-ytvideo-news`, {
+  const queryParams = new URLSearchParams({
     locale: locale,
-    sort: ['createdAt:desc'],
+    'sort[0]': 'createdAt:desc',
     populate: '*',
-    pagination: {
-      limit: 5,
-    },
+    'pagination[limit]': 5,
   });
+
+  const data = await fetchAPI(`/latest-ytvideo-news?${queryParams}`);
   return data;
 }
 
@@ -21,18 +21,14 @@ export async function getYoutubeVideos(locale = 'bn') {
  * @param {string} locale
  */
 export async function getActivePoll(locale = 'bn') {
-  const data = await fetchAPI(`/polls`, {
+  const queryParams = new URLSearchParams({
     locale: locale,
-    filters: {
-      isActive: {
-        $eq: true,
-      },
-    },
-    sort: ['publishedAt:desc'],
+    'filters[isActive][$eq]': 'true',
+    'sort[0]': 'publishedAt:desc',
     populate: '*',
-    pagination: {
-      limit: 1,
-    },
+    'pagination[limit]': 1,
   });
+
+  const data = await fetchAPI(`/polls?${queryParams}`);
   return data;
 }

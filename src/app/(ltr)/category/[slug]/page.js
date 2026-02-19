@@ -16,6 +16,34 @@ import { getGlobalSettings } from '@/services/globalService';
 import { getStrapiMedia, formatDate } from '@/lib/strapi';
 import ImageWithFallback from '@/components/ui/ImageWithFallback';
 import Pagination from '@/components/ui/Pagination';
+import { useLanguage } from '@/lib/LanguageContext';
+
+const dictionary = {
+    en: {
+        loading: "Loading...",
+        loadingTitle: "Loading: News title will appear here...",
+        home: "Home",
+        mostViewed: "Most Viewed",
+        popularNews: "Popular News",
+        join: "Join",
+        followers: "Followers",
+        subscribers: "Subscribers",
+        fans: "Fans",
+        noNews: "No news found in this category."
+    },
+    bn: {
+        loading: "লোড হচ্ছে...",
+        loadingTitle: "লোড হচ্ছে: সংবাদের শিরোনাম এখানে দেখাবে...",
+        home: "হোম",
+        mostViewed: "সর্বাধিক দেখা",
+        popularNews: "জনপ্রিয় সংবাদ",
+        join: "যোগ দিন",
+        followers: "অনুসরণকারীরা",
+        subscribers: "সাবস্ক্রাইবার",
+        fans: "ফ্যান",
+        noNews: "এই বিভাগে কোনো সংবাদ পাওয়া যায়নি।"
+    }
+};
 
 if (typeof window !== 'undefined') {
     window.$ = window.jQuery = require('jquery');
@@ -31,12 +59,15 @@ const ArticleSkeleton = () => (
             <a href="#" className="news-image">
                 <img src="/default.jpg" alt="" className="img-fluid" />
             </a>
-            <span className="post-category">লোড হচ্ছে...</span>
+            <a href="#" className="news-image">
+                <img src="/default.jpg" alt="" className="img-fluid" />
+            </a>
+            <span className="post-category">...</span>
         </figure>
         <div className="post-info">
-            <h3><a href="#">লোড হচ্ছে: সংবাদের শিরোনাম এখানে দেখাবে...</a></h3>
+            <h3><a href="#">...</a></h3>
             <ul className="authar-info d-flex flex-wrap">
-                <li><i className="ti ti-timer" /> লোডিং...</li>
+                <li><i className="ti ti-timer" /> ...</li>
             </ul>
         </div>
     </article>
@@ -183,6 +214,8 @@ const CategoryPage = () => {
     const searchParams = useSearchParams();
     const slug = params?.slug || '';
     const page = Number(searchParams.get('page')) || 1;
+    const { locale } = useLanguage();
+    const t = dictionary[locale] || dictionary.bn;
 
     const [loading, setLoading] = useState(true);
     const [categoryName, setCategoryName] = useState('');
@@ -199,11 +232,11 @@ const CategoryPage = () => {
             setLoading(true);
             try {
                 const [catData, articlesRes, mostViewedRes, popularRes, globalRes] = await Promise.all([
-                    getCategoryBySlug(slug).catch(() => null),
-                    getArticlesByCategoryEnhanced(slug, 19, { page }).catch(() => ({ data: [] })),
-                    getMostViewedArticles(5).catch(() => ({ data: [] })),
-                    getPopularArticles(5).catch(() => ({ data: [] })),
-                    getGlobalSettings().catch(() => ({ data: null })),
+                    getCategoryBySlug(slug, locale).catch(() => null),
+                    getArticlesByCategoryEnhanced(slug, 19, { page }, locale).catch(() => ({ data: [] })),
+                    getMostViewedArticles(5, locale).catch(() => ({ data: [] })),
+                    getPopularArticles(5, locale).catch(() => ({ data: [] })),
+                    getGlobalSettings(locale).catch(() => ({ data: null })),
                 ]);
                 const name = catData?.attributes?.name || catData?.name || slug;
                 setCategoryName(name);
@@ -242,10 +275,10 @@ const CategoryPage = () => {
                             <nav aria-label="breadcrumb">
                                 <ol className="breadcrumb d-inline-block">
                                     <li className="breadcrumb-item">
-                                        <Link href="/">হোম</Link>
+                                        <Link href="/">{t.home}</Link>
                                     </li>
                                     <li className="breadcrumb-item active" aria-current="page">
-                                        {loading ? 'লোড হচ্ছে...' : categoryName}
+                                        {loading ? t.loading : categoryName}
                                     </li>
                                 </ol>
                             </nav>
@@ -288,8 +321,8 @@ const CategoryPage = () => {
                                                         <img src="/default.jpg" alt="" className="img-fluid" />
                                                     </a>
                                                     <div className="post-text">
-                                                        <span className="post-category">লোড হচ্ছে...</span>
-                                                        <h4><a href="#">লোড হচ্ছে: সংবাদের শিরোনাম এখানে দেখাবে...</a></h4>
+                                                        <span className="post-category">{t.loading}</span>
+                                                        <h4><a href="#">{t.loadingTitle}</a></h4>
                                                     </div>
                                                 </div>
                                             </div>
@@ -322,7 +355,7 @@ const CategoryPage = () => {
                                                 : mainArticles.length === 0 && articles.length === 0
                                                     ? (
                                                         <div className="col-12 text-center py-5">
-                                                            <p>এই বিভাগে কোনো সংবাদ পাওয়া যায়নি।</p>
+                                                            <p>{t.noNews}</p>
                                                         </div>
                                                     )
                                                     : mainArticles.map((article) => (
@@ -351,10 +384,10 @@ const CategoryPage = () => {
                             <StickyBox>
                                 {/* SOCIAL COUNTER */}
                                 <div className="align-items-center d-flex fs-6 justify-content-center mb-1 text-center social-counter-total">
-                                    <i className="fa-solid fa-heart text-primary me-1" /> Join{" "}
+                                    <i className="fa-solid fa-heart text-primary me-1" /> {t.join}{" "}
                                     <span className="fw-bold mx-1">
                                         {globalSettings?.socialTotalFollowers ? parseFloat(globalSettings.socialTotalFollowers / 1000000).toFixed(1) + 'M' : '2.5M'}
-                                    </span> Followers
+                                    </span> {t.followers}
                                 </div>
                                 {/* SOCIAL ICONS */}
                                 <div className="social-media-inner mb-2">
@@ -428,7 +461,7 @@ const CategoryPage = () => {
                                                 aria-controls="most-viewed-pane"
                                                 aria-selected="true"
                                             >
-                                                সর্বাধিক দেখা
+                                                {t.mostViewed}
                                             </button>
                                         </li>
                                         <li className="nav-item" role="presentation">
@@ -442,7 +475,7 @@ const CategoryPage = () => {
                                                 aria-controls="popular-news-pane"
                                                 aria-selected="false"
                                             >
-                                                জনপ্রিয় সংবাদ
+                                                {t.popularNews}
                                             </button>
                                         </li>
                                     </ul>

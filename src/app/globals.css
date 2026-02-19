@@ -6333,6 +6333,31 @@ blockquote.no-sign p {
     }
 }
 
+[data-theme=skin-dark] .news-ticker .item a {
+    color: #fff !important;
+}
+[data-theme=skin-dark] .trending {
+    color: #fff !important;
+    border-right-color: #222327; /* Match dark bg if needed */
+}
+[data-theme=skin-dark] .trending::after {
+    border-left-color: #eb0254; /* Keep primary or adjust */
+}
+
+.header-video-title {
+    color: #333;
+}
+[data-theme=skin-dark] .header-video-title {
+    color: #fff !important;
+}
+
+.theme-icon {
+    transition: color 0.3s ease;
+}
+.theme-icon:hover {
+    color: #eb0254 !important; /* Primary color */
+}
+
 /*Post*/
 .layout-rtl .filter-nav {
     float: left;
@@ -6867,6 +6892,12 @@ blockquote.no-sign p {
     font-size: 80%;
     color: #777;
     letter-spacing: 0.3px;
+}
+[data-theme=skin-dark] .RYPP .RYPP-playlist ol li > p {
+    color: #fff !important;
+}
+[data-theme=skin-dark] .RYPP .RYPP-playlist ol li > p > small {
+    color: #e0e0e0 !important;
 }
 .RYPP .RYPP-playlist ol li:hover {
     background-color: rgba(255,255,255,0.07);

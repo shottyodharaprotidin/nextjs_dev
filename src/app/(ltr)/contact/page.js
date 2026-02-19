@@ -55,13 +55,15 @@ const dictionary = {
     }
 };
 
+import { useLanguage } from '@/lib/LanguageContext';
+
+// ... (rest of imports)
+
 const page = () => {
     useRemoveBodyClass(['None'], ['home-seven', 'home-nine','boxed-layout','home-six','home-two']);
     
-    const searchParams = useSearchParams();
-    const lang = searchParams.get('lang');
-    const locale = lang === 'en' ? 'en' : 'bn';
-    const t = dictionary[locale];
+    const { locale } = useLanguage();
+    const t = dictionary[locale] || dictionary.bn;
     
     const [formData, setFormData] = useState({
         name: '',

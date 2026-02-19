@@ -14,6 +14,16 @@ export async function getGlobalSettings(locale = 'bn') {
   }
 }
 
+export async function getFooterData(locale = 'bn') {
+  const strapiLocale = getStrapiLocale(locale);
+  try {
+    return await fetchAPI(`/footer?populate=*&locale=${strapiLocale}`, { silent: true });
+  } catch (error) {
+    console.warn("getFooterData failed.", error);
+    return { data: null };
+  }
+}
+
 export async function getAuthors(locale = 'bn') {
   const strapiLocale = getStrapiLocale(locale);
   return fetchAPI(`/authors?populate=*&locale=${strapiLocale}`);
@@ -54,3 +64,20 @@ export async function getTags(limit = 10, locale = 'bn') {
   }
 }
 
+export async function getMenuItems(location = 'header', locale = 'bn') {
+  const strapiLocale = getStrapiLocale(locale);
+  try {
+    const queryParams = new URLSearchParams({
+      locale: strapiLocale,
+      'filters[location][$eq]': location,
+      'filters[menu_item][id][$null]': 'true', // Get only root items
+      'populate[menu_items][populate]': '*', // Populate children
+      'sort': 'order:asc'
+    });
+    
+    return await fetchAPI(`/menu-items?${queryParams}`, { silent: true });
+  } catch (error) {
+    console.warn(`getMenuItems failed for location: ${location}`, error);
+    return { data: [] };
+  }
+}

@@ -1,6 +1,26 @@
 "use client"
 import React, { useState, useEffect } from 'react';
 import { getStrapiMedia } from "@/lib/strapi";
+import { useLanguage } from '@/lib/LanguageContext';
+
+const dictionary = {
+  en: {
+    latestVideoNews: 'Latest Video News',
+    playlist: 'Playlist',
+    videoNews: 'Video News',
+    loadingVideo: 'Loading: Video News...',
+    pleaseWait: 'Please wait...',
+    loading: 'Loading...'
+  },
+  bn: {
+    latestVideoNews: 'সর্বশেষ ভিডিও সংবাদ',
+    playlist: 'প্লেলিস্ট',
+    videoNews: 'ভিডিও সংবাদ',
+    loadingVideo: 'লোড হচ্ছে: ভিডিও সংবাদ...',
+    pleaseWait: 'অপেক্ষা করুন...',
+    loading: 'লোড হচ্ছে...'
+  }
+};
 
 const getVideoId = (url) => {
   if (!url) return '';
@@ -48,6 +68,42 @@ const dummyVideos = [
 const YoutubeVideo = ({ data = [], isLoading = false }) => {
   const [videos, setVideos] = useState([]);
   const [selectedVideo, setSelectedVideo] = useState(0);
+  const { locale } = useLanguage();
+  const t = dictionary[locale] || dictionary.bn;
+
+  // Re-define dummyVideos inside component to use t
+  const dummyVideos = [
+    {
+      id: 'rqJDO3TWnac',
+      thumbnailUrl: 'https://i.ytimg.com/vi/rqJDO3TWnac/default.jpg',
+      title: t.loadingVideo,
+      author: 'VisualDon',
+    },
+    {
+      id: '3WWlhPmqXQI',
+      thumbnailUrl: 'https://i.ytimg.com/vi/3WWlhPmqXQI/default.jpg',
+      title: t.pleaseWait,
+      author: 'Channel',
+    },
+    {
+      id: 'kssD4L2NBw0',
+      thumbnailUrl: 'https://i.ytimg.com/vi/kssD4L2NBw0/default.jpg',
+      title: t.loading,
+      author: 'News Desk',
+    },
+    {
+      id: 'YcwrRA2BIlw',
+      thumbnailUrl: 'https://i.ytimg.com/vi/YcwrRA2BIlw/default.jpg',
+      title: t.loading,
+      author: 'Update',
+    },
+    {
+      id: 'HMpmI2F2cMs',
+      thumbnailUrl: 'https://i.ytimg.com/vi/HMpmI2F2cMs/default.jpg',
+      title: t.loading,
+      author: 'Live',
+    },
+  ];
 
   useEffect(() => {
     if (isLoading) {
@@ -80,15 +136,15 @@ const YoutubeVideo = ({ data = [], isLoading = false }) => {
   return (
     <div className="youtube-wrapper">
       <div className="playlist-title">
-        <h4>সর্বশেষ ভিডিও সংবাদ</h4>
+        <h4>{t.latestVideoNews}</h4>
       </div>
       <div id="rypp-demo-1" className="RYPP r16-9" data-rypp="da4e5dd6">
         <div>
           <div className="RYPP-playlist">
             <header>
-              <h2 className="_h1 RYPP-title">প্লেলিস্ট</h2>
+              <h2 className="_h1 RYPP-title">{t.playlist}</h2>
               <p className="RYPP-desc">
-                ভিডিও সংবাদ <a href="#" target="_blank">#ভিডিও</a>
+                {t.videoNews} <a href="#" target="_blank">#Video</a>
               </p>
             </header>
             <div className="RYPP-items">

@@ -1,6 +1,21 @@
 
+import { useLanguage } from '@/lib/LanguageContext';
+
+const dictionary = {
+    en: {
+        title: 'Tags',
+        dummyTag: 'Tag'
+    },
+    bn: {
+        title: 'ট্যাগ',
+        dummyTag: 'ট্যাগ'
+    }
+};
+
 const Tags = ({ data = [], isLoading = false }) => {
-    const tags = isLoading ? Array(10).fill({ attributes: { name: 'ট্যাগ', slug: '#' } }) : data;
+    const { locale } = useLanguage();
+    const t = dictionary[locale] || dictionary.bn;
+    const tags = isLoading ? Array(10).fill({ attributes: { name: t.dummyTag, slug: '#' } }) : data;
 
     if (!isLoading && tags.length === 0) return null;
 
@@ -8,7 +23,7 @@ const Tags = ({ data = [], isLoading = false }) => {
         <div className="panel_inner mb-0">
         <div className="panel_header">
           <h4>
-            <strong>ট্যাগ </strong>
+            <strong>{t.title} </strong>
           </h4>
         </div>
         <div className="panel_body">

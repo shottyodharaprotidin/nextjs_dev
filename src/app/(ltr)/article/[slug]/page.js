@@ -1,4 +1,5 @@
 import { getArticleBySlug, getMostViewedArticles, getPopularArticles } from '@/services/articleService';
+import { cookies } from 'next/headers';
 import { getGlobalSettings } from '@/services/globalService';
 import { getStrapiMedia } from '@/lib/strapi';
 import ClientArticleDetail from '@/components/article/article-details';
@@ -8,7 +9,8 @@ export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }) {
   const { slug } = params;
-  const locale = 'bn'; // Hardcoded for now
+  const cookieStore = cookies();
+  const locale = cookieStore.get('NEXT_LOCALE')?.value || 'bn';
   const articleData = await getArticleBySlug(slug, locale);
   
   if (!articleData) {
@@ -33,7 +35,8 @@ export async function generateMetadata({ params }) {
 
 const ArticleDetailPage = async ({ params }) => {
   const { slug } = params;
-  const locale = 'bn';
+  const cookieStore = cookies();
+  const locale = cookieStore.get('NEXT_LOCALE')?.value || 'bn';
 
   // Parallel Data Fetching with Error Handling
   let articleData = null;

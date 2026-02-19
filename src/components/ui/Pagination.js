@@ -38,7 +38,7 @@ const Pagination = ({ currentPage, totalPages, basePath }) => {
                             {currentPage === 1 ? (
                                 <span className="ti ti-angle-left" />
                             ) : (
-                                <Link href={`${basePath}?page=${prevPage}`}>
+                                <Link href={`${basePath}?page=${prevPage}`} scroll={false}>
                                     <span className="ti ti-angle-left" />
                                 </Link>
                             )}
@@ -50,7 +50,7 @@ const Pagination = ({ currentPage, totalPages, basePath }) => {
                                 {currentPage === page ? (
                                     <span>{page}</span>
                                 ) : (
-                                    <Link href={`${basePath}?page=${page}`}>
+                                    <Link href={`${basePath}?page=${page}`} scroll={false}>
                                         {page}
                                     </Link>
                                 )}
@@ -62,7 +62,7 @@ const Pagination = ({ currentPage, totalPages, basePath }) => {
                             {currentPage === totalPages ? (
                                 <span className="ti ti-angle-right" />
                             ) : (
-                                <Link href={`${basePath}?page=${nextPage}`}>
+                                <Link href={`${basePath}?page=${nextPage}`} scroll={false}>
                                     <span className="ti ti-angle-right" />
                                 </Link>
                             )}

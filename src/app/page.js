@@ -21,29 +21,92 @@ import { getStrapiMedia, formatDate, toBengaliNumber } from "@/lib/strapi";
 
 // Helper: get article data (supports both v4 and v5)
 // Helper: get article data (supports both v4 and v5)
-const getArt = (article) => {
+const getArt = (article, locale = 'bn') => {
+  const t = dictionary[locale] || dictionary.bn;
   const d = article?.attributes || article || {};
   return {
     title: d.title || '',
     slug: d.slug || '#',
     image: getStrapiMedia(d.cover),
-    category: d.category?.data?.attributes?.name || d.category?.name || 'সংবাদ',
-    author: d.author?.data?.attributes?.name || d.author?.name || 'সম্পাদক',
+    category: d.category?.data?.attributes?.name || d.category?.name || t.news,
+    author: d.author?.data?.attributes?.name || d.author?.name || t.editor,
     date: d.createdAt || d.publishedAt || new Date().toISOString(),
     excerpt: d.excerpt || '',
     id: article?.id || 0,
   };
 };
 
-const fmtDate = (dateStr) => {
+const fmtDate = (dateStr, locale = 'bn') => {
   if (!dateStr) return '';
-  // Use the centralized formatDate which enforces Bengali numerals
-  return formatDate(dateStr, 'bn');
+  // Use the centralized formatDate which enforces Bengali numerals if locale is bn
+  return formatDate(dateStr, locale);
 };
 
 // ... (rest of page component)
+import { useLanguage } from '@/lib/LanguageContext';
+
+// ... (rest of imports)
+
+const dictionary = {
+  en: {
+    loading: 'Loading...',
+    topNews: 'Top News',
+    mostRead: 'Most Read',
+    popularNews: 'Popular News',
+    by: 'By',
+    editor: 'Editor',
+    news: 'News',
+    trendingTopics: 'Trending Topics',
+    seeAllCategories: 'See All Categories',
+    recentReviews: 'Recent Reviews',
+    latestVideoNews: 'Latest Video News',
+    latestVideoDesc: 'Watch videos of recent events and important news.',
+    techInnovation: 'Tech & Innovation',
+    editorsChoice: "Editor's Choice",
+    recentArticles: 'Recent Articles',
+    today: 'Today',
+    socialJoin: 'Join',
+    socialFollowers: 'Followers',
+    weatherStatic: {
+      condition: 'Partly Sunny',
+      realFeel: 'Real Feel',
+      chanceOfRain: 'Chance of Rain',
+      days: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+    }
+  },
+  bn: {
+    loading: 'লোড হচ্ছে...',
+    topNews: 'শীর্ষ সংবাদ',
+    topNews: 'শীর্ষ সংবাদ',
+    mostRead: 'সর্বাধিক পঠিত',
+    popularNews: 'জনপ্রিয় সংবাদ',
+    by: 'By',
+    editor: 'সম্পাদক',
+    news: 'সংবাদ',
+    trendingTopics: 'ট্রেন্ডিং বিষয়',
+    seeAllCategories: 'সব বিভাগ দেখুন',
+    recentReviews: 'সাম্প্রতিক পর্যালোচনা',
+    latestVideoNews: 'সর্বশেষ ভিডিও সংবাদ',
+    latestVideoDesc: 'সাম্প্রতিক ঘটনাবলী ও গুরুত্বপূর্ণ সংবাদের ভিডিও দেখুন।',
+    techInnovation: 'প্রযুক্তি ও উদ্ভাবন',
+    editorsChoice: 'সম্পাদকের পছন্দ',
+    recentArticles: 'সাম্প্রতিক নিবন্ধ',
+    weatherCity: 'ঢাকা, বাংলাদেশ',
+    today: 'আজ',
+    socialJoin: 'যোগ দিন',
+    socialFollowers: 'অনুসরণকারী',
+    weatherStatic: {
+      condition: 'আংশিক রৌদ্রোজ্জ্বল',
+      realFeel: 'অনুভূত',
+      chanceOfRain: 'বৃষ্টির সম্ভাবনা',
+      days: ['রবি', 'সোম', 'মঙ্গল', 'বুধ', 'বৃহঃ', 'শুক্র', 'শনি']
+    }
+  }
+};
+
 export default function Home() {
-  const locale = 'bn';
+  const { locale } = useLanguage();
+  const t = dictionary[locale] || dictionary.bn;
   
   // Dummy data for loading state
   // Dummy data for loading state
@@ -98,7 +161,7 @@ export default function Home() {
       
       // Scroll to the latest articles section if needed
       const element = document.getElementById('latest-articles');
-      if (element) element.scrollIntoView({ behavior: 'smooth' });
+      // if (element) element.scrollIntoView({ behavior: 'smooth' });
     } catch (error) {
       console.error('Error changing page:', error);
     } finally {
@@ -181,7 +244,7 @@ export default function Home() {
               <div className="col-md-4 col-xxl-4 thm-padding d-md-none d-xxl-block">
                 <div className="row slider-right-post thm-margin">
                   {(displayFeatured.length > 0 ? displayFeatured.slice(0, 2) : []).map((article, i) => {
-                    const a = getArt(article);
+                    const a = getArt(article, locale);
                     const heights = ['post-height-4', 'post-height-4'];
                     return (
                       <div key={a.id || `left-${i}`} className={`${i < 2 ? 'col-6 col-sm-6' : 'col-md-12 col-sm-12 d-md-block d-none'} thm-padding`}>
@@ -192,11 +255,11 @@ export default function Home() {
                           <div className="post-text">
                             <span className="post-category">{a.category}</span>
                             <h4>
-                              <Link href={a.slug !== '#' ? `/article/${a.slug}` : '#'}>{a.title || 'লোড হচ্ছে...'}</Link>
+                              <Link href={a.slug !== '#' ? `/article/${a.slug}` : '#'}>{a.title || t.loading}</Link>
                             </h4>
                             <ul className="align-items-center authar-info d-flex flex-wrap gap-1">
-                              <li>By <span className="editor-name">{a.author}</span></li>
-                              <li>{fmtDate(a.date)}</li>
+                              <li>{t.by} <span className="editor-name">{a.author}</span></li>
+                              <li>{fmtDate(a.date, locale)}</li>
                             </ul>
                           </div>
                         </div>
@@ -215,8 +278,8 @@ export default function Home() {
                             <span className="post-category">{a.category}</span>
                             <h4><Link href={`/article/${a.slug}`}>{a.title}</Link></h4>
                             <ul className="align-items-center authar-info d-flex flex-wrap gap-1">
-                              <li>By <span className="editor-name">{a.author}</span></li>
-                              <li>{fmtDate(a.date)}</li>
+                              <li>{t.by} <span className="editor-name">{a.author}</span></li>
+                              <li>{fmtDate(a.date, locale)}</li>
                             </ul>
                           </div>
                         </div>
@@ -233,7 +296,7 @@ export default function Home() {
               <div className="col-md-6 col-xxl-4 thm-padding">
                 <div className="row slider-right-post thm-margin">
                   {(displayLatest.length > 0 ? displayLatest.slice(0, 3) : []).map((article, i) => {
-                    const a = getArt(article);
+                    const a = getArt(article, locale);
                     return (
                       <div key={a.id || `right-${i}`} className={`${i === 0 ? 'col-md-12 col-sm-12 d-md-block d-none' : 'col-6 col-sm-6'} thm-padding`}>
                         <div className={`slider-post ${i === 0 ? 'post-height-2' : 'post-height-2'}`}>
@@ -244,8 +307,8 @@ export default function Home() {
                             <span className="post-category">{a.category}</span>
                             <h4><Link href={`/article/${a.slug}`}>{a.title}</Link></h4>
                             <ul className="align-items-center authar-info d-flex flex-wrap gap-1">
-                              <li>By <span className="editor-name">{a.author}</span></li>
-                              <li>{fmtDate(a.date)}</li>
+                              <li>{t.by} <span className="editor-name">{a.author}</span></li>
+                              <li>{fmtDate(a.date, locale)}</li>
                             </ul>
                           </div>
                         </div>
@@ -265,13 +328,13 @@ export default function Home() {
               <StickyBox >
                 <div className="panel_header">
                   <h4>
-                    <strong>শীর্ষ </strong> সংবাদ
+                    <strong>{t.topNews}</strong>
                   </h4>
                 </div>
                 <div className="border-bottom posts">
                   <ul>
                     {(displayTrending.length > 0 ? displayTrending.slice(0, 3) : []).map((article, i) => {
-                      const a = getArt(article);
+                      const a = getArt(article, locale);
                       return (
                         <li key={a.id || `ts-${i}`} className={`${i === 2 ? 'd-none d-xl-block ' : ''}post-grid`}>
                           <div className="posts-inner px-0">
@@ -280,7 +343,7 @@ export default function Home() {
                             </h6>
                             <ul className="align-items-center authar-info d-flex flex-wrap gap-1">
                               <li><span className="post-category">{a.category}</span></li>
-                              <li>{fmtDate(a.date)}</li>
+                              <li>{fmtDate(a.date, locale)}</li>
                             </ul>
                             <p>{a.excerpt}</p>
                           </div>
@@ -294,12 +357,12 @@ export default function Home() {
                   <ul className="nav nav-tabs" id="myTab" role="tablist">
                     <li className="nav-item" role="presentation">
                       <button className="nav-link border-0 active" id="most-viewed" data-bs-toggle="tab" data-bs-target="#most-viewed-pane" type="button" role="tab" aria-controls="most-viewed-pane" aria-selected="true">
-                        সর্বাধিক পঠিত
+                        {t.mostRead}
                       </button>
                     </li>
                     <li className="nav-item" role="presentation">
                       <button className="nav-link border-0" id="popular-news" data-bs-toggle="tab" data-bs-target="#popular-news-pane" type="button" role="tab" aria-controls="popular-news-pane" aria-selected="false">
-                        জনপ্রিয় সংবাদ
+                        {t.popularNews}
                       </button>
                     </li>
                   </ul>
@@ -308,7 +371,7 @@ export default function Home() {
                       <div className="most-viewed">
                         <ul id="most-today" className="content tabs-content">
                           {(displayPopular.length > 0 ? displayPopular.slice(0, 5) : []).map((article, i) => {
-                            const a = getArt(article);
+                            const a = getArt(article, locale);
                             return (
                               <li key={a.id || `mv-${i}`}>
                                 <span className="count">{String(i + 1).padStart(2, '0')}</span>
@@ -324,12 +387,12 @@ export default function Home() {
                     <div className="tab-pane fade" id="popular-news-pane" role="tabpanel" aria-labelledby="popular-news" tabIndex={0}>
                       <div className="popular-news">
                         {(displayPopular.length > 0 ? displayPopular.slice(5, 8) : []).map((article, i) => {
-                          const a = getArt(article);
+                          const a = getArt(article, locale);
                           return (
                             <div key={a.id || `pn-${i}`} className="p-post">
                               <h4><Link href={`/article/${a.slug}`}>{a.title}</Link></h4>
                               <ul className="authar-info d-flex flex-wrap justify-content-center">
-                                <li className="date"><i className="ti ti ti-timer" /> {fmtDate(a.date)}</li>
+                                <li className="date"><i className="ti ti ti-timer" /> {fmtDate(a.date, locale)}</li>
                               </ul>
                               <div className="reatting-2">
                                 <i className="fas fa-star" />
@@ -367,8 +430,8 @@ export default function Home() {
                             <h3 className="fs-4"><Link href={`/article/${a.slug}`}>{a.title}</Link></h3>
                             <ul className="align-items-center authar-info d-flex flex-wrap gap-1">
                               <li><span className="post-category mb-0">{a.category}</span></li>
-                              <li>By <span className="editor-name">{a.author}</span></li>
-                              <li>{fmtDate(a.date)}</li>
+                              <li>{t.by} <span className="editor-name">{a.author}</span></li>
+                              <li>{fmtDate(a.date, locale)}</li>
                             </ul>
                             <p>{a.excerpt}</p>
                           </div>
@@ -381,7 +444,7 @@ export default function Home() {
                 <div className="news-grid-2 border-top pt-4 mb-4">
                   <div className="row gx-3 gx-lg-4 gy-4">
                     {(displayLatest.length > 3 ? displayLatest.slice(3, 9) : []).map((article, i) => {
-                      const a = getArt(article);
+                      const a = getArt(article, locale);
                       const icons = ['fa-play', 'fa-camera', 'fa-camera', 'fa-play', 'fa-camera', 'fa-camera'];
                       return (
                         <div key={a.id || `grid-${i}`} className="col-6 col-md-4 col-sm-6">
@@ -394,7 +457,7 @@ export default function Home() {
                             </div>
                             <h5><Link href={`/article/${a.slug}`} className="title">{a.title}</Link></h5>
                             <ul className="align-items-center authar-info d-flex flex-wrap gap-1 mb-0">
-                              <li>{fmtDate(a.date)}</li>
+                              <li>{fmtDate(a.date, locale)}</li>
                             </ul>
                           </div>
                         </div>
@@ -419,8 +482,8 @@ export default function Home() {
               <StickyBox>
                 {/* START SOCIAL COUNTER TEXT */}
                 <div className="align-items-center d-flex fs-6 justify-content-center mb-1 text-center social-counter-total">
-                  <i className="fa-solid fa-heart text-primary me-1" /> যোগ দিন{" "}
-                  <span className="fw-bold mx-1">{globalSettings?.socialTotalFollowers || '0'}</span> অনুসরণকারী
+                  <i className="fa-solid fa-heart text-primary me-1" /> {t.socialJoin}{" "}
+                  <span className="fw-bold mx-1">{globalSettings?.socialTotalFollowers || '0'}</span> {t.socialFollowers}
                 </div>
                 {/* END OF /. SOCIAL COUNTER TEXT */}
                 {/* START SOCIAL ICON */}
@@ -475,7 +538,7 @@ export default function Home() {
                 {/* START TRENDING TOPICS */}
                 <div className="panel_inner review-inner">
                   <div className="panel_header">
-                    <h4><strong>ট্রেন্ডিং</strong> বিষয়</h4>
+                    <h4><strong>{t.trendingTopics}</strong></h4>
                   </div>
                   <div className="panel_body">
                     {(categories.length > 0 ? categories.slice(0, 5) : (loading ? Array(5).fill(null) : [])).map((cat, i) => {
@@ -491,7 +554,7 @@ export default function Home() {
                       );
                     })}
                     <div className="text-center mt-3">
-                      <Link href="#footer" className="fw-bold text-primary-hover"><u>সব বিভাগ দেখুন</u></Link>
+                      <Link href="#footer" className="fw-bold text-primary-hover"><u>{t.seeAllCategories}</u></Link>
                     </div>
                   </div>
                 </div>
@@ -499,7 +562,7 @@ export default function Home() {
                 {/* START LATEST REVIEWS */}
                 <div className="panel_inner review-inner">
                   <div className="panel_header">
-                    <h4><strong>সাম্প্রতিক</strong> পর্যালোচনা</h4>
+                    <h4><strong>{t.recentReviews}</strong></h4>
                   </div>
                   <div className="panel_body">
                   <div className="panel_body">
@@ -516,7 +579,7 @@ export default function Home() {
                           <div className="post-text">
                             <ul className="align-items-center authar-info d-flex flex-wrap gap-1 mb-1">
                               <li><span className="post-category mb-0">{a.category}</span></li>
-                              <li>{fmtDate(a.date)}</li>
+                              <li>{fmtDate(a.date, locale)}</li>
                             </ul>
                             <h4 className="mb-0">{a.title}</h4>
                           </div>
@@ -558,9 +621,9 @@ export default function Home() {
           <div className="container">
             <div className="row justify-content-center mb-5">
               <div className="col-md-6 text-center">
-                <h3 className="text-white">সর্বশেষ ভিডিও সংবাদ</h3>
+                <h3 className="text-white">{t.latestVideoNews}</h3>
                 <p className="text-white mb-0">
-                  সাম্প্রতিক ঘটনাবলী ও গুরুত্বপূর্ণ সংবাদের ভিডিও দেখুন।
+                  {t.latestVideoDesc}
                 </p>
               </div>
             </div>
@@ -576,7 +639,7 @@ export default function Home() {
                   {/* START TECH & INNOVATION */}
                   <div className="panel_inner">
                     <div className="panel_header">
-                      <h4><strong>প্রযুক্তি ও</strong> উদ্ভাবন</h4>
+                      <h4><strong>{t.techInnovation}</strong></h4>
                     </div>
                     <div className="panel_body">
                       {displayTech.length > 0 && (() => {
@@ -589,7 +652,7 @@ export default function Home() {
                             <h5><Link href={a.slug !== '#' ? `/article/${a.slug}` : '#'}>{a.title}</Link></h5>
                             <ul className="align-items-center authar-info d-flex flex-wrap gap-1">
                               <li><span className="post-category mb-0">{a.category}</span></li>
-                              <li>{fmtDate(a.date)}</li>
+                              <li>{fmtDate(a.date, locale)}</li>
                             </ul>
                             <p>{a.excerpt}</p>
                           </div>
@@ -601,7 +664,7 @@ export default function Home() {
                           <div key={a.id || `tech-${i}`} className={`${i < 2 ? 'border-bottom ' : ''}${i === 2 ? 'pb-0 ' : ''}py-3`}>
                             <h6 className="posts-title"><Link href={a.slug !== '#' ? `/article/${a.slug}` : '#'}>{a.title}</Link></h6>
                             <ul className="align-items-center authar-info d-flex flex-wrap gap-1 mb-0">
-                              <li>{fmtDate(a.date)}</li>
+                              <li>{fmtDate(a.date, locale)}</li>
                             </ul>
                           </div>
                         );
@@ -612,7 +675,7 @@ export default function Home() {
                   {/* START EDITOR'S PICKS */}
                   <div className="panel_inner mb-0">
                     <div className="panel_header">
-                      <h4><strong>সম্পাদকের</strong> পছন্দ</h4>
+                      <h4><strong>{t.editorsChoice}</strong></h4>
                     </div>
                     <div className="panel_body">
                       {displayEditor.length > 0 && (() => {
@@ -625,7 +688,7 @@ export default function Home() {
                             <h5><Link href={a.slug !== '#' ? `/article/${a.slug}` : '#'}>{a.title}</Link></h5>
                             <ul className="align-items-center authar-info d-flex flex-wrap gap-1">
                               <li><span className="post-category mb-0">{a.category}</span></li>
-                              <li>{fmtDate(a.date)}</li>
+                              <li>{fmtDate(a.date, locale)}</li>
                             </ul>
                             <p>{a.excerpt}</p>
                           </div>
@@ -637,7 +700,7 @@ export default function Home() {
                           <div key={a.id || `ep-${i}`} className={`${i < 2 ? 'border-bottom ' : ''}${i === 2 ? 'pb-0 ' : ''}py-3`}>
                             <h6 className="posts-title"><Link href={a.slug !== '#' ? `/article/${a.slug}` : '#'}>{a.title}</Link></h6>
                             <ul className="align-items-center authar-info d-flex flex-wrap gap-1 mb-0">
-                              <li>{fmtDate(a.date)}</li>
+                              <li>{fmtDate(a.date, locale)}</li>
                             </ul>
                           </div>
                         );
@@ -654,7 +717,7 @@ export default function Home() {
                     {/*post header*/}
                     <div className="post-head">
                       <h2 className="title">
-                        <strong>সাম্প্রতিক</strong> নিবন্ধ
+                        <strong>{t.recentArticles}</strong>
                       </h2>
                     </div>
                     {/* post body */}
@@ -676,7 +739,7 @@ export default function Home() {
                               <ul className="align-items-center authar-info d-flex flex-wrap gap-1">
                                 <li><span className="post-category mb-0">{a.category}</span></li>
                                 <li>By <span className="editor-name">{a.author}</span></li>
-                                <li>{fmtDate(a.date)}</li>
+                                <li>{fmtDate(a.date, locale)}</li>
                               </ul>
                               <p className="d-lg-block d-none">{a.excerpt}</p>
                             </div>
@@ -829,15 +892,15 @@ export default function Home() {
                       </div>
                     </div>
                     <div className="weather-info">
-                      <div className="weather-name">Partly Sunny</div>
+                      <div className="weather-name">{t.weatherStatic.condition}</div>
                       <span>
-                        Real Fell: 67 <sup>°</sup>
+                        {t.weatherStatic.realFeel}: 67 <sup>°</sup>
                       </span>
-                      <span>Change of Rain</span>
+                      <span>{t.weatherStatic.chanceOfRain}</span>
                     </div>
                     <div className="weather-week-2">
                       <div className="weather-days">
-                        <div className="day-0">Sun</div>
+                        <div className="day-0">{t.weatherStatic.days[0]}</div>
                         <div className="day-icon">
                           <i className="wi wi-day-sunny" />
                         </div>
@@ -847,7 +910,7 @@ export default function Home() {
                         </div>
                       </div>
                       <div className="weather-days">
-                        <div className="day-1">Mon</div>
+                        <div className="day-1">{t.weatherStatic.days[1]}</div>
                         <div className="day-icon">
                           <i className="wi wi-day-cloudy-high" />
                         </div>
@@ -857,7 +920,7 @@ export default function Home() {
                         </div>
                       </div>
                       <div className="weather-days">
-                        <div className="day-2">Tue</div>
+                        <div className="day-2">{t.weatherStatic.days[2]}</div>
                         <div className="day-icon">
                           <i className="wi wi-day-sleet" />
                         </div>
@@ -867,7 +930,7 @@ export default function Home() {
                         </div>
                       </div>
                       <div className="weather-days">
-                        <div className="day-3">Wed</div>
+                        <div className="day-3">{t.weatherStatic.days[3]}</div>
                         <div className="day-icon">
                           <i className="wi wi-day-lightning" />
                         </div>
@@ -877,7 +940,7 @@ export default function Home() {
                         </div>
                       </div>
                       <div className="weather-days">
-                        <div className="day-4">Thu</div>
+                        <div className="day-4">{t.weatherStatic.days[4]}</div>
                         <div className="day-icon">
                           <i className="wi wi-sleet" />
                         </div>
@@ -887,7 +950,7 @@ export default function Home() {
                         </div>
                       </div>
                       <div className="weather-days">
-                        <div className="day-4">Fri</div>
+                        <div className="day-4">{t.weatherStatic.days[5]}</div>
                         <div className="day-icon">
                           <i className="wi wi-smog" />
                         </div>
@@ -897,7 +960,7 @@ export default function Home() {
                         </div>
                       </div>
                       <div className="weather-days">
-                        <div className="day-4">Sat</div>
+                        <div className="day-4">{t.weatherStatic.days[6]}</div>
                         <div className="day-icon">
                           <i className="wi wi-lightning" />
                         </div>
@@ -908,8 +971,8 @@ export default function Home() {
                       </div>
                     </div>
                     <div className="weather-footer">
-                      <div className="weather-date">{formatDate(new Date().toISOString(), 'bn')}</div>
-                      <div className="weather-city">ঢাকা, বাংলাদেশ</div>
+                      <div className="weather-date">{formatDate(new Date().toISOString(), locale)}</div>
+                      <div className="weather-city">{t.weatherCity}</div>
                     </div>
                   </div>
                   {/* END OF /. WEATHER */}

@@ -4,10 +4,34 @@ import LayoutTwo from '@/components/ltr/layout/layout-two';
 import { useBackgroundImageLoader } from '@/components/ltr/use-background-image/use-background-image';
 import useRemoveBodyClass from '@/components/ltr/useEffect-hook/useEffect-hook';
 import Link from 'next/link';
+import { useLanguage } from '@/lib/LanguageContext';
+
+const dictionary = {
+    en: {
+        title: "About Us",
+        breadHome: "Home",
+        breadAbout: "About Us",
+        mission: "Our Mission",
+        team: "Our Valuable Team Members",
+        history: "Bold History that Fuels the Future",
+        related: "Related Articles"
+    },
+    bn: {
+        title: "আমাদের সম্পর্কে",
+        breadHome: "হোম",
+        breadAbout: "আমাদের সম্পর্কে",
+        mission: "আমাদের লক্ষ্য",
+        team: "আমাদের মূল্যবান দল",
+        history: "ভবিষ্যতের জ্বালানি জোগায় যে ইতিহাস",
+        related: "সম্পর্কিত নিবন্ধ"
+    }
+};
 
 const page = () => {
     useRemoveBodyClass(['None'], ['home-seven', 'home-nine','boxed-layout','home-six','home-two']);
-    useBackgroundImageLoader()
+    useBackgroundImageLoader();
+    const { locale } = useLanguage();
+    const t = dictionary[locale] || dictionary.bn;
     return (
         <LayoutTwo>
             {/* *** START PAGE MAIN CONTENT *** */}
@@ -20,7 +44,7 @@ const page = () => {
                     <div className="container position-relative">
                         <div className="row">
                             <div className="col-sm-12">
-                                <h2 className="entry-title">About Us</h2>
+                                <h1 className="entry-title">{t.title}</h1>
                                 <p className="description">
                                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
                                     lorem quam, adipiscing condimentum tristique vel, eleifend sed
@@ -30,9 +54,9 @@ const page = () => {
                                 <div className="breadcrumb">
                                     <ul className="clearfix">
                                         <li className="ib">
-                                            <Link href="/">Home</Link>
+                                            <Link href="/">{t.breadHome}</Link>
                                         </li>
-                                        <li className="ib current-page">About</li>
+                                        <li className="ib current-page">{t.breadAbout}</li>
                                     </ul>
                                 </div>
                             </div>
@@ -43,7 +67,7 @@ const page = () => {
                 <div className="team about-content">
                     <div className="container">
                         <div className="about-title">
-                            <h1>Our Mission</h1>
+                            <h1>{t.mission}</h1>
                             <h3>
                                 It is a long established fact that a reader will be distracted
                             </h3>
@@ -68,7 +92,7 @@ const page = () => {
                         </div>
                         <div className="row">
                             <div className="col-12">
-                                <h2>Our Valuable Team Members </h2>
+                                <h2>{t.team}</h2>
                             </div>
                             {/* end col-12 */}
                             <div className="col-6 col-md-3">
@@ -226,7 +250,7 @@ const page = () => {
                         </div>
                         {/* end row */}
                         <div className="about-title">
-                            <h2>Bold History that Fuels the Future</h2>
+                            <h2>{t.history}</h2>
                             <p>
                                 Lorem Ipsum is simply dummy text of the printing and typesetting
                                 industry. Lorem Ipsum has been the industry's standard dummy text
@@ -250,7 +274,7 @@ const page = () => {
                                 PageMaker including versions of Lorem Ipsum.
                             </p>
                         </div>
-                        <h2>Related Articles</h2>
+                        <h2>{t.related}</h2>
                         <div className="news-grid-2">
                             <div className="row">
                                 <div className="col-6 col-md-3">

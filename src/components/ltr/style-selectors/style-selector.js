@@ -21,10 +21,10 @@ const StyleSelector = () => {
         <div>
 
             {theme === "skin-dark" ? (
-                <i className="fa-regular fa-sun fa-lg" onClick={() => setTheme("light")} />
+                <i className="fa-regular fa-sun fa-lg theme-icon" onClick={() => setTheme("light")} style={{ cursor: 'pointer' }} title="Switch to Light Mode" />
 
             ) : (
-                <i className="fa-solid fa-moon fa-lg" onClick={() => setTheme("skin-dark")}></i>
+                <i className="fa-solid fa-moon fa-lg theme-icon" onClick={() => setTheme("skin-dark")} style={{ cursor: 'pointer' }} title="Switch to Dark Mode"></i>
             )}
         </div>
 

@@ -1,4 +1,5 @@
 import Layout from "@/components/ltr/layout/layout";
+import { cookies } from 'next/headers';
 import Link from "next/link";
 import { getFaqs } from "@/services/faqService";
 import { getGlobalSettings } from "@/services/globalService";
@@ -6,7 +7,8 @@ import { getStrapiMedia } from "@/lib/strapi";
 import BodyClassCleaner from "@/components/ltr/useEffect-hook/BodyClassCleaner";
 
 export default async function FaqPage() {
-    const locale = 'bn'; // Default locale, can be dynamic later
+    const cookieStore = cookies();
+    const locale = cookieStore.get('NEXT_LOCALE')?.value || 'bn';
     const translations = {
         en: {
             title: 'Frequently Asked Questions',
