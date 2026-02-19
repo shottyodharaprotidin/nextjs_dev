@@ -9,6 +9,7 @@ import ArticleSidebar from "@/components/article/article-sidebar";
 import useRemoveBodyClass from "@/components/ltr/useEffect-hook/useEffect-hook";
 import { getStrapiMedia, formatDate } from '@/lib/strapi';
 import { useTranslations } from '@/lib/translations';
+import StrapiBlocks from '@/components/article/strapi-blocks';
 
 const ClientArticleDetail = ({ article, mostViewed, popularNews, globalSettings, locale = 'bn' }) => {
   useRemoveBodyClass(['None'], ['home-seven', 'home-nine','boxed-layout','home-six','home-two']);
@@ -112,7 +113,8 @@ const ClientArticleDetail = ({ article, mostViewed, popularNews, globalSettings,
                         </div>
                     )}
 
-                    <div className="article-content" dangerouslySetInnerHTML={{ __html: content }} />
+                    {/* Universal Renderer: Handles both Markdown and Blocks */}
+                    <StrapiBlocks content={content} />
                     
                   </div>
                   

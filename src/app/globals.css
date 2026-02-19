@@ -4499,6 +4499,348 @@ figure.social-icon:hover a:nth-child(5) i {
     line-height: 26px;
 }
 
+/* Custom Article Content Styles */
+.article-content {
+    color: var(--bs-body-color);
+}
+
+.article-content p, 
+.article-content li, 
+.article-content blockquote p {
+    font-family: var(--font-cormorant-garamond);
+}
+
+.article-content p {
+    font-size: 16px;
+    line-height: 27px;
+    margin-bottom: 25px;
+}
+
+.article-content h1, 
+.article-content h2, 
+.article-content h3, 
+.article-content h4, 
+.article-content h5, 
+.article-content h6 {
+    font-family: var(--font-roboto);
+    /* Removed forced color to respect global and dark mode styles */
+    font-weight: 500;
+    margin-top: 0;
+    margin-bottom: 25px;
+}
+
+.article-content h2 {
+    font-size: 30px;
+}
+
+.article-content h3 {
+    font-size: 24px;
+}
+
+/* Mapping standard blockquote to article_comment */
+.article-content blockquote {
+    position: relative;
+    padding-left: 55px;
+    padding-right: 50px;
+    margin: 25px 0;
+    background-color: #f9f9f9;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    border: none;
+}
+
+[data-theme=skin-dark] .article-content blockquote {
+    background-color: #141414;
+}
+
+.article-content blockquote::before {
+    content: "\f10e";
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    color: #eb0254;
+    font-family: 'Font Awesome 5 Free';
+    font-size: 25px;
+    font-weight: 900;
+}
+
+.article-content blockquote p,
+.article_comment p {
+    font-size: 15px;
+    line-height: 27px;
+    margin-bottom: 15px;
+}
+
+/* Mapping cite/footer to template's 'customers' style */
+.article-content blockquote cite,
+.article-content blockquote footer,
+.article-content blockquote .customers,
+.article_comment .customers {
+    display: block;
+    font-size: 14px;
+    line-height: 25px;
+    color: #222;
+    text-transform: uppercase;
+    font-style: normal;
+    margin-top: 10px;
+}
+
+[data-theme=skin-dark] .article-content blockquote cite,
+[data-theme=skin-dark] .article-content blockquote footer,
+[data-theme=skin-dark] .article-content blockquote .customers {
+    color: #ccc;
+}
+
+.article-content blockquote cite span,
+.article-content blockquote footer span,
+.article-content blockquote .customers span {
+    font-size: 13px;
+    line-height: 25px;
+    text-transform: none;
+    font-weight: 400;
+}
+
+/* Mapping standard lists to arrow_list */
+.article-content ul {
+    list-style: none;
+    margin-left: 15px;
+    margin-bottom: 26px;
+    padding: 0;
+}
+
+.article-content ul li {
+    font-size: 17px;
+    line-height: 27px;
+    margin-left: 21px;
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.article-content ul li::before {
+    font: normal normal normal 14px/1 'Font Awesome 5 Free';
+    content: "\f0a4";
+    float: left;
+    margin-left: -25px;
+    line-height: 26px;
+    font-size: 14px;
+    color: #000;
+    font-weight: 900;
+}
+
+[data-theme=skin-dark] .article-content ul li::before {
+    color: #fff;
+}
+
+/* Ordered List Styling */
+.article-content ol {
+    list-style: decimal;
+    margin-left: 20px;
+    margin-bottom: 26px;
+    padding-left: 15px;
+}
+
+.article-content ol li {
+    font-size: 17px;
+    line-height: 27px;
+    margin-bottom: 10px;
+    padding-left: 5px;
+}
+
+/* Strikethrough & Italics */
+.article-content del,
+.article-content s,
+.article-content strike {
+    text-decoration: line-through;
+    color: #999;
+}
+
+.article-content em,
+.article-content i {
+    font-style: italic;
+    font-family: var(--font-cormorant-garamond);
+}
+
+.article-content img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Exact image alignment from template */
+.article-content figure.align-left,
+.article-content .image-left,
+.post_details_block figure.align-left,
+.post_details_block .align-left {
+    float: left;
+    margin: 6px 20px 15px 0;
+}
+
+.article-content figure.align-right,
+.article-content .image-right,
+.post_details_block figure.align-right,
+.post_details_block .align-right {
+    float: right;
+    margin: 6px 0 15px 20px;
+}
+
+.article-content img.align-left,
+.article-content img[style*="float: left"] {
+    float: left;
+    margin: 6px 20px 15px 0;
+}
+
+.article-content img.align-right,
+.article-content img[style*="float: right"] {
+    float: right;
+    margin: 6px 0 15px 20px;
+}
+
+/* -----------------------------------------------------------
+   Comprehensive Strapi Editor Support
+   (Code, Tables, HR, Images, Embeds)
+----------------------------------------------------------- */
+
+/* 1. Code Blocks */
+/* 1. Code Blocks */
+.article-content pre,
+.post_details_block pre {
+    background: #2d2d2d;
+    color: #f8f8f2;
+    padding: 20px;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 25px 0;
+    font-size: 14px;
+    line-height: 1.5;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.article-content code,
+.post_details_block code {
+    font-family: 'Fira Code', 'Courier New', Courier, monospace;
+    background: #eee;
+    color: #d63384;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+[data-theme=skin-dark] .article-content code {
+    background: #333;
+    color: #ff79c6;
+}
+
+.article-content pre code {
+    background: transparent;
+    padding: 0;
+    color: inherit;
+    border-radius: 0;
+}
+
+/* 2. Tables */
+.article-content table,
+.post_details_block table {
+    width: 100%;
+    margin-bottom: 25px;
+    border-collapse: collapse;
+    background: #fff;
+    border: 1px solid #e9ecef;
+}
+
+[data-theme=skin-dark] .article-content table {
+    background: #1e1e1e;
+    border-color: #333;
+}
+
+.article-content th,
+.article-content td {
+    padding: 12px 15px;
+    border: 1px solid #e9ecef;
+    text-align: left;
+}
+
+[data-theme=skin-dark] .article-content th,
+[data-theme=skin-dark] .article-content td {
+    border-color: #333;
+}
+
+.article-content th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    font-family: var(--font-roboto);
+    color: #333;
+}
+
+[data-theme=skin-dark] .article-content th {
+    background-color: #2c2c2c;
+    color: #fff;
+}
+
+.article-content tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+[data-theme=skin-dark] .article-content tr:nth-child(even) {
+    background-color: #252525;
+}
+
+/* 3. Horizontal Rule */
+.article-content hr,
+.post_details_block hr {
+    margin: 40px 0;
+    border: 0;
+    height: 1px;
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0));
+}
+
+[data-theme=skin-dark] .article-content hr {
+    background-image: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
+}
+
+/* 4. Formatting Helpers */
+.article-content strong,
+.article-content b {
+    font-weight: 700;
+    color: #111;
+}
+
+[data-theme=skin-dark] .article-content strong,
+[data-theme=skin-dark] .article-content b {
+    color: #fff;
+}
+
+.article-content a {
+    color: var(--bs-primary);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+}
+
+.article-content a:hover {
+    border-bottom-color: var(--bs-primary);
+}
+
+/* 5. Images & Captions (Enhanced) */
+.article-content figure {
+    margin: 25px 0;
+    display: table;
+}
+
+.article-content figcaption {
+    font-family: var(--font-roboto);
+    font-size: 13px;
+    color: #777;
+    margin-top: 8px;
+    text-align: center;
+    font-style: italic;
+    width: 100%;
+    display: table-caption;
+    caption-side: bottom;
+}
+
+[data-theme=skin-dark] .article-content figcaption {
+    color: #aaa;
+}
+
 .post_details_block blockquote {
     margin: 0 0 25px;
     border-left: 0;
