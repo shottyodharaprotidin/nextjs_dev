@@ -25,6 +25,35 @@ export async function getArticleBySlug(slug, locale = 'bn') {
   return data?.data?.[0] || null;
 }
 
+export async function getArticleBySlugPreview(slug, locale = 'bn-BD') {
+  // getStrapiLocale maps 'bn' -> 'bn-BD'. Passing 'bn-BD' directly falls through unchanged.
+  const strapiLocale = getStrapiLocale(locale) || locale;
+  // Strapi v5 uses status=draft instead of deprecated publicationState=preview
+  const url = `/articles?filters[slug][$eq]=${slug}&populate=*&locale=${strapiLocale}&status=draft`;
+  console.log('Fetching preview article by slug:', url);
+  const data = await fetchAPI(url);
+  console.log('Preview article data length:', data?.data?.length);
+  return data?.data?.[0] || null;
+}
+
+export async function getArticleByDocumentIdPreview(documentId, locale) {
+  // getStrapiLocale maps 'bn' -> 'bn-BD'. Passing 'bn-BD' directly falls through unchanged.
+  const strapiLocale = locale ? (getStrapiLocale(locale) || locale) : null;
+  const localeParam = strapiLocale ? `&locale=${strapiLocale}` : '';
+  // Strapi v5 uses status=draft
+  const url = `/articles?filters[documentId][$eq]=${documentId}&populate=*${localeParam}&status=draft`;
+  console.log('Fetching preview article by documentId:', url);
+  try {
+      const data = await fetchAPI(url);
+      console.log('Preview article data (by documentId):', data?.data?.length);
+      return data?.data?.[0] || null;
+  } catch (e) {
+      console.warn('Failed to fetch by documentId:', e);
+      return null;
+  }
+}
+
+
 export async function getLatestArticles(page = 1, limit = 5, locale = 'bn') {
   const strapiLocale = getStrapiLocale(locale);
   const queryParams = new URLSearchParams({

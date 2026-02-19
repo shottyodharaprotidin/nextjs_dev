@@ -1,5 +1,5 @@
-import { getArticleBySlug, getMostViewedArticles, getPopularArticles } from '@/services/articleService';
-import { cookies } from 'next/headers';
+import { getArticleBySlug, getArticleBySlugPreview, getMostViewedArticles, getPopularArticles } from '@/services/articleService';
+import { cookies, draftMode } from 'next/headers';
 import { getGlobalSettings } from '@/services/globalService';
 import { getStrapiMedia } from '@/lib/strapi';
 import ClientArticleDetail from '@/components/article/article-details';
@@ -33,7 +33,7 @@ export async function generateMetadata({ params }) {
   };
 }
 
-const ArticleDetailPage = async ({ params }) => {
+const ArticleDetailPage = async ({ params, searchParams }) => {
   const { slug } = params;
   const cookieStore = cookies();
   const locale = cookieStore.get('NEXT_LOCALE')?.value || 'bn';
@@ -44,9 +44,18 @@ const ArticleDetailPage = async ({ params }) => {
   let popularResponse = { data: [] };
   let globalSettingsResponse = { data: null };
 
+  // Deteksi Draft Mode
+  const { isEnabled } = draftMode();
+
+  // When in draft mode, use the locale from URL params (e.g. from preview redirect)
+  // because the browser cookie might be in a different language from the article
+  const previewLocale = searchParams?.locale || locale;
+  const articleFetcher = isEnabled ? getArticleBySlugPreview : getArticleBySlug;
+  const fetchLocale = isEnabled ? previewLocale : locale;
+
   try {
     const results = await Promise.allSettled([
-      getArticleBySlug(slug, locale),
+      articleFetcher(slug, fetchLocale),
       getMostViewedArticles(5, locale),
       getPopularArticles(5, locale),
       getGlobalSettings(locale)
@@ -66,6 +75,9 @@ const ArticleDetailPage = async ({ params }) => {
   }
 
   return (
+    <>
+    {isEnabled && <PreviewBanner slug={slug} />}
+
     <ClientArticleDetail 
       article={articleData}
       mostViewed={mostViewedResponse?.data || []}
@@ -73,7 +85,36 @@ const ArticleDetailPage = async ({ params }) => {
       globalSettings={globalSettingsResponse?.data}
       locale={locale}
     />
+    </>
   );
 };
+
+/* Preview Banner Component */
+function PreviewBanner({ slug }) {
+  return (
+    <div style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      background: '#f59e0b',
+      color: '#000',
+      padding: '12px',
+      textAlign: 'center',
+      zIndex: 9999,
+      fontWeight: 'bold',
+      boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+    }}>
+      ⚠️ Mode Preview — Artikel ini belum dipublish.{' '}
+      <a 
+        href={`/api/disable-preview?slug=${slug}`}
+        style={{ textDecoration: 'underline', marginLeft: '10px' }}
+      >
+        Keluar dari Preview
+      </a>
+    </div>
+  );
+}
+
 
 export default ArticleDetailPage;
