@@ -16,7 +16,16 @@ export default function StrapiBlocks({ content }) {
             remarkPlugins={[remarkGfm]}
             components={{
                 // Custom Mappings to match post-template/page.js exactly
-                p: ({node, ...props}) => <p {...props} />, // Standard p matches .post_details_block p
+                p: ({node, children, ...props}) => {
+                    let hasImage = false;
+                    if (node && node.children) {
+                        hasImage = node.children.some(child => child.type === 'element' && child.tagName === 'img');
+                    }
+                    if (hasImage) {
+                        return <div className="article-p" {...props}>{children}</div>;
+                    }
+                    return <p {...props}>{children}</p>;
+                },
                 
                 // Lists
                 ul: ({node, ...props}) => <ul className="arrow_list" {...props} />,
@@ -27,13 +36,34 @@ export default function StrapiBlocks({ content }) {
                 
                 // Images - Template uses figure.align-left (or right)
                 img: ({node, ...props}) => {
+                    let alignClass = ""; // Default to full-width (no float)
+                    let src = props.src;
+                    
+                    // Parse from URL hash (e.g., image.png#align-right)
+                    if (src && src.includes('#')) {
+                        const parts = src.split('#');
+                        src = parts[0];
+                        const hash = parts[1];
+                        if (['align-left', 'align-right', 'align-center'].includes(hash)) {
+                            alignClass = hash;
+                        }
+                    }
+
+                    // Parse from alt text (e.g., ![align-right My Image](url))
+                    if (props.alt) {
+                        if (props.alt.includes('align-left')) alignClass = 'align-left';
+                        if (props.alt.includes('align-right')) alignClass = 'align-right';
+                        if (props.alt.includes('align-center')) alignClass = 'align-center';
+                    }
+
+                    const cleanAlt = props.alt ? props.alt.replace(/align-(left|right|center)/, '').trim() : '';
+
                     return (
-                        <figure className="align-left">
+                        <figure className={alignClass}>
                             <img 
-                                src={props.src} 
-                                alt={props.alt} 
+                                src={src} 
+                                alt={cleanAlt} 
                                 className="img-fluid"
-                                {...props}
                             />
                             {props.title && <figcaption>{props.title}</figcaption>}
                         </figure>
@@ -52,7 +82,10 @@ export default function StrapiBlocks({ content }) {
                         {children}
                         </code>
                     )
-                }
+                },
+                
+                // Strikethrough
+                del: ({node, ...props}) => <del {...props} />,
             }}
             >
             {content}
@@ -87,16 +120,34 @@ export default function StrapiBlocks({ content }) {
                 ),
                 image: ({ image }) => {
                     if (!image) return null;
+                    
+                    let alignClass = ""; // Default to full-width (no float)
+                    
+                    // Parse alignment from alt text or caption in Strapi
+                    if (image.alternativeText) {
+                        if (image.alternativeText.includes('align-left')) alignClass = 'align-left';
+                        if (image.alternativeText.includes('align-right')) alignClass = 'align-right';
+                        if (image.alternativeText.includes('align-center')) alignClass = 'align-center';
+                    }
+                    if (image.caption) {
+                        if (image.caption.includes('align-left')) alignClass = 'align-left';
+                        if (image.caption.includes('align-right')) alignClass = 'align-right';
+                        if (image.caption.includes('align-center')) alignClass = 'align-center';
+                    }
+
+                    const cleanAlt = image.alternativeText ? image.alternativeText.replace(/align-(left|right|center)/g, '').trim() : '';
+                    const cleanCaption = image.caption ? image.caption.replace(/align-(left|right|center)/g, '').trim() : '';
+
                     return (
-                    <figure className="align-left">
+                    <figure className={alignClass}>
                         <img
                             src={image.url}
-                            alt={image.alternativeText || ''}
+                            alt={cleanAlt}
                             width={image.width}
                             height={image.height}
                             className="img-fluid"
                         />
-                        {image.caption && <figcaption>{image.caption}</figcaption>}
+                        {cleanCaption && <figcaption>{cleanCaption}</figcaption>}
                     </figure>
                     );
                 },

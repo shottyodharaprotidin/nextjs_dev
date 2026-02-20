@@ -4260,12 +4260,14 @@ abbr[title] {
 .post_details_block h4,
 .post_details_block h5,
 .post_details_block h6,
-.post_details_block p {
+.post_details_block p,
+.post_details_block .article-p {
     margin-top: 0;
     margin-bottom: 25px;
 }
 
-.post_details_block p {
+.post_details_block p,
+.post_details_block .article-p {
     font-size: 16px;
 }
 
@@ -4506,14 +4508,31 @@ figure.social-icon:hover a:nth-child(5) i {
 
 .article-content p, 
 .article-content li, 
-.article-content blockquote p {
+.article-content blockquote p,
+.article-content .article-p {
     font-family: var(--font-cormorant-garamond);
 }
 
-.article-content p {
+.article-content p,
+.article-content .article-p {
     font-size: 16px;
     line-height: 27px;
     margin-bottom: 25px;
+}
+
+/* Clear float on paragraphs coming after an image block so they don't wrap */
+.article-content .article-p + p,
+.post_details_block .article-p + p,
+.article-content .article-p + h1,
+.article-content .article-p + h2,
+.article-content .article-p + h3,
+.article-content .article-p + h4,
+.article-content .article-p + h5,
+.article-content .article-p + h6,
+.article-content .article-p + blockquote,
+.article-content .article-p + ul,
+.article-content .article-p + ol {
+    clear: both;
 }
 
 .article-content h1, 
@@ -4671,7 +4690,8 @@ figure.social-icon:hover a:nth-child(5) i {
 .post_details_block figure.align-left,
 .post_details_block .align-left {
     float: left;
-    margin: 6px 20px 15px 0;
+    margin: 6px 20px 6px 0;
+    max-width: 50%;
 }
 
 .article-content figure.align-right,
@@ -4679,19 +4699,20 @@ figure.social-icon:hover a:nth-child(5) i {
 .post_details_block figure.align-right,
 .post_details_block .align-right {
     float: right;
-    margin: 6px 0 15px 20px;
+    margin: 6px 0 20px 20px;
+    max-width: 50%;
 }
 
 .article-content img.align-left,
 .article-content img[style*="float: left"] {
     float: left;
-    margin: 6px 20px 15px 0;
+    margin: 6px 20px 20px 0;
 }
 
 .article-content img.align-right,
 .article-content img[style*="float: right"] {
     float: right;
-    margin: 6px 0 15px 20px;
+    margin: 6px 0 20px 20px;
 }
 
 /* -----------------------------------------------------------
