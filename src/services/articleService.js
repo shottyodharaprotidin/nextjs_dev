@@ -21,7 +21,7 @@ export async function getArticles(params = {}, locale = 'bn') {
 
 export async function getArticleBySlug(slug, locale = 'bn') {
   const strapiLocale = getStrapiLocale(locale);
-  const data = await fetchAPI(`/articles?filters[slug][$eq]=${slug}&populate=*&locale=${strapiLocale}`);
+  const data = await fetchAPI(`/articles?filters[slug][$eq]=${slug}&populate=*&populate[seo][populate]=*&locale=${strapiLocale}`);
   return data?.data?.[0] || null;
 }
 

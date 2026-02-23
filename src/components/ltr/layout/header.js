@@ -44,6 +44,8 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
     const [currentDate, setCurrentDate] = useState('');
     const [menuItems, setMenuItems] = useState([]);
     const [isLoadingMenu, setIsLoadingMenu] = useState(true);
+    const [sidebarMenuItems, setSidebarMenuItems] = useState([]);
+    const [expandedSidebarItems, setExpandedSidebarItems] = useState({});
 
     const [instagrams, setInstagrams] = useState([]);
     const [isLoadingInstagrams, setIsLoadingInstagrams] = useState(true);
@@ -58,12 +60,17 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
     }, []);
 
     useEffect(() => {
-        // Fetch menu items
+        // Fetch header menu items
         setIsLoadingMenu(true);
         getMenuItems('header', locale).then(res => {
              setMenuItems(res?.data || []);
         }).finally(() => {
              setIsLoadingMenu(false);
+        });
+
+        // Fetch sidebar menu items
+        getMenuItems('sidebar', locale).then(res => {
+            setSidebarMenuItems(res?.data || []);
         });
         
         // Fetch weather data
@@ -71,6 +78,10 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
             setWeather(data);
         });
     }, [locale]);
+
+    const toggleSidebarSubMenu = (itemId) => {
+        setExpandedSidebarItems(prev => ({ ...prev, [itemId]: !prev[itemId] }));
+    };
 
     useEffect(() => {
         // Set current date on mount to avoid hydration mismatch
@@ -348,10 +359,54 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
                             </p>
                         </div>
                         <ul className="nav d-block flex-column my-4">
-                            <li className="nav-item h5"><Link className="nav-link" href="/">Home</Link></li>
-                            <li className="nav-item h5"><Link className="nav-link" href="/about">About</Link></li>
-                            <li className="nav-item h5"><Link className="nav-link" href="#">Our Journal</Link></li>
-                            <li className="nav-item h5"><Link className="nav-link" href="/contact">Contact Us</Link></li>
+                            {sidebarMenuItems.length > 0 ? (
+                                sidebarMenuItems.map((item, index) => {
+                                    const data = item.attributes || item;
+                                    const children = data.menu_items?.data || [];
+                                    const hasChildren = children.length > 0;
+                                    const slug = data.slug || '#';
+                                    const url = slug.startsWith('http') || slug === '#' ? slug : (slug.startsWith('/') ? slug : `/${slug}`);
+                                    const isExpanded = expandedSidebarItems[data.id || index];
+
+                                    return (
+                                        <li className="nav-item h5" key={data.id || index}>
+                                            <div className="d-flex align-items-center justify-content-between">
+                                                <Link className="nav-link flex-grow-1" href={url} onClick={hasChildren ? undefined : closeSidebar}>
+                                                    {data.title}
+                                                </Link>
+                                                {hasChildren && (
+                                                    <button
+                                                        className="btn btn-sm p-0 ms-2 text-white border-0"
+                                                        onClick={() => toggleSidebarSubMenu(data.id || index)}
+                                                        aria-expanded={isExpanded}
+                                                        style={{ background: 'none', fontSize: '14px' }}
+                                                    >
+                                                        <i className={`fas fa-chevron-${isExpanded ? 'up' : 'down'}`} />
+                                                    </button>
+                                                )}
+                                            </div>
+                                            {hasChildren && isExpanded && (
+                                                <ul className="nav d-block flex-column ms-3 mt-1">
+                                                    {children.map((child, cIndex) => {
+                                                        const childData = child.attributes || child;
+                                                        const childSlug = childData.slug || '#';
+                                                        const childUrl = childSlug.startsWith('http') || childSlug === '#' ? childSlug : (childSlug.startsWith('/') ? childSlug : `/${childSlug}`);
+                                                        return (
+                                                            <li className="nav-item h6" key={childData.id || cIndex}>
+                                                                <Link className="nav-link" href={childUrl} onClick={closeSidebar}>
+                                                                    {childData.title}
+                                                                </Link>
+                                                            </li>
+                                                        );
+                                                    })}
+                                                </ul>
+                                            )}
+                                        </li>
+                                    );
+                                })
+                            ) : (
+                                <li className="nav-item h5"><span className="nav-link">No menu item</span></li>
+                            )}
                         </ul>
                         <h5 className="wiget-title">Instagram</h5>
                         {isLoadingInstagrams ? (

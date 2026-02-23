@@ -123,7 +123,7 @@ const Footer = () => {
       <footer
         id="footer"
         className="main-footer bg-img"
-        data-image-src="/assets/images/1920x1000-1.jpg"
+        data-image-src={getStrapiMedia(footerData?.attributes?.backgroundImage) || "/assets/images/1920x1000-1.jpg"}
       >
         <div className="container position-relative z-1">
           <div className="g-3 row">

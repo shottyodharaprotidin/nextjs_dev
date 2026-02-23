@@ -57,6 +57,16 @@ This file contains the common info of this theme.
 
 /*** 01. General Styling & Typography
 ------------------------------------------------------------------------------*/
+
+/* SolaimanLipi Bangla Font */
+@font-face {
+    font-family: "SolaimanLipi";
+    src: url("/assets/fonts/SolaimanLipi.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
 :root,
 [data-bs-theme=light] {
     --bs-body-color: #777;
@@ -66,8 +76,8 @@ This file contains the common info of this theme.
     --bs-body-font-size: 15px;
     --bs-border-radius: 0;
     --bs-emphasis-color-rgb: 235, 2, 84;
-    --font-source-sans: __variable_2b53ae;
-    --bs-font-sans-serif: var(--font-source-sans), system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --font-solaiman-lipi: "SolaimanLipi";
+    --bs-font-sans-serif: var(--font-solaiman-lipi), system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
 ::-webkit-selection {
@@ -183,7 +193,7 @@ h3,
 h4,
 h5,
 h6 {
-    font-family: var(--font-roboto);
+    font-family: var(--font-solaiman-lipi);
 }
 
 a {
@@ -2646,14 +2656,14 @@ div.bhoechie-tab .weather-temp-wrap:not(.active) {
 .weather-footer .weather-date {
     font-size: 21px;
     font-weight: 300;
-    font-family: var(--font-roboto);
+    font-family: var(--font-solaiman-lipi);
 }
 
 .weather-week-2 {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
-    font-family: var(--font-roboto);
+    font-family: var(--font-solaiman-lipi);
     padding: 15px 20px;
     width: 100%;
     line-height: 1;
@@ -2913,7 +2923,7 @@ div.bhoechie-tab .weather-temp-wrap:not(.active) {
 
 .social-media li a div {
     font-weight: bold;
-    font-family: var(--font-cormorant-garamond);
+    font-family: var(--font-solaiman-lipi);
     font-size: 26px;
 }
 
@@ -3040,7 +3050,7 @@ div.bhoechie-tab .weather-temp-wrap:not(.active) {
     font-size: 40px;
     padding-right: 20px;
     line-height: 24px;
-        font-family: var(--font-cormorant-garamond);
+        font-family: var(--font-solaiman-lipi);
     font-style: italic;
     font-weight: 600;
 }
@@ -3448,7 +3458,7 @@ padding:0 1rem;
 .react-calendar {
 
     border: 1px solid #e0e0e0 !important;
-    font-family: var(--font-cormorant-garamond) !important;
+    font-family: var(--font-solaiman-lipi) !important;
 
 }
 
@@ -3665,7 +3675,7 @@ abbr[title] {
     width: 40px;
     color: #eb0254;
     font-weight: 700;
-        font-family: var(--font-cormorant-garamond);
+        font-family: var(--font-solaiman-lipi);
 }
 
 @media(min-width:0px) and (max-width:1199px) {
@@ -4510,7 +4520,7 @@ figure.social-icon:hover a:nth-child(5) i {
 .article-content li, 
 .article-content blockquote p,
 .article-content .article-p {
-    font-family: var(--font-cormorant-garamond);
+    font-family: var(--font-solaiman-lipi);
 }
 
 .article-content p,
@@ -4541,7 +4551,7 @@ figure.social-icon:hover a:nth-child(5) i {
 .article-content h4, 
 .article-content h5, 
 .article-content h6 {
-    font-family: var(--font-roboto);
+    font-family: var(--font-solaiman-lipi);
     /* Removed forced color to respect global and dark mode styles */
     font-weight: 500;
     margin-top: 0;
@@ -4676,7 +4686,7 @@ figure.social-icon:hover a:nth-child(5) i {
 .article-content em,
 .article-content i {
     font-style: italic;
-    font-family: var(--font-cormorant-garamond);
+    font-family: var(--font-solaiman-lipi);
 }
 
 .article-content img {
@@ -4787,7 +4797,7 @@ figure.social-icon:hover a:nth-child(5) i {
 .article-content th {
     background-color: #f8f9fa;
     font-weight: 600;
-    font-family: var(--font-roboto);
+    font-family: var(--font-solaiman-lipi);
     color: #333;
 }
 
@@ -4847,7 +4857,7 @@ figure.social-icon:hover a:nth-child(5) i {
 }
 
 .article-content figcaption {
-    font-family: var(--font-roboto);
+    font-family: var(--font-solaiman-lipi);
     font-size: 13px;
     color: #777;
     margin-top: 8px;

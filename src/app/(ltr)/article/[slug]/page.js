@@ -20,15 +20,18 @@ export async function generateMetadata({ params }) {
   }
 
   const data = articleData.attributes || articleData;
-  const imageUrl = getStrapiMedia(data.cover);
+  const seo = data.seo || {};
+  const metaTitle = seo.metaTitle || data.title;
+  const metaDescription = seo.metaDescription || data.excerpt || '';
+  const shareImage = getStrapiMedia(seo.shareImage) || getStrapiMedia(data.cover);
 
   return {
-    title: data.title,
-    description: data.excerpt,
+    title: metaTitle,
+    description: metaDescription,
     openGraph: {
-      title: data.title,
-      description: data.excerpt,
-      images: imageUrl ? [imageUrl] : [],
+      title: metaTitle,
+      description: metaDescription,
+      images: shareImage ? [shareImage] : [],
     },
   };
 }
