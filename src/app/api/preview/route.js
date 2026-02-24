@@ -8,11 +8,11 @@ export async function GET(request) {
   const slug = searchParams.get('slug');
   const locale = searchParams.get('locale') || 'bn-BD';
 
-  if (!process.env.STRAPI_PREVIEW_SECRET) {
-      return new Response('STRAPI_PREVIEW_SECRET not set', { status: 500 });
+  if (!process.env.PREVIEW_SECRET) {
+      return new Response('PREVIEW_SECRET not set', { status: 500 });
   }
 
-  if (secret !== process.env.STRAPI_PREVIEW_SECRET) {
+  if (secret !== process.env.PREVIEW_SECRET) {
     console.error('Invalid token:', secret);
     return new Response('Invalid token', { status: 401 });
   }

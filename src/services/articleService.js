@@ -21,7 +21,17 @@ export async function getArticles(params = {}, locale = 'bn') {
 
 export async function getArticleBySlug(slug, locale = 'bn') {
   const strapiLocale = getStrapiLocale(locale);
-  const data = await fetchAPI(`/articles?filters[slug][$eq]=${slug}&populate=*&populate[seo][populate]=*&locale=${strapiLocale}`);
+  const queryParams = new URLSearchParams({
+    'filters[slug][$eq]': slug,
+    'populate[0]': 'cover',
+    'populate[1]': 'author',
+    'populate[2]': 'category',
+    'populate[3]': 'tags',
+    'populate[4]': 'blocks',
+    'populate[5]': 'seo.shareImage',
+    'locale': strapiLocale,
+  });
+  const data = await fetchAPI(`/articles?${queryParams}`);
   return data?.data?.[0] || null;
 }
 
@@ -29,7 +39,18 @@ export async function getArticleBySlugPreview(slug, locale = 'bn-BD') {
   // getStrapiLocale maps 'bn' -> 'bn-BD'. Passing 'bn-BD' directly falls through unchanged.
   const strapiLocale = getStrapiLocale(locale) || locale;
   // Strapi v5 uses status=draft instead of deprecated publicationState=preview
-  const url = `/articles?filters[slug][$eq]=${slug}&populate=*&locale=${strapiLocale}&status=draft`;
+  const queryParams = new URLSearchParams({
+    'filters[slug][$eq]': slug,
+    'populate[0]': 'cover',
+    'populate[1]': 'author',
+    'populate[2]': 'category',
+    'populate[3]': 'tags',
+    'populate[4]': 'blocks',
+    'populate[5]': 'seo.shareImage',
+    'locale': strapiLocale,
+    'status': 'draft',
+  });
+  const url = `/articles?${queryParams}`;
   console.log('Fetching preview article by slug:', url);
   const data = await fetchAPI(url);
   console.log('Preview article data length:', data?.data?.length);
@@ -39,9 +60,21 @@ export async function getArticleBySlugPreview(slug, locale = 'bn-BD') {
 export async function getArticleByDocumentIdPreview(documentId, locale) {
   // getStrapiLocale maps 'bn' -> 'bn-BD'. Passing 'bn-BD' directly falls through unchanged.
   const strapiLocale = locale ? (getStrapiLocale(locale) || locale) : null;
-  const localeParam = strapiLocale ? `&locale=${strapiLocale}` : '';
   // Strapi v5 uses status=draft
-  const url = `/articles?filters[documentId][$eq]=${documentId}&populate=*${localeParam}&status=draft`;
+  const queryParams = new URLSearchParams({
+    'filters[documentId][$eq]': documentId,
+    'populate[0]': 'cover',
+    'populate[1]': 'author',
+    'populate[2]': 'category',
+    'populate[3]': 'tags',
+    'populate[4]': 'blocks',
+    'populate[5]': 'seo.shareImage',
+    'status': 'draft',
+  });
+  if (strapiLocale) {
+    queryParams.append('locale', strapiLocale);
+  }
+  const url = `/articles?${queryParams}`;
   console.log('Fetching preview article by documentId:', url);
   try {
       const data = await fetchAPI(url);

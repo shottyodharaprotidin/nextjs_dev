@@ -7599,3 +7599,60 @@ body.layout-rtl .style-settings-content {
 body.layout-rtl .style-settings-content ul li select {
     float: left;
 }
+
+/* --- Typography Updates based on Client Request --- */
+
+/* 1. Headline (H1): 32-36px */
+h1, .h1 { font-size: 34px !important; font-weight: 700 !important; color: #111 !important; }
+
+/* 2. Sub-headline (H2): 24-28px */
+h2, .h2, .post-head .title { font-size: 26px !important; }
+
+/* 3. Section titles: 20-22px */
+h3, .h3, .section-title { font-size: 21px !important; }
+
+/* 4. Article Body/Main Content: 18-20px */
+.post_details_inner .post_details_block p,
+.post_details_inner .post_details_block .article-p,
+.post_details_inner .post_details_block li {
+    font-size: 19px !important;
+}
+
+/* 5. Menu / Navigation Bar: 16-18px */
+.navbar-nav .nav-link, 
+.navbar-nav .dropdown-item,
+#sidebar .nav-link { 
+    font-size: 17px !important; 
+}
+
+/* 6. Meta text (Byline, Date, Category): 14-15px */
+.authar-info li, 
+.post-date, 
+.post-category, 
+.breadcrumb-item { 
+    font-size: 15px !important; 
+}
+
+/* Article card title: 20px */
+.news-list-item .post-info-2 h4 .title,
+.news-list-item h4 a { 
+    font-size: 20px !important; 
+}
+
+/* Homepage lead news title: 30-32px */
+.slider-post .post-text h1 a,
+.slider-post .post-text h1 { 
+    font-size: 31px !important; 
+}
+
+/* Category small news title: 17-18px */
+.post-info h5 a,
+.post-info h4 a,
+.news-title-small { 
+    font-size: 18px !important; 
+}
+
+/* Paragraph text: 18-19px */
+p { 
+    font-size: 18px !important; 
+}
