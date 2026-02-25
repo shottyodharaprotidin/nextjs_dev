@@ -69,17 +69,34 @@ export async function getMenuItems(location = 'header', locale = 'bn') {
   try {
     const query = [
       `locale=${strapiLocale}`,
-      `filters[location][$eq]=${location}`,
-      'populate[menuItems][on][navigation.base-link][populate]=*',
-      'populate[menuItems][on][navigation.menu-button][populate]=*',
-      'populate[menuItems][on][navigation.dropdown-menu][populate][subMenus][on][navigation.base-link][populate]=*',
-      'populate[menuItems][on][navigation.dropdown-menu][populate][subMenus][on][navigation.dropdown-header][populate]=*',
-      'populate[menuItems][on][navigation.dropdown-menu][populate][subMenus][on][navigation.nested-dropdown][populate][subMenus]=*',
-      'populate[menuItems][on][navigation.mega-menu][populate][sections][populate][links][populate]=*',
-      'sort=id:asc'
+      'populate[headerMenu][on][navigation.base-link][populate]=*',
+      'populate[headerMenu][on][navigation.menu-button][populate]=*',
+      'populate[headerMenu][on][navigation.dropdown-menu][populate][subMenus][on][navigation.base-link][populate]=*',
+      'populate[headerMenu][on][navigation.dropdown-menu][populate][subMenus][on][navigation.dropdown-header][populate]=*',
+      'populate[headerMenu][on][navigation.dropdown-menu][populate][subMenus][on][navigation.nested-dropdown][populate][subMenus]=*',
+      'populate[headerMenu][on][navigation.mega-menu][populate][sections][populate][links][populate]=*',
+      'populate[footerMenu][populate]=*',
+      'populate[sidebarMenu][populate]=*'
     ].join('&');
 
-    return await fetchAPI(`/menu-items?${query}`, { silent: true });
+    const response = await fetchAPI(`/menu-item?${query}`, { silent: true });
+    
+    // In Strapi single types, the response is usually an object, not an array.
+    const firstEntry = response?.data;
+    const attributes = firstEntry?.attributes || firstEntry || {};
+
+    let menuData = [];
+    if (location === 'header') {
+      menuData = attributes.headerMenu || [];
+    } else if (location === 'footer') {
+      menuData = attributes.footerMenu || [];
+    } else if (location === 'sidebar') {
+      menuData = attributes.sidebarMenu || [];
+    }
+
+    // Return the menu array directly
+    return { data: menuData };
+
   } catch (error) {
     console.warn(`getMenuItems failed for location: ${location}`, error);
     return { data: [] };

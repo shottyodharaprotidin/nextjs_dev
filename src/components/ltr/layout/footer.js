@@ -5,7 +5,7 @@ import Link from 'next/link';
 import ScrollToTopUI from '../scroll-to-top/scroll-to-top';
 import { useBackgroundImageLoader } from '../use-background-image/use-background-image';
 import { getLatestArticles } from '@/services/articleService';
-import { getCategories, getTags, getFooterData } from '@/services/globalService';
+import { getCategories, getTags, getFooterData, getMenuItems } from '@/services/globalService';
 import { getStrapiMedia, formatDate, toBengaliNumber } from '@/lib/strapi';
 import { useLanguage } from '@/lib/LanguageContext';
 
@@ -85,22 +85,27 @@ const Footer = () => {
   const [hotTopics, setHotTopics] = useState([]);
 
   const [footerData, setFooterData] = useState(null);
+  const [footerMenuItems, setFooterMenuItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [recentRes, catRes, tagRes, footerDataRes] = await Promise.all([
+        const [recentRes, catRes, tagRes, footerDataRes, footerMenuRes] = await Promise.all([
           getLatestArticles(1, 3, locale), // Fetch 3 recent posts
           getCategories(6, locale), // Fetch 6 categories (generic)
           getTags(12, locale), // Fetch 12 tags for hot topics
-          getFooterData(locale) // Fetch footer data
+          getFooterData(locale), // Fetch footer data
+          getMenuItems('footer', locale) // Fetch footer menu
         ]);
 
         setRecentPosts(recentRes?.data || []);
         setCategories(catRes?.data || []);
         setHotTopics(tagRes?.data || []);
         setFooterData(footerDataRes?.data || null);
+        
+        const footerItems = footerMenuRes?.data || [];
+        setFooterMenuItems(footerItems);
       } catch (error) {
         console.error("Error fetching footer data:", error);
       } finally {
@@ -300,21 +305,37 @@ const Footer = () => {
             </div>
             <div className="col-sm-auto">
               <ul className="footer-nav list-unstyled text-center mb-0">
-                <li className="list-inline-item">
-                  <Link href={footerAttrs?.privacyLink || 'http://localhost:3000/privacy-policy'}>{t.links.privacy}</Link>
-                </li>
-                <li className="list-inline-item">
-                  <Link href={footerAttrs?.contactLink || 'http://localhost:3000/contact'}>{t.links.contact}</Link>
-                </li>
-                <li className="list-inline-item">
-                  <Link href={footerAttrs?.aboutLink || 'http://localhost:3000/about'}>{t.links.about}</Link>
-                </li>
-                <li className="list-inline-item">
-                  <Link href={footerAttrs?.donationLink || 'http://localhost:3000/donation'}>{t.links.donation}</Link>
-                </li>
-                <li className="list-inline-item">
-                  <Link href={footerAttrs?.faqLink || 'http://localhost:3000/faq'}>{t.links.faq}</Link>
-                </li>
+                {footerMenuItems.length > 0 ? (
+                  footerMenuItems.map((item, index) => {
+                    const data = item.attributes || item;
+                    const title = data.title;
+                    const url = data.url || '#';
+                    const finalUrl = url.startsWith('http') || url === '#' ? url : (url.startsWith('/') ? url : `/${url}`);
+                    return (
+                        <li className="list-inline-item" key={data.id || index}>
+                            <Link href={finalUrl}>{title}</Link>
+                        </li>
+                    );
+                  })
+                ) : (
+                  <>
+                    <li className="list-inline-item">
+                      <Link href={footerAttrs?.privacyLink || 'http://localhost:3000/privacy-policy'}>{t.links.privacy}</Link>
+                    </li>
+                    <li className="list-inline-item">
+                      <Link href={footerAttrs?.contactLink || 'http://localhost:3000/contact'}>{t.links.contact}</Link>
+                    </li>
+                    <li className="list-inline-item">
+                      <Link href={footerAttrs?.aboutLink || 'http://localhost:3000/about'}>{t.links.about}</Link>
+                    </li>
+                    <li className="list-inline-item">
+                      <Link href={footerAttrs?.donationLink || 'http://localhost:3000/donation'}>{t.links.donation}</Link>
+                    </li>
+                    <li className="list-inline-item">
+                      <Link href={footerAttrs?.faqLink || 'http://localhost:3000/faq'}>{t.links.faq}</Link>
+                    </li>
+                  </>
+                )}
               </ul>
             </div>
           </div>

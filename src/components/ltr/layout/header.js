@@ -67,18 +67,15 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
         // Fetch header menu items from the relocated structure
         setIsLoadingMenu(true);
         getMenuItems('header', locale).then(res => {
-            // Flatten the menuItems Dynamic Zone from all entries for this location
-            const allItems = res?.data?.flatMap(item => (item.attributes || item).menuItems || []) || [];
-            setMenuItems(allItems);
+            setMenuItems(res?.data || []);
         }).finally(() => {
             setIsLoadingMenu(false);
         });
 
         // Fetch sidebar menu items
         getMenuItems('sidebar', locale).then(res => {
-            const allItems = res?.data?.flatMap(item => (item.attributes || item).menuItems || []) || [];
             if (setSidebarMenuItems) {
-                setSidebarMenuItems(allItems);
+                setSidebarMenuItems(res?.data || []);
             }
         });
         
@@ -503,45 +500,17 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
                             {sidebarMenuItems.length > 0 ? (
                                 sidebarMenuItems.map((item, index) => {
                                     const data = item.attributes || item;
-                                    const children = data.menu_items?.data || [];
-                                    const hasChildren = children.length > 0;
-                                    const slug = data.slug || '#';
-                                    const url = slug.startsWith('http') || slug === '#' ? slug : (slug.startsWith('/') ? slug : `/${slug}`);
-                                    const isExpanded = expandedSidebarItems[data.id || index];
+                                    const title = data.title;
+                                    const url = data.url || '#';
+                                    const finalUrl = url.startsWith('http') || url === '#' ? url : (url.startsWith('/') ? url : `/${url}`);
 
                                     return (
                                         <li className="nav-item h5" key={data.id || index}>
                                             <div className="d-flex align-items-center justify-content-between">
-                                                <Link className="nav-link flex-grow-1" href={url} onClick={hasChildren ? undefined : closeSidebar}>
-                                                    {data.title}
+                                                <Link className="nav-link flex-grow-1" href={finalUrl} onClick={closeSidebar}>
+                                                    {title}
                                                 </Link>
-                                                {hasChildren && (
-                                                    <button
-                                                        className="btn btn-sm p-0 ms-2 text-white border-0"
-                                                        onClick={() => toggleSidebarSubMenu(data.id || index)}
-                                                        aria-expanded={isExpanded}
-                                                        style={{ background: 'none', fontSize: '14px' }}
-                                                    >
-                                                        <i className={`fas fa-chevron-${isExpanded ? 'up' : 'down'}`} />
-                                                    </button>
-                                                )}
                                             </div>
-                                            {hasChildren && isExpanded && (
-                                                <ul className="nav d-block flex-column ms-3 mt-1">
-                                                    {children.map((child, cIndex) => {
-                                                        const childData = child.attributes || child;
-                                                        const childSlug = childData.slug || '#';
-                                                        const childUrl = childSlug.startsWith('http') || childSlug === '#' ? childSlug : (childSlug.startsWith('/') ? childSlug : `/${childSlug}`);
-                                                        return (
-                                                            <li className="nav-item h6" key={childData.id || cIndex}>
-                                                                <Link className="nav-link" href={childUrl} onClick={closeSidebar}>
-                                                                    {childData.title}
-                                                                </Link>
-                                                            </li>
-                                                        );
-                                                    })}
-                                                </ul>
-                                            )}
                                         </li>
                                     );
                                 })
