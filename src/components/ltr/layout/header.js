@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
-import { formatDate, getStrapiMedia } from '@/lib/strapi';
+import { formatDate, getStrapiMedia, toBengaliNumber } from '@/lib/strapi';
 import { getInstagramPhotos } from '@/services/instagramService';
 import { getCurrentWeather } from '@/services/weatherService';
 import { getMenuItems, getAdsManagement } from '@/services/globalService';
@@ -51,6 +51,51 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
     const [isLoadingInstagrams, setIsLoadingInstagrams] = useState(true);
     const [adsData, setAdsData] = useState(null);
 
+    const hasWeatherTemp = weather.temp !== null && weather.temp !== undefined && !Number.isNaN(Number(weather.temp));
+    const roundedHeaderTemp = hasWeatherTemp ? Math.round(Number(weather.temp)) : null;
+    const weatherTempText = hasWeatherTemp
+        ? (locale === 'bn' ? toBengaliNumber(roundedHeaderTemp) : roundedHeaderTemp)
+        : '--';
+    const weatherUnitText = locale === 'bn' ? '°সে' : '°C';
+
+    const getBrowserCoordinates = () => {
+        return new Promise((resolve) => {
+            if (typeof window === 'undefined' || !navigator.geolocation) {
+                resolve(null);
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    resolve({
+                        lat: position.coords.latitude,
+                        lon: position.coords.longitude,
+                    });
+                },
+                () => resolve(null),
+                {
+                    enableHighAccuracy: false,
+                    timeout: 8000,
+                    maximumAge: 600000,
+                }
+            );
+        });
+    };
+
+    const getIpCoordinates = async () => {
+        try {
+            const response = await fetch('https://ipwho.is/', { cache: 'no-store' });
+            if (!response.ok) return null;
+            const data = await response.json();
+            const lat = Number(data?.latitude);
+            const lon = Number(data?.longitude);
+            if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
+            return { lat, lon };
+        } catch {
+            return null;
+        }
+    };
+
     useEffect(() => {
         setIsLoadingInstagrams(true);
         getInstagramPhotos(6).then(res => {
@@ -79,10 +124,17 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
             }
         });
         
-        // Fetch weather data
-        getCurrentWeather().then(data => {
+        const fetchHeaderWeather = async () => {
+            const gpsCoords = await getBrowserCoordinates();
+            const ipCoords = gpsCoords ? null : await getIpCoordinates();
+            const lat = gpsCoords?.lat ?? ipCoords?.lat;
+            const lon = gpsCoords?.lon ?? ipCoords?.lon;
+
+            const data = await getCurrentWeather(lat, lon, locale);
             setWeather(data);
-        });
+        };
+
+        fetchHeaderWeather();
     }, [locale]);
 
     const toggleSidebarSubMenu = (itemId) => {
@@ -399,7 +451,7 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
                                 <div className="col-auto">
                                     <div className="align-items-center d-flex gap-3">
                                         <div className="fs-5 fw-semibold weather-text d-flex align-items-center gap-2">
-                                            {getWeatherIcon(weather.icon)} {weather.temp ? Math.round(weather.temp) : '--'}°C
+                                            {getWeatherIcon(weather.icon)} {weatherTempText}{weatherUnitText}
                                         </div>
                                         <Link href="/" className="header-logo">
                                             <img src="assets/images/logo.png" className="header-logo_dark" alt="" />
@@ -417,7 +469,7 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="col text-end fw-semibold text-uppercase date-text">{currentDate}</div>
+                                <div className={`col text-end text-uppercase date-text ${locale === 'bn' ? 'date-text-bn' : ''}`}>{currentDate}</div>
                             </div>
                         </div>
                     </div>

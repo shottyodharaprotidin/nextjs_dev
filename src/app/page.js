@@ -17,6 +17,7 @@ import Link from "next/link";
 import { getFeaturedArticles, getPopularArticles, getTrendingNews, getLatestArticles, getReviewArticles, getArticlesByCategory, getEditorPicks } from "@/services/articleService";
 import { getYoutubeVideos, getActivePoll } from "@/services/mediaService";
 import { getGlobalSettings, getTags, getCategories, getAdsManagement } from "@/services/globalService";
+import { getWeatherForecast } from "@/services/weatherService";
 import { getStrapiMedia, formatDate, toBengaliNumber } from "@/lib/strapi";
 
 // Helper: get article data (supports both v4 and v5)
@@ -43,6 +44,137 @@ const fmtDate = (dateStr, locale = 'bn') => {
   return formatDate(dateStr, locale);
 };
 
+const fmtWeatherValue = (value, locale = 'bn') => {
+  if (value === null || value === undefined || Number.isNaN(Number(value))) return '--';
+  const rounded = Math.round(Number(value));
+  return locale === 'bn' ? toBengaliNumber(rounded) : rounded;
+};
+
+const BN_LOCATION_MAP = {
+  dhaka: 'ঢাকা',
+  bangladesh: 'বাংলাদেশ',
+  'people\'s republic of bangladesh': 'বাংলাদেশ',
+
+  chattogram: 'চট্টগ্রাম',
+  chittagong: 'চট্টগ্রাম',
+  cumilla: 'কুমিল্লা',
+  comilla: 'কুমিল্লা',
+  "cox's bazar": 'কক্সবাজার',
+  'coxs bazar': 'কক্সবাজার',
+  feni: 'ফেনী',
+  noakhali: 'নোয়াখালী',
+  lakshmipur: 'লক্ষ্মীপুর',
+  laxmipur: 'লক্ষ্মীপুর',
+  chandpur: 'চাঁদপুর',
+  brahmanbaria: 'ব্রাহ্মণবাড়িয়া',
+  khagrachhari: 'খাগড়াছড়ি',
+  rangamati: 'রাঙ্গামাটি',
+  bandarban: 'বান্দরবান',
+
+  gazipur: 'গাজীপুর',
+  narsingdi: 'নরসিংদী',
+  narayanganj: 'নারায়ণগঞ্জ',
+  manikganj: 'মানিকগঞ্জ',
+  munshiganj: 'মুন্সিগঞ্জ',
+  tangail: 'টাঙ্গাইল',
+  kishoreganj: 'কিশোরগঞ্জ',
+  faridpur: 'ফরিদপুর',
+  rajbari: 'রাজবাড়ী',
+  gopalganj: 'গোপালগঞ্জ',
+  madaripur: 'মাদারীপুর',
+  shariatpur: 'শরীয়তপুর',
+
+  mymensingh: 'ময়মনসিংহ',
+  jamalpur: 'জামালপুর',
+  sherpur: 'শেরপুর',
+  netrokona: 'নেত্রকোনা',
+
+  sylhet: 'সিলেট',
+  moulvibazar: 'মৌলভীবাজার',
+  maulvibazar: 'মৌলভীবাজার',
+  habiganj: 'হবিগঞ্জ',
+  sunamganj: 'সুনামগঞ্জ',
+
+  rajshahi: 'রাজশাহী',
+  naogaon: 'নওগাঁ',
+  natore: 'নাটোর',
+  pabna: 'পাবনা',
+  sirajganj: 'সিরাজগঞ্জ',
+  bogura: 'বগুড়া',
+  bogra: 'বগুড়া',
+  joypurhat: 'জয়পুরহাট',
+  chapainawabganj: 'চাঁপাইনবাবগঞ্জ',
+  'chapai nawabganj': 'চাঁপাইনবাবগঞ্জ',
+
+  rangpur: 'রংপুর',
+  dinajpur: 'দিনাজপুর',
+  thakurgaon: 'ঠাকুরগাঁও',
+  panchagarh: 'পঞ্চগড়',
+  nilphamari: 'নীলফামারী',
+  lalmonirhat: 'লালমনিরহাট',
+  gaibandha: 'গাইবান্ধা',
+  kurigram: 'কুড়িগ্রাম',
+
+  khulna: 'খুলনা',
+  jashore: 'যশোর',
+  jessore: 'যশোর',
+  satkhira: 'সাতক্ষীরা',
+  narail: 'নড়াইল',
+  magura: 'মাগুরা',
+  jhenaidah: 'ঝিনাইদহ',
+  kushtia: 'কুষ্টিয়া',
+  chuadanga: 'চুয়াডাঙ্গা',
+  meherpur: 'মেহেরপুর',
+  bagerhat: 'বাগেরহাট',
+
+  barishal: 'বরিশাল',
+  barisal: 'বরিশাল',
+  bhola: 'ভোলা',
+  pirojpur: 'পিরোজপুর',
+  jhalokati: 'ঝালকাঠি',
+  patuakhali: 'পটুয়াখালী',
+  barguna: 'বরগুনা',
+
+  singapore: 'সিঙ্গাপুর',
+  malaysia: 'মালয়েশিয়া',
+  'kuala lumpur': 'কুয়ালালামপুর',
+  'petaling jaya': 'পেটালিং জায়া',
+  puchong: 'পুচং',
+  putrajaya: 'পুত্রাজায়া',
+  'shah alam': 'শাহ আলম',
+  subang: 'সুবাং',
+  'subang jaya': 'সুবাং জায়া',
+  klang: 'ক্লাং',
+  cyberjaya: 'সাইবারজায়া',
+  selangor: 'সেলাঙ্গর',
+  penang: 'পেনাং',
+  johor: 'জোহর',
+  india: 'ভারত',
+  kolkata: 'কলকাতা',
+  delhi: 'দিল্লি',
+  pakistan: 'পাকিস্তান',
+  nepal: 'নেপাল',
+  bhutan: 'ভুটান',
+  sri: 'শ্রী',
+  lanka: 'লঙ্কা',
+  thailand: 'থাইল্যান্ড',
+  indonesia: 'ইন্দোনেশিয়া',
+  jakarta: 'জাকার্তা',
+};
+
+const localizeLocationLabel = (label, locale = 'en') => {
+  if (!label || locale !== 'bn') return label;
+
+  return label
+    .split(',')
+    .map((part) => {
+      const text = part.trim();
+      const key = text.toLowerCase();
+      return BN_LOCATION_MAP[key] || text;
+    })
+    .join(', ');
+};
+
 // ... (rest of page component)
 import { useLanguage } from '@/lib/LanguageContext';
 
@@ -65,6 +197,7 @@ const dictionary = {
     techInnovation: 'Tech & Innovation',
     editorsChoice: "Editor's Choice",
     recentArticles: 'Recent Articles',
+    weatherCity: 'Dhaka, Bangladesh',
     today: 'Today',
     socialJoin: 'Join',
     socialFollowers: 'Followers',
@@ -140,11 +273,71 @@ export default function Home() {
   const [latestReviews, setLatestReviews] = useState([]);
   const [adsData, setAdsData] = useState(null);
   const [categories, setCategories] = useState([]);
+  const [weatherData, setWeatherData] = useState({
+    currentTemp: null,
+    apparentTemp: null,
+    description: '',
+    icon: 'partly-cloudy',
+    iconClass: 'wi wi-day-cloudy',
+    rainChance: null,
+    locationLabel: '',
+    daily: [],
+  });
   const [loading, setLoading] = useState(true);
   
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [currentPageUrl, setCurrentPageUrl] = useState('');
+  const [isRecentFooterLiked, setIsRecentFooterLiked] = useState(false);
+
+  const shareBaseUrl = currentPageUrl || 'https://shottyodharaprotidin.com';
+  const shareTitle = t.recentArticles;
+  const shareText = locale === 'bn' ? 'সাম্প্রতিক নিবন্ধ দেখুন' : 'Check out recent articles';
+  const encodedShareUrl = encodeURIComponent(shareBaseUrl);
+  const encodedShareText = encodeURIComponent(shareText);
+
+  const openPopup = (url) => {
+    if (typeof window === 'undefined') return;
+    window.open(url, '_blank', 'noopener,noreferrer,width=700,height=560');
+  };
+
+  const handleShareClick = async (e) => {
+    e.preventDefault();
+    if (typeof window === 'undefined') return;
+    const url = currentPageUrl || window.location.href;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: shareTitle, text: shareText, url });
+        return;
+      } catch {
+      }
+    }
+
+    if (navigator.clipboard?.writeText) {
+      try {
+        await navigator.clipboard.writeText(url);
+      } catch {
+      }
+    }
+  };
+
+  const handleLikeClick = (e) => {
+    e.preventDefault();
+    setIsRecentFooterLiked((prev) => {
+      const next = !prev;
+      if (typeof window !== 'undefined') {
+        window.localStorage.setItem('recentFooterLiked', next ? '1' : '0');
+      }
+      return next;
+    });
+  };
+
+  const handleTwitterClick = (e) => {
+    e.preventDefault();
+    openPopup(`https://twitter.com/intent/tweet?url=${encodedShareUrl}&text=${encodedShareText}`);
+  };
 
   const displayFeatured = loading ? dummyArticles : featured;
   const displayPopular = loading ? dummyArticles : popular;
@@ -175,16 +368,130 @@ export default function Home() {
     }
   };
 
+  const getBrowserCoordinates = () => {
+    return new Promise((resolve) => {
+      if (typeof window === 'undefined' || !navigator.geolocation) {
+        resolve(null);
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          resolve({
+            lat: position.coords.latitude,
+            lon: position.coords.longitude,
+          });
+        },
+        () => resolve(null),
+        {
+          enableHighAccuracy: false,
+          timeout: 8000,
+          maximumAge: 600000,
+        }
+      );
+    });
+  };
+
+  const getIpLocation = async () => {
+    const providers = [
+      async () => {
+        const response = await fetch('https://ipapi.co/json/', { cache: 'no-store' });
+        if (!response.ok) return null;
+        const data = await response.json();
+        return {
+          lat: Number(data?.latitude),
+          lon: Number(data?.longitude),
+          city: data?.city || '',
+          country: data?.country_name || '',
+        };
+      },
+      async () => {
+        const response = await fetch('https://ipwho.is/', { cache: 'no-store' });
+        if (!response.ok) return null;
+        const data = await response.json();
+        return {
+          lat: Number(data?.latitude),
+          lon: Number(data?.longitude),
+          city: data?.city || '',
+          country: data?.country || '',
+        };
+      },
+    ];
+
+    for (const provider of providers) {
+      try {
+        const result = await provider();
+        const lat = Number(result?.lat);
+        const lon = Number(result?.lon);
+        if (!Number.isFinite(lat) || !Number.isFinite(lon)) continue;
+
+        const city = result?.city || '';
+        const country = result?.country || '';
+        const label = city && country ? `${city}, ${country}` : city || country || '';
+
+        return { lat, lon, label };
+      } catch {
+      }
+    }
+
+    return null;
+  };
+
+  const getTimezoneLocation = async () => {
+    try {
+      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+      if (!timezone.includes('/')) return null;
+
+      const timezoneParts = timezone.split('/');
+      const cityGuess = timezoneParts[timezoneParts.length - 1]?.replace(/_/g, ' ');
+      if (!cityGuess) return null;
+
+      const language = locale === 'bn' ? 'bn' : 'en';
+      const response = await fetch(
+        `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(cityGuess)}&count=1&language=${language}&format=json`,
+        { cache: 'no-store' }
+      );
+      if (!response.ok) return null;
+
+      const data = await response.json();
+      const result = data?.results?.[0];
+      if (!result) return null;
+
+      const lat = Number(result?.latitude);
+      const lon = Number(result?.longitude);
+      if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
+
+      const city = result?.name || cityGuess;
+      const country = result?.country || '';
+      const label = city && country ? `${city}, ${country}` : city || country || '';
+
+      return { lat, lon, label };
+    } catch {
+      return null;
+    }
+  };
+
   useEffect(() => {
     // Remove RTL direction
     document.documentElement.removeAttribute('dir', 'rtl');
+    setCurrentPageUrl(window.location.href);
+    setIsRecentFooterLiked(window.localStorage.getItem('recentFooterLiked') === '1');
     
     // Fetch data dari API
     async function fetchData() {
       try {
+        const userCoords = await getBrowserCoordinates();
+        const [ipLocation, timezoneLocation] = await Promise.all([
+          getIpLocation(),
+          getTimezoneLocation(),
+        ]);
+
+        const weatherLat = userCoords?.lat ?? ipLocation?.lat ?? timezoneLocation?.lat;
+        const weatherLon = userCoords?.lon ?? ipLocation?.lon ?? timezoneLocation?.lon;
+        const detectedLocationLabel = ipLocation?.label || timezoneLocation?.label || '';
 
 
-        const [featuredRes, popularRes, trendingRes, latestRes, youtubeRes, pollRes, globalRes, tagsRes, techRes, editorRes, reviewRes, categoriesRes, adsRes] = await Promise.allSettled([
+        const [featuredRes, popularRes, trendingRes, latestRes, youtubeRes, pollRes, globalRes, tagsRes, techRes, editorRes, reviewRes, categoriesRes, adsRes, weatherRes] = await Promise.allSettled([
           getFeaturedArticles(10, locale),
           getPopularArticles(10, locale),
           getTrendingNews(15, locale),
@@ -198,6 +505,7 @@ export default function Home() {
           getReviewArticles(7, locale),
           getCategories(10, locale),
           getAdsManagement(),
+          getWeatherForecast(weatherLat, weatherLon, locale),
         ]);
 
         setFeatured(featuredRes.value?.data || []);
@@ -215,6 +523,14 @@ export default function Home() {
         setCategories(categoriesRes.value?.data || []);
         const adsRaw = adsRes.value?.data || adsRes.value || null;
         setAdsData(adsRaw);
+        if (weatherRes.status === 'fulfilled' && weatherRes.value) {
+          const nextWeatherData = { ...weatherRes.value };
+          const resolvedLocationLabel = weatherRes.value.locationLabel || detectedLocationLabel || '';
+          if (resolvedLocationLabel) {
+            nextWeatherData.locationLabel = localizeLocationLabel(resolvedLocationLabel, locale);
+          }
+          setWeatherData(nextWeatherData);
+        }
         setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -362,7 +678,7 @@ export default function Home() {
                   </ul>
                 </div>
                 {/* START NAV TABS */}
-                <div className="tabs-wrapper">
+                <div className={`tabs-wrapper ${locale === 'bn' ? 'tabs-wrapper-bn' : 'tabs-wrapper-en'}`}>
                   <ul className="nav nav-tabs" id="myTab" role="tablist">
                     <li className="nav-item" role="presentation">
                       <button className="nav-link border-0 active" id="most-viewed" data-bs-toggle="tab" data-bs-target="#most-viewed-pane" type="button" role="tab" aria-controls="most-viewed-pane" aria-selected="true">
@@ -565,7 +881,12 @@ export default function Home() {
                       );
                     })}
                     <div className="text-center mt-3">
-                      <Link href="#footer" className="fw-bold text-primary-hover"><u>{t.seeAllCategories}</u></Link>
+                      <Link
+                        href="#footer"
+                        className={`text-primary-hover see-all-categories-link ${locale === 'bn' ? 'see-all-categories-link-bn' : ''}`}
+                      >
+                        <u>{t.seeAllCategories}</u>
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -632,8 +953,8 @@ export default function Home() {
           <div className="container">
             <div className="row justify-content-center mb-5">
               <div className="col-md-6 text-center">
-                <h3 className="text-white">{t.latestVideoNews}</h3>
-                <p className="text-white mb-0">
+                <h3 className="text-white latest-video-title">{t.latestVideoNews}</h3>
+                <p className="text-white mb-0 latest-video-desc">
                   {t.latestVideoDesc}
                 </p>
               </div>
@@ -727,9 +1048,7 @@ export default function Home() {
                   <div className="post-inner">
                     {/*post header*/}
                     <div className="post-head">
-                      <h2 className="title">
-                        <strong>{t.recentArticles}</strong>
-                      </h2>
+                      <h2 className="title recent-articles-title">{t.recentArticles}</h2>
                     </div>
                     {/* post body */}
                     <div className="post-body">
@@ -844,28 +1163,54 @@ export default function Home() {
                             <ul>
                               <li>
                                 <div className="share transition">
-                                  <a href="#" target="_blank" className="ico fb">
+                                  <a
+                                    href={`https://www.facebook.com/sharer/sharer.php?u=${encodedShareUrl}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="ico fb"
+                                  >
                                     <i className="fab fa-facebook-f" />
                                   </a>
-                                  <a href="#" target="_blank" className="ico tw">
+                                  <a
+                                    href={`https://twitter.com/intent/tweet?url=${encodedShareUrl}&text=${encodedShareText}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="ico tw"
+                                  >
                                     <i className="fab fa-twitter" />
                                   </a>
-                                  <a href="#" target="_blank" className="ico rs">
+                                  <a
+                                    href={globalSettings?.socialRssUrl || '/feed.xml'}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="ico rs"
+                                  >
                                     <i className="fas fa-rss" />
                                   </a>
-                                  <a href="#" target="_blank" className="ico pin">
+                                  <a
+                                    href={`https://pinterest.com/pin/create/button/?url=${encodedShareUrl}&description=${encodeURIComponent(shareTitle)}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="ico pin"
+                                  >
                                     <i className="fab fa-pinterest-p" />
                                   </a>
-                                  <i className="ti ti-share ico-share" />
+                                  <a href="#" onClick={handleShareClick} className="ico-share" aria-label={locale === 'bn' ? 'শেয়ার করুন' : 'Share'}>
+                                    <i className="ti ti-share ico-share" />
+                                  </a>
                                 </div>
                               </li>
                               <li>
-                                <a href="#">
-                                  <i className="ti ti-heart" />
+                                <a href="#" onClick={handleLikeClick} aria-label={locale === 'bn' ? 'লাইক' : 'Like'}>
+                                  <i className={`ti ti-heart ${isRecentFooterLiked ? 'text-primary' : ''}`} />
                                 </a>
                               </li>
                               <li>
-                                <a href="#">
+                                <a
+                                  href={`https://twitter.com/intent/tweet?url=${encodedShareUrl}&text=${encodedShareText}`}
+                                  onClick={handleTwitterClick}
+                                  aria-label={locale === 'bn' ? 'টুইটারে শেয়ার করুন' : 'Share on X'}
+                                >
                                   <i className="ti ti-twitter" />
                                 </a>
                               </li>
@@ -896,96 +1241,47 @@ export default function Home() {
                   <div className="weather-wrapper-2 weather-bg-2">
                     <div className="weather-temperature">
                       <div className="weather-now">
-                        <span className="big-degrees">39</span>
+                        <span className="big-degrees">{fmtWeatherValue(weatherData.currentTemp, locale)}</span>
                         <span className="circle">°</span>
                         <span className="weather-unit">C</span>
                       </div>
                       <div className="weather-icon-2">
-                        <SunnyWeather />
+                        <SunnyWeather icon={weatherData.icon || 'partly-cloudy'} />
                       </div>
                     </div>
                     <div className="weather-info">
-                      <div className="weather-name">{t.weatherStatic.condition}</div>
-                      <span>
-                        {t.weatherStatic.realFeel}: 67 <sup>°</sup>
+                      <div className="weather-name">{weatherData.description || t.weatherStatic.condition}</div>
+                      <span className="weather-real-feel">
+                        <span className="weather-real-feel-label">{t.weatherStatic.realFeel}:</span>{' '}
+                        <span className="weather-real-feel-value">{fmtWeatherValue(weatherData.apparentTemp, locale)}</span>{' '}
+                        <sup>°</sup>
                       </span>
-                      <span>{t.weatherStatic.chanceOfRain}</span>
+                      <span>
+                        {t.weatherStatic.chanceOfRain}: {weatherData.rainChance === null || weatherData.rainChance === undefined
+                          ? '--'
+                          : `${fmtWeatherValue(weatherData.rainChance, locale)}%`}
+                      </span>
                     </div>
                     <div className="weather-week-2">
-                      <div className="weather-days">
-                        <div className="day-0">{t.weatherStatic.days[0]}</div>
-                        <div className="day-icon">
-                          <i className="wi wi-day-sunny" />
-                        </div>
-                        <div className="day-degrees">
-                          <span className="degrees-0">45</span>
-                          <span className="td-circle">°</span>
-                        </div>
-                      </div>
-                      <div className="weather-days">
-                        <div className="day-1">{t.weatherStatic.days[1]}</div>
-                        <div className="day-icon">
-                          <i className="wi wi-day-cloudy-high" />
-                        </div>
-                        <div className="day-degrees">
-                          <span className="degrees-1">21</span>
-                          <span className="circle">°</span>
-                        </div>
-                      </div>
-                      <div className="weather-days">
-                        <div className="day-2">{t.weatherStatic.days[2]}</div>
-                        <div className="day-icon">
-                          <i className="wi wi-day-sleet" />
-                        </div>
-                        <div className="day-degrees">
-                          <span className="degrees-2">29</span>
-                          <span className="circle">°</span>
-                        </div>
-                      </div>
-                      <div className="weather-days">
-                        <div className="day-3">{t.weatherStatic.days[3]}</div>
-                        <div className="day-icon">
-                          <i className="wi wi-day-lightning" />
-                        </div>
-                        <div className="day-degrees">
-                          <span className="degrees-3">19</span>
-                          <span className="circle">°</span>
-                        </div>
-                      </div>
-                      <div className="weather-days">
-                        <div className="day-4">{t.weatherStatic.days[4]}</div>
-                        <div className="day-icon">
-                          <i className="wi wi-sleet" />
-                        </div>
-                        <div className="day-degrees">
-                          <span className="degrees-4">54</span>
-                          <span className="circle">°</span>
-                        </div>
-                      </div>
-                      <div className="weather-days">
-                        <div className="day-4">{t.weatherStatic.days[5]}</div>
-                        <div className="day-icon">
-                          <i className="wi wi-smog" />
-                        </div>
-                        <div className="day-degrees">
-                          <span className="degrees-5">68</span>
-                          <span className="circle">°</span>
-                        </div>
-                      </div>
-                      <div className="weather-days">
-                        <div className="day-4">{t.weatherStatic.days[6]}</div>
-                        <div className="day-icon">
-                          <i className="wi wi-lightning" />
-                        </div>
-                        <div className="day-degrees">
-                          <span className="degrees-6">28</span>
-                          <span className="circle">°</span>
-                        </div>
-                      </div>
+                      {t.weatherStatic.days.map((dayLabel, index) => {
+                        const day = weatherData.daily?.[index] || {};
+                        return (
+                          <div className="weather-days" key={`weather-day-${index}`}>
+                            <div className={`day-${index}`}>{dayLabel}</div>
+                            <div className="day-icon">
+                              <i className={day.iconClass || "wi wi-day-cloudy"} />
+                            </div>
+                            <div className="day-degrees">
+                              <span className={`degrees-${index}`}>{fmtWeatherValue(day.maxTemp, locale)}</span>
+                              <span className="circle">°</span>
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
                     <div className="weather-footer">
                       <div className="weather-date">{formatDate(new Date().toISOString(), locale)}</div>
-                      <div className="weather-city">{t.weatherCity}</div>
+                      <div className="weather-city">{weatherData.locationLabel || t.weatherCity}</div>
                     </div>
                   </div>
                   {/* END OF /. WEATHER */}

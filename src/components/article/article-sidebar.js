@@ -81,7 +81,7 @@ const ArticleSidebar = ({ mostViewed, popularNews, globalSettings, adsData, loca
       {/* END OF /. SOCIAL ICON */}
 
       {/* START NAV TABS */}
-      <div className="tabs-wrapper">
+      <div className={`tabs-wrapper ${locale === 'bn' ? 'tabs-wrapper-bn' : 'tabs-wrapper-en'}`}>
         <ul className="nav nav-tabs" id="myTab" role="tablist">
           <li className="nav-item" role="presentation">
             <button

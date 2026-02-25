@@ -79,6 +79,7 @@ const dictionary = {
 const Footer = () => {
   useBackgroundImageLoader();
   const { locale } = useLanguage();
+  const isBanglaLocale = (locale || '').toLowerCase().startsWith('bn');
   const t = dictionary[locale] || dictionary.bn;
   const [recentPosts, setRecentPosts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -122,6 +123,9 @@ const Footer = () => {
   const rightCategories = categories.slice(midIndex);
 
   const footerAttrs = footerData?.attributes || footerData || {};
+  const footerPrimaryText = footerAttrs?.description || t.description || '';
+  const hasBanglaFooterText = /[\u0980-\u09FF]/.test(footerPrimaryText);
+  const applyBanglaFooterClass = isBanglaLocale || hasBanglaFooterText;
 
   return (
     <>
@@ -129,7 +133,7 @@ const Footer = () => {
       {/* *** START FOOTER *** */}
       <footer
         id="footer"
-        className="main-footer"
+        className={`main-footer ${applyBanglaFooterClass ? 'footer-locale-bn' : ''}`}
         style={{
           backgroundImage: `url(${getStrapiMedia(footerAttrs?.backgroundImage) || "/assets/images/1920x1000-1.jpg"})`,
           backgroundSize: 'cover',
@@ -297,7 +301,7 @@ const Footer = () => {
       {/* *** END OF /. FOOTER *** */}
 
       {/* *** START SUB FOOTER *** */}
-      <div className="sub-footer">
+      <div className={`sub-footer ${applyBanglaFooterClass ? 'footer-locale-bn' : ''}`}>
         <div className="container">
           <div className="align-items-center g-1 g-sm-3 row">
             <div className="col text-center text-sm-start">
