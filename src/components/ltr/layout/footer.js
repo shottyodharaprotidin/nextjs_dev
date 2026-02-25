@@ -116,6 +116,8 @@ const Footer = () => {
   const leftCategories = categories.slice(0, midIndex);
   const rightCategories = categories.slice(midIndex);
 
+  const footerAttrs = footerData?.attributes || footerData || {};
+
   return (
     <>
        <ScrollToTopUI/>
@@ -123,20 +125,20 @@ const Footer = () => {
       <footer
         id="footer"
         className="main-footer bg-img"
-        data-image-src={getStrapiMedia(footerData?.attributes?.backgroundImage) || "/assets/images/1920x1000-1.jpg"}
+        data-image-src={getStrapiMedia(footerAttrs?.backgroundImage) || "/assets/images/1920x1000-1.jpg"}
       >
         <div className="container position-relative z-1">
           <div className="g-3 row">
             <div className="col-md-3">
               <img
-                src={getStrapiMedia(footerData?.attributes?.logo) || "/assets/images/logo-white.png"}
+                src={getStrapiMedia(footerAttrs?.logo) || "/assets/images/logo-white.png"}
                 alt="footer logo"
                 className="img-fluid"
               />
             </div>
             <div className="col-md-5">
               <p className="text-white mb-0">
-                {footerData?.attributes?.description || t.description}
+                {footerAttrs?.description || t.description}
               </p>
             </div>
             <div className="col-md-4">
@@ -155,7 +157,7 @@ const Footer = () => {
                   </button>
                 </div>
                 <div className="form-text mt-2 text-white">
-                  {footerData?.attributes?.newsletterText || t.subscribe.text}
+                  {footerAttrs?.newsletterText || t.subscribe.text}
                   <a href="#" className="text-decoration-underline text-primary ms-1">
                     {t.subscribe.privacy}
                   </a>
@@ -170,17 +172,17 @@ const Footer = () => {
             <div className="col-sm-6 col-lg-3 footer-box py-4">
               <div className="about-inner text-center">
                 <h5 className="wiget-title">{t.app.title}</h5>
-                <div className="bg-white mb-3 d-inline-block">
+                <div className="bg-white pb-0 mb-3 d-inline-block rounded">
                   {/* Start Qr Code Image */}
                   <img
-                    src={getStrapiMedia(footerData?.attributes?.appQrImage) || "/assets/images/qr-code.png"}
-                    height={105}
-                    width={105}
+                    src={getStrapiMedia(footerAttrs?.appQrImage) || "/assets/images/qr-code.png"}
+                    height={180}
+                    width={180}
                     alt="Qr Code"
                   />
                   {/* /. End Qr Code Image */}
                 </div>
-                <p>{footerData?.attributes?.appDescription || t.app.text}</p>
+                <p>{footerAttrs?.appDescription || t.app.text}</p>
               </div>
             </div>
             {/*  END OF /. FOOTER BOX (Qr Code) */}
@@ -294,19 +296,19 @@ const Footer = () => {
             <div className="col-sm-auto">
               <ul className="footer-nav list-unstyled text-center mb-0">
                 <li className="list-inline-item">
-                  <Link href={footerData?.attributes?.privacyLink || 'http://localhost:3000/privacy-policy'}>{t.links.privacy}</Link>
+                  <Link href={footerAttrs?.privacyLink || 'http://localhost:3000/privacy-policy'}>{t.links.privacy}</Link>
                 </li>
                 <li className="list-inline-item">
-                  <Link href={footerData?.attributes?.contactLink || 'http://localhost:3000/contact'}>{t.links.contact}</Link>
+                  <Link href={footerAttrs?.contactLink || 'http://localhost:3000/contact'}>{t.links.contact}</Link>
                 </li>
                 <li className="list-inline-item">
-                  <Link href={footerData?.attributes?.aboutLink || 'http://localhost:3000/about'}>{t.links.about}</Link>
+                  <Link href={footerAttrs?.aboutLink || 'http://localhost:3000/about'}>{t.links.about}</Link>
                 </li>
                 <li className="list-inline-item">
-                  <Link href={footerData?.attributes?.donationLink || 'http://localhost:3000/donation'}>{t.links.donation}</Link>
+                  <Link href={footerAttrs?.donationLink || 'http://localhost:3000/donation'}>{t.links.donation}</Link>
                 </li>
                 <li className="list-inline-item">
-                  <Link href={footerData?.attributes?.faqLink || 'http://localhost:3000/faq'}>{t.links.faq}</Link>
+                  <Link href={footerAttrs?.faqLink || 'http://localhost:3000/faq'}>{t.links.faq}</Link>
                 </li>
               </ul>
             </div>

@@ -35,14 +35,11 @@ export default async function FaqPage() {
             <main className="page_main_wrapper">
                 <BodyClassCleaner remove={['home-nine', 'home-six', 'home-seven', 'home-two', 'boxed-layout', 'layout-rtl']} />
                 {/* START PAGE HEADER */}
-                <section
-                    className="inner-head bg-img"
-                    data-image-src={headerImage}
-                >
+                <section className="inner-head bg-dark">
                     <div className="container position-relative">
                         <div className="row">
                             <div className="col-sm-12">
-                                <h1 className="entry-title">{t.title}</h1>
+                                <h1 className="entry-title text-white">{t.title}</h1>
                                 {t.description && <p className="text-white mt-2">{t.description}</p>}
                                 <div className="breadcrumb">
                                     <ul className="clearfix">
@@ -104,6 +101,15 @@ export default async function FaqPage() {
                                 )}
                             </div>
                         </div>
+                        
+                        {/* HEADER IMAGE MOVED UNDER FAQ PER CLIENT REQUEST */}
+                        {headerImage && headerImage !== '/default.jpg' && (
+                            <div className="row mt-5">
+                                <div className="col-12 text-center">
+                                    <img src={headerImage} alt="FAQ Header" className="img-fluid rounded" />
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </section>
             </main>

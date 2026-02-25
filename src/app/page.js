@@ -32,6 +32,7 @@ const getArt = (article, locale = 'bn') => {
     author: d.author?.data?.attributes?.name || d.author?.name || t.editor,
     date: d.createdAt || d.publishedAt || new Date().toISOString(),
     excerpt: d.excerpt || '',
+    videoUrl: d.videoUrl || null,
     id: article?.id || 0,
   };
 };
@@ -445,14 +446,14 @@ export default function Home() {
                   <div className="row gx-3 gx-lg-4 gy-4">
                     {(displayLatest.length > 3 ? displayLatest.slice(3, 9) : []).map((article, i) => {
                       const a = getArt(article, locale);
-                      const icons = ['fa-play', 'fa-camera', 'fa-camera', 'fa-play', 'fa-camera', 'fa-camera'];
+                      const iconClass = a.videoUrl ? 'fa-play' : 'fa-camera';
                       return (
                         <div key={a.id || `grid-${i}`} className="col-6 col-md-4 col-sm-6">
                           <div className="grid-item mb-0">
                             <div className="grid-item-img">
                               <Link href={`/article/${a.slug}`}>
                                 <img src={a.image} className="img-fluid" alt={a.title} onError={(e) => e.target.src = '/default.jpg'} />
-                                <div className="link-icon"><i className={`fa ${icons[i] || 'fa-camera'}`} /></div>
+                                <div className="link-icon"><i className={`fa ${iconClass}`} /></div>
                               </Link>
                             </div>
                             <h5><Link href={`/article/${a.slug}`} className="title">{a.title}</Link></h5>
