@@ -38,42 +38,42 @@ const ArticleSidebar = ({ mostViewed, popularNews, globalSettings, adsData, loca
             <Link href={globalSettings?.socialRssUrl || '#'} className="rss" target="_blank">
               <i className="fas fa-rss" />
               <div>{globalSettings?.socialRssSubscribers || 0}</div>
-              <p className="social-text">{t('subscribers')}</p>
+              <p className="social-text follower-label-text">{t('subscribers')}</p>
             </Link>
           </li>
           <li className="col-4">
             <Link href={globalSettings?.socialFacebookUrl || '#'} className="fb" target="_blank">
               <i className="fab fa-facebook-f" />
               <div>{globalSettings?.socialFacebookFans || 0}</div>
-              <p className="social-text">{t('fans')}</p>
+              <p className="social-text follower-label-text">{t('fans')}</p>
             </Link>
           </li>
           <li className="col-4">
             <Link href={globalSettings?.socialInstagramUrl || '#'} className="insta" target="_blank">
               <i className="fab fa-instagram" />
               <div>{globalSettings?.socialInstagramFollowers || 0}</div>
-              <p className="social-text">{t('followers')}</p>
+              <p className="social-text follower-label-text">{t('followers')}</p>
             </Link>
           </li>
           <li className="col-4">
             <Link href={globalSettings?.socialYoutubeUrl || '#'} className="you_tube" target="_blank">
               <i className="fab fa-youtube" />
               <div>{globalSettings?.socialYoutubeSubscribers || 0}</div>
-              <p className="social-text">{t('subscribers')}</p>
+              <p className="social-text follower-label-text">{t('subscribers')}</p>
             </Link>
           </li>
           <li className="col-4">
             <Link href={globalSettings?.socialTwitterUrl || '#'} className="twitter" target="_blank">
               <i className="fab fa-twitter" />
               <div>{globalSettings?.socialTwitterFollowers || 0}</div>
-              <p className="social-text">{t('followers')}</p>
+              <p className="social-text follower-label-text">{t('followers')}</p>
             </Link>
           </li>
           <li className="col-4">
             <Link href={globalSettings?.socialPinterestUrl || '#'} className="pin" target="_blank">
               <i className="fab fa-pinterest-p" />
               <div>{globalSettings?.socialPinterestFollowers || 0}</div>
-              <p className="social-text">{t('followers')}</p>
+              <p className="social-text follower-label-text">{t('followers')}</p>
             </Link>
           </li>
         </ul>

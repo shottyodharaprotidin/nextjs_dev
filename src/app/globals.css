@@ -2769,6 +2769,23 @@ div.bhoechie-tab .weather-temp-wrap:not(.active) {
     font-size: 24px;
 }
 
+.social-media li a div {
+    font-size: 16px;
+    font-weight: 700;
+    margin-top: 8px;
+    line-height: 1.2;
+}
+
+.social-media li a p,
+.social-media li a p.social-text,
+.follower-label-text {
+    font-size: 14px !important;
+    margin-bottom: 0 !important;
+    margin-top: 1px !important;
+    letter-spacing: -0.2px !important;
+    line-height: 1 !important;
+}
+
 .social-media li .rss,
 .home-six .social-media li .rss:hover,
 .home-seven .social-media li .rss:hover,

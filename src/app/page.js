@@ -68,6 +68,8 @@ const dictionary = {
     today: 'Today',
     socialJoin: 'Join',
     socialFollowers: 'Followers',
+    socialFans: 'Fans',
+    socialSubscribers: 'Subscribers',
     weatherStatic: {
       condition: 'Partly Sunny',
       realFeel: 'Real Feel',
@@ -96,6 +98,8 @@ const dictionary = {
     today: 'আজ',
     socialJoin: 'যোগ দিন',
     socialFollowers: 'অনুসরণকারী',
+    socialFans: 'ভক্ত',
+    socialSubscribers: 'সাবস্ক্রাইবার',
     weatherStatic: {
       condition: 'আংশিক রৌদ্রোজ্জ্বল',
       realFeel: 'অনুভূত',
@@ -500,42 +504,42 @@ export default function Home() {
                       <a href={globalSettings?.socialRssUrl || '#'} className="rss" target="_blank">
                         <i className="fas fa-rss" />
                         <div>{globalSettings?.socialRssSubscribers || 0}</div>
-                        <p>Subscribers</p>
+                        <p className="follower-label-text">{t.socialSubscribers}</p>
                       </a>
                     </li>
                     <li className="col-4">
                       <a href={globalSettings?.socialFacebookUrl || '#'} className="fb" target="_blank">
                         <i className="fab fa-facebook-f" />
                         <div>{globalSettings?.socialFacebookFans || 0}</div>
-                        <p>Fans</p>
+                        <p className="follower-label-text">{t.socialFans}</p>
                       </a>
                     </li>
                     <li className="col-4">
                       <a href={globalSettings?.socialInstagramUrl || '#'} className="insta" target="_blank">
                         <i className="fab fa-instagram" />
                         <div>{globalSettings?.socialInstagramFollowers || 0}</div>
-                        <p>Followers</p>
+                        <p className="follower-label-text">{t.socialFollowers}</p>
                       </a>
                     </li>
                     <li className="col-4">
                       <a href={globalSettings?.socialYoutubeUrl || '#'} className="you_tube" target="_blank">
                         <i className="fab fa-youtube" />
                         <div>{globalSettings?.socialYoutubeSubscribers || 0}</div>
-                        <p>Subscribers</p>
+                        <p className="follower-label-text">{t.socialSubscribers}</p>
                       </a>
                     </li>
                     <li className="col-4">
                       <a href={globalSettings?.socialTwitterUrl || '#'} className="twitter" target="_blank">
                         <i className="fab fa-twitter" />
                         <div>{globalSettings?.socialTwitterFollowers || 0}</div>
-                        <p>Followers</p>
+                        <p className="follower-label-text">{t.socialFollowers}</p>
                       </a>
                     </li>
                     <li className="col-4">
                       <a href={globalSettings?.socialPinterestUrl || '#'} className="pint" target="_blank">
                         <i className="fab fa-pinterest-p" />
                         <div>{globalSettings?.socialPinterestFollowers || 0}</div>
-                        <p>Followers</p>
+                        <p className="follower-label-text">{t.socialFollowers}</p>
                       </a>
                     </li>
                   </ul>{" "}
