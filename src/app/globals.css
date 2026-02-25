@@ -5153,6 +5153,23 @@ blockquote.no-sign p {
     height: auto;
 }
 
+/* English locale overrides - 2px smaller than Bengali base */
+.locale-en .grid-item h5 {
+    font-size: 16px;
+    line-height: 22px;
+}
+.locale-en .comments-container h3,
+.locale-en .comment-form h3 {
+    font-size: 18px;
+    line-height: 23px;
+}
+.locale-en .comment-form label {
+    font-size: 14px;
+}
+.locale-en .comment-form .form-control {
+    font-size: 13px;
+}
+
 
 /*** 26. Category Style One
 ------------------------------------------------------------------------------*/

@@ -32,7 +32,7 @@ const ClientArticleDetail = ({ article, mostViewed, popularNews, globalSettings,
   return (
     <Layout hideMiddleHeader={true} globalSettings={globalSettings}>
       {/* *** START PAGE MAIN CONTENT *** */}
-      <main className="page_main_wrapper">
+      <main className={`page_main_wrapper ${locale === 'en' ? 'locale-en' : ''}`}>
         {/* START PAGE TITLE */}
         <div className="page-title">
           <div className="container">
