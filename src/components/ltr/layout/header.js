@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { formatDate, getStrapiMedia } from '@/lib/strapi';
 import { getInstagramPhotos } from '@/services/instagramService';
 import { getCurrentWeather } from '@/services/weatherService';
-import { getMenuItems } from '@/services/globalService';
+import { getMenuItems, getAdsManagement } from '@/services/globalService';
 import { useLanguage } from '@/lib/LanguageContext';
 import { WiDaySunny, WiCloud, WiRain, WiSnow, WiThunderstorm, WiFog } from 'weather-icons-react';
 import ThemeChanger from '../style-selectors/style-selector';
@@ -49,6 +49,7 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
 
     const [instagrams, setInstagrams] = useState([]);
     const [isLoadingInstagrams, setIsLoadingInstagrams] = useState(true);
+    const [adsData, setAdsData] = useState(null);
 
     useEffect(() => {
         setIsLoadingInstagrams(true);
@@ -56,6 +57,9 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
             setInstagrams(res?.data || []);
         }).finally(() => {
             setIsLoadingInstagrams(false);
+        });
+        getAdsManagement().then(res => {
+            setAdsData(res?.data || res || null);
         });
     }, []);
 
@@ -237,9 +241,14 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
                                         <img src="/assets/images/logo-white.png" className="img-fluid header-logo_white" alt="" />
                                     </Link>
                                 </div>
-                                <div className="col-sm-8">
-                                    <Link href={globalSettings?.adBannerTopLink || '#'}>
-                                        <img src={getStrapiMedia(globalSettings?.adBannerTop, "/assets/images/add728x90-1.jpg")} className="img-fluid" alt="Top Banner" />
+                                <div className="col-sm-8 text-end">
+                                    <Link href={adsData?.headerBannerLink || '#'}>
+                                        <img 
+                                            src={getStrapiMedia(adsData?.headerBanner) || "/assets/images/add728x90-1.jpg"} 
+                                            alt="Header Banner" 
+                                            style={{ width: '728px', height: '90px', objectFit: 'cover' }}
+                                            className="img-fluid"
+                                        />
                                     </Link>
                                 </div>
                             </div>

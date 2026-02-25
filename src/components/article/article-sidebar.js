@@ -6,16 +6,16 @@ import { getStrapiMedia, formatDate, toBengaliNumber } from '@/lib/strapi';
 import { useTranslations } from '@/lib/translations';
 import ImageWithFallback from "@/components/ui/ImageWithFallback";
 
-const ArticleSidebar = ({ mostViewed, popularNews, globalSettings, locale = 'bn' }) => {
+const ArticleSidebar = ({ mostViewed, popularNews, globalSettings, adsData, locale = 'bn' }) => {
   const { t } = useTranslations(locale);
 
   return (
     <StickyBox offsetTop={100} offsetBottom={20}>
       {/* START ADVERTISEMENT */}
       <div className="add-inner">
-        <Link href={globalSettings?.adBannerSidebarLink || '#'} target="_blank">
+        <Link href={adsData?.articleBannerLink || '#'} target="_blank">
             <img
-            src={getStrapiMedia(globalSettings?.adBannerSidebar) || "/assets/images/add/sidebar.jpg"}
+            src={getStrapiMedia(adsData?.articleBanner) || "/assets/images/add/sidebar.jpg"}
             className="img-fluid"
             alt="Sidebar Advertisement"
             onError={(e) => e.target.style.display = 'none'}

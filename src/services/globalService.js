@@ -81,3 +81,12 @@ export async function getMenuItems(location = 'header', locale = 'bn') {
     return { data: [] };
   }
 }
+
+export async function getAdsManagement() {
+  try {
+    return await fetchAPI(`/ads-management?populate=*`, { silent: true });
+  } catch (error) {
+    console.warn('getAdsManagement failed.', error);
+    return { data: null };
+  }
+}

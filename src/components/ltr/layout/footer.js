@@ -124,8 +124,13 @@ const Footer = () => {
       {/* *** START FOOTER *** */}
       <footer
         id="footer"
-        className="main-footer bg-img"
-        data-image-src={getStrapiMedia(footerAttrs?.backgroundImage) || "/assets/images/1920x1000-1.jpg"}
+        className="main-footer"
+        style={{
+          backgroundImage: `url(${getStrapiMedia(footerAttrs?.backgroundImage) || "/assets/images/1920x1000-1.jpg"})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
+        }}
       >
         <div className="container position-relative z-1">
           <div className="g-3 row">

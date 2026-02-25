@@ -11,7 +11,7 @@ import { getStrapiMedia, formatDate } from '@/lib/strapi';
 import { useTranslations } from '@/lib/translations';
 import StrapiBlocks from '@/components/article/strapi-blocks';
 
-const ClientArticleDetail = ({ article, mostViewed, popularNews, globalSettings, locale = 'bn' }) => {
+const ClientArticleDetail = ({ article, mostViewed, popularNews, globalSettings, adsData, locale = 'bn' }) => {
   useRemoveBodyClass(['None'], ['home-seven', 'home-nine','boxed-layout','home-six','home-two']);
   const { t } = useTranslations(locale);
   
@@ -149,6 +149,7 @@ const ClientArticleDetail = ({ article, mostViewed, popularNews, globalSettings,
                   mostViewed={mostViewed} 
                   popularNews={popularNews} 
                   globalSettings={globalSettings} 
+                  adsData={adsData}
                   locale={locale} 
                />
             </div>

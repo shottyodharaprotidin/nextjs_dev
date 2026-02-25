@@ -1,6 +1,6 @@
 import { getArticleBySlug, getArticleBySlugPreview, getMostViewedArticles, getPopularArticles } from '@/services/articleService';
 import { cookies, draftMode } from 'next/headers';
-import { getGlobalSettings } from '@/services/globalService';
+import { getGlobalSettings, getAdsManagement } from '@/services/globalService';
 import { getStrapiMedia } from '@/lib/strapi';
 import ClientArticleDetail from '@/components/article/article-details';
 
@@ -46,6 +46,7 @@ const ArticleDetailPage = async ({ params, searchParams }) => {
   let mostViewedResponse = { data: [] };
   let popularResponse = { data: [] };
   let globalSettingsResponse = { data: null };
+  let adsResponse = { data: null };
 
   // Deteksi Draft Mode
   const { isEnabled } = draftMode();
@@ -61,13 +62,16 @@ const ArticleDetailPage = async ({ params, searchParams }) => {
       articleFetcher(slug, fetchLocale),
       getMostViewedArticles(5, locale),
       getPopularArticles(5, locale),
-      getGlobalSettings(locale)
+      getGlobalSettings(locale),
+      getAdsManagement(),
     ]);
 
     articleData = results[0].status === 'fulfilled' ? results[0].value : null;
     mostViewedResponse = results[1].status === 'fulfilled' ? results[1].value : { data: [] };
     popularResponse = results[2].status === 'fulfilled' ? results[2].value : { data: [] };
     globalSettingsResponse = results[3].status === 'fulfilled' ? results[3].value : { data: null };
+    const adsRaw = results[4].status === 'fulfilled' ? results[4].value : null;
+    adsResponse = { data: adsRaw?.data || adsRaw || null };
   } catch (error) {
     console.error("Error fetching data for article page:", error);
   }
@@ -86,6 +90,7 @@ const ArticleDetailPage = async ({ params, searchParams }) => {
       mostViewed={mostViewedResponse?.data || []}
       popularNews={popularResponse?.data || []}
       globalSettings={globalSettingsResponse?.data}
+      adsData={adsResponse?.data}
       locale={locale}
     />
     </>

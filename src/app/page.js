@@ -16,7 +16,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getFeaturedArticles, getPopularArticles, getTrendingNews, getLatestArticles, getReviewArticles, getArticlesByCategory, getEditorPicks } from "@/services/articleService";
 import { getYoutubeVideos, getActivePoll } from "@/services/mediaService";
-import { getGlobalSettings, getTags, getCategories } from "@/services/globalService";
+import { getGlobalSettings, getTags, getCategories, getAdsManagement } from "@/services/globalService";
 import { getStrapiMedia, formatDate, toBengaliNumber } from "@/lib/strapi";
 
 // Helper: get article data (supports both v4 and v5)
@@ -134,6 +134,7 @@ export default function Home() {
   const [techArticles, setTechArticles] = useState([]);
   const [editorPicks, setEditorPicks] = useState([]);
   const [latestReviews, setLatestReviews] = useState([]);
+  const [adsData, setAdsData] = useState(null);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   
@@ -179,7 +180,7 @@ export default function Home() {
       try {
 
 
-        const [featuredRes, popularRes, trendingRes, latestRes, youtubeRes, pollRes, globalRes, tagsRes, techRes, editorRes, reviewRes, categoriesRes] = await Promise.allSettled([
+        const [featuredRes, popularRes, trendingRes, latestRes, youtubeRes, pollRes, globalRes, tagsRes, techRes, editorRes, reviewRes, categoriesRes, adsRes] = await Promise.allSettled([
           getFeaturedArticles(10, locale),
           getPopularArticles(10, locale),
           getTrendingNews(15, locale),
@@ -192,6 +193,7 @@ export default function Home() {
           getEditorPicks(5, locale),
           getReviewArticles(7, locale),
           getCategories(10, locale),
+          getAdsManagement(),
         ]);
 
         setFeatured(featuredRes.value?.data || []);
@@ -207,6 +209,8 @@ export default function Home() {
         setEditorPicks(editorRes.value?.data || []);
         setLatestReviews(reviewRes.value?.data || []);
         setCategories(categoriesRes.value?.data || []);
+        const adsRaw = adsRes.value?.data || adsRes.value || null;
+        setAdsData(adsRaw);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -468,11 +472,13 @@ export default function Home() {
                 </div>
                 {/* START ADVERTISEMENT */}
                 <div className="add-inner">
-                  <img
-                    src="/default.jpg"
-                    className="img-fluid"
-                    alt=""
-                  />
+                  <Link href={adsData?.homeTopBannerLink || '#'}>
+                    <img
+                      src={getStrapiMedia(adsData?.homeTopBanner) || "/assets/images/add728x90-1.jpg"}
+                      className="img-fluid"
+                      alt="Banner Ad"
+                    />
+                  </Link>
                 </div>
                 {/* END OF /. ADVERTISEMENT */}
               </StickyBox>
@@ -869,11 +875,13 @@ export default function Home() {
                   {/* END OF /. POST CATEGORY STYLE FOUR (Latest articles ) */}
                   {/* START ADVERTISEMENT */}
                   <div className="add-inner mb-0">
-                    <img
-                      src="/default.jpg"
-                      className="img-fluid"
-                      alt=""
-                    />
+                    <Link href={adsData?.homeSecondBannerLink || '#'}>
+                      <img
+                        src={getStrapiMedia(adsData?.homeSecondBanner) || "/assets/images/add/sidebar.jpg"}
+                        className="img-fluid"
+                        alt="Banner Ad"
+                      />
+                    </Link>
                   </div>
                   {/* END OF /. ADVERTISEMENT */}
                 </StickyBox>

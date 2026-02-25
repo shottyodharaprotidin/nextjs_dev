@@ -25,9 +25,11 @@ export default async function FaqPage() {
         getFaqs(locale),
         getGlobalSettings(locale),
     ]);
-    const faqs = faqsResponse?.data || [];
+    // FAQ is now a single type; `data` is the page object with `items` and `faqHeaderImage`
+    const faqData = faqsResponse?.data || {};
+    const faqs = faqData?.items || [];
     const globalSettings = globalSettingsResponse?.data || null;
-    const headerImage = getStrapiMedia(globalSettings?.faqHeaderImage, "/default.jpg");
+    const headerImage = getStrapiMedia(faqData?.faqHeaderImage, "/default.jpg");
 
     return (
         <Layout hideMiddleHeader={true} globalSettings={globalSettings}>
@@ -65,11 +67,12 @@ export default async function FaqPage() {
                                 ) : (
                                     <div className="panel-group" id="accordion" role="tablist">
                                         {faqs.map((faq, index) => {
-                                            const collapseId = `collapse-faq-${faq.id}`;
-                                            const headingId = `heading-faq-${faq.id}`;
+                                            const collapseId = `collapse-faq-${index}`;
+                                            const headingId = `heading-faq-${index}`;
                                             const isFirst = index === 0;
+                                            if (!faq?.isActive && faq?.isActive !== undefined) return null;
                                             return (
-                                                <div className="panel" key={faq.id}>
+                                                <div className="panel" key={index}>
                                                     <div className="panel-heading" role="tab" id={headingId}>
                                                         <h4 className="panel-title">
                                                             <a
