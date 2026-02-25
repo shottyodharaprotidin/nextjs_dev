@@ -64,17 +64,22 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
     }, []);
 
     useEffect(() => {
-        // Fetch header menu items
+        // Fetch header menu items from the relocated structure
         setIsLoadingMenu(true);
         getMenuItems('header', locale).then(res => {
-             setMenuItems(res?.data || []);
+            // Flatten the menuItems Dynamic Zone from all entries for this location
+            const allItems = res?.data?.flatMap(item => (item.attributes || item).menuItems || []) || [];
+            setMenuItems(allItems);
         }).finally(() => {
-             setIsLoadingMenu(false);
+            setIsLoadingMenu(false);
         });
 
         // Fetch sidebar menu items
         getMenuItems('sidebar', locale).then(res => {
-            setSidebarMenuItems(res?.data || []);
+            const allItems = res?.data?.flatMap(item => (item.attributes || item).menuItems || []) || [];
+            if (setSidebarMenuItems) {
+                setSidebarMenuItems(allItems);
+            }
         });
         
         // Fetch weather data
@@ -141,36 +146,155 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
     };
 
     const renderMenuItem = (item, index) => {
-        const data = item.attributes || item;
+        const component = item.__component;
+        const data = item.attributes || item; // Handle both direct component data and relation data
+        
+        // Handle Component: Navigation.base-link
+        if (component === 'navigation.base-link') {
+            const slug = data.url || data.slug || '#';
+            const url = slug.startsWith('http') || slug === '#' ? slug : (slug.startsWith('/') ? slug : `/${slug}`);
+            return (
+                <li className="nav-item" key={index}>
+                    <Link className="nav-link" href={url} target={data.openInNewTab ? "_blank" : "_self"}>
+                        {data.title}
+                    </Link>
+                </li>
+            );
+        }
+
+        // Handle Component: Navigation.menu-button
+        if (component === 'navigation.menu-button') {
+            const slug = data.url || '#';
+            const url = slug.startsWith('http') || slug === '#' ? slug : (slug.startsWith('/') ? slug : `/${slug}`);
+            const btnClass = data.buttonType === 'primary' ? 'btn-primary' : (data.buttonType === 'secondary' ? 'btn-secondary' : 'btn-outline-primary');
+            return (
+                <li className="nav-item d-flex align-items-center ms-lg-2" key={index}>
+                    <Link className={`btn ${btnClass} btn-sm text-white`} href={url}>
+                        {data.title}
+                    </Link>
+                </li>
+            );
+        }
+
+        // Handle Component: Navigation.dropdown-menu
+        if (component === 'navigation.dropdown-menu') {
+            const subMenus = data.subMenus || [];
+            return (
+                <li className="nav-item dropdown" key={index}>
+                    <Link className="nav-link dropdown-toggle" href="#" id={`dropdown-${index}`} data-bs-toggle="dropdown" aria-expanded="false">
+                        {data.title}
+                    </Link>
+                    <ul className="dropdown-menu" aria-labelledby={`dropdown-${index}`}>
+                        {subMenus.map((sub, i) => {
+                            const subComponent = sub.__component;
+                            if (subComponent === 'navigation.dropdown-header') {
+                                return (
+                                    <li key={i}>
+                                        <h6 className="dropdown-header fw-bold text-dark">{sub.title}</h6>
+                                    </li>
+                                );
+                            }
+                            if (subComponent === 'navigation.nested-dropdown') {
+                                const nestedItems = sub.subMenus || [];
+                                return (
+                                    <li className="nav-item dropdown dropend" key={i}>
+                                        <Link className="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+                                            {sub.title}
+                                        </Link>
+                                        <ul className="dropdown-menu">
+                                            {nestedItems.map((nested, ni) => {
+                                                const nestedSlug = nested.url || '#';
+                                                const nestedUrl = nestedSlug.startsWith('http') || nestedSlug === '#' ? nestedSlug : (nestedSlug.startsWith('/') ? nestedSlug : `/${nestedSlug}`);
+                                                return (
+                                                    <li key={ni}>
+                                                        <Link className="dropdown-item" href={nestedUrl} target={nested.openInNewTab ? "_blank" : "_self"}>
+                                                            {nested.title}
+                                                        </Link>
+                                                    </li>
+                                                );
+                                            })}
+                                        </ul>
+                                    </li>
+                                );
+                            }
+                            const subSlug = sub.url || '#';
+                            const subUrl = subSlug.startsWith('http') || subSlug === '#' ? subSlug : (subSlug.startsWith('/') ? subSlug : `/${subSlug}`);
+                            return (
+                                <li key={i}>
+                                    <Link className="dropdown-item" href={subUrl} target={sub.openInNewTab ? "_blank" : "_self"}>
+                                        {sub.title}
+                                    </Link>
+                                </li>
+                            );
+                        })}
+                    </ul>
+                </li>
+            );
+        }
+
+        // Handle Component: Navigation.mega-menu
+        if (component === 'navigation.mega-menu') {
+            const sections = data.sections || [];
+            return (
+                <li className="nav-item dropdown mega-menu-content d-none d-lg-block" key={index}>
+                    <Link className="nav-link dropdown-toggle" href="#" id={`mega-${index}`} data-bs-toggle="dropdown" aria-expanded="false">
+                        {data.title}
+                    </Link>
+                    <ul className="dropdown-menu mega-menu p-3 megamenu-content" aria-labelledby={`mega-${index}`}>
+                        <li>
+                            <div className="row">
+                                {sections.map((section, i) => (
+                                    <div className="col-menu col-md-3" key={i}>
+                                        <h6 className="title">{section.heading}</h6>
+                                        <div className="content">
+                                            <ul className="menu-col">
+                                                {section.links?.map((link, j) => {
+                                                    const linkSlug = link.url || '#';
+                                                    const linkUrl = linkSlug.startsWith('http') || linkSlug === '#' ? linkSlug : (linkSlug.startsWith('/') ? linkSlug : `/${linkSlug}`);
+                                                    return (
+                                                        <li key={j}>
+                                                            <Link href={linkUrl} className="d-flex align-items-center gap-2">
+                                                                {link.icon && <img src={getStrapiMedia(link.icon)} alt="" style={{ width: '16px', height: '16px' }} />}
+                                                                <div>
+                                                                    <div className="fw-bold">{link.title}</div>
+                                                                    {link.description && <small className="text-muted d-block" style={{ fontSize: '11px', lineHeight: '1.2' }}>{link.description}</small>}
+                                                                </div>
+                                                            </Link>
+                                                        </li>
+                                                    );
+                                                })}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+            );
+        }
+
+        // Fallback for old menu items structure (backward compatibility)
         const children = data.menu_items?.data || [];
         const hasChildren = children.length > 0;
-        // Handle slug: ensure it starts with / unless it is links like '#'
         const slug = data.slug || '#';
         const url = slug.startsWith('http') || slug === '#' ? slug : (slug.startsWith('/') ? slug : `/${slug}`);
         const isActive = path === url;
 
         if (hasChildren) {
             return (
-                <li className="nav-item dropdown" key={data.id || index}>
-                    <Link 
-                        className={`nav-link dropdown-toggle ${isActive ? 'active' : ''}`} 
-                        href="#" 
-                        id={`dropdownMenuButton-${data.id}`} 
-                        data-bs-toggle="dropdown" 
-                        data-bs-auto-close="outside" 
-                        aria-expanded="false"
-                    >
+                <li className="nav-item dropdown" key={index}>
+                    <Link className={`nav-link dropdown-toggle ${isActive ? 'active' : ''}`} href="#" data-bs-toggle="dropdown">
                         {data.title}
                     </Link>
-                    <ul className="dropdown-menu" aria-labelledby={`dropdownMenuButton-${data.id}`}>
+                    <ul className="dropdown-menu">
                         {children.map((child, cIndex) => {
                             const childData = child.attributes || child;
                             const childSlug = childData.slug || '#';
                             const childUrl = childSlug.startsWith('http') || childSlug === '#' ? childSlug : (childSlug.startsWith('/') ? childSlug : `/${childSlug}`);
-                            const isChildActive = path === childUrl;
                             return (
-                                <li key={childData.id || cIndex}>
-                                    <Link className={`dropdown-item ${isChildActive ? 'active' : ''}`} href={childUrl}>
+                                <li key={cIndex}>
+                                    <Link className={`dropdown-item ${path === childUrl ? 'active' : ''}`} href={childUrl}>
                                         {childData.title}
                                     </Link>
                                 </li>
@@ -182,7 +306,7 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
         }
 
         return (
-            <li className="nav-item" key={data.id || index}>
+            <li className="nav-item" key={index}>
                 <Link className={`nav-link ${isActive ? 'active' : ''}`} href={url}>
                     {data.title}
                 </Link>
@@ -231,14 +355,22 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
                 </div>
 
                 {/* START MIDDLE SECTION */}
-                {hideMiddleHeader ? (
+                {hideMiddleHeader || path.includes('/post-template') || path.includes('/article/') ? (
                     <div className="d-md-block d-none header-mid">
                         <div className="container">
                             <div className="align-items-center row">
                                 <div className="col-sm-4">
                                     <Link href="/">
-                                        <img src="/assets/images/logo.png" className="img-fluid header-logo header-logo_dark" alt="" />
-                                        <img src="/assets/images/logo-white.png" className="img-fluid header-logo_white" alt="" />
+                                        <img
+                                            src="/assets/images/logo.png"
+                                            className="img-fluid header-logo header-logo_dark"
+                                            alt=""
+                                        />
+                                        <img
+                                            src="/assets/images/logo-white.png"
+                                            className="img-fluid header-logo_white"
+                                            alt=""
+                                        />
                                     </Link>
                                 </div>
                                 <div className="col-sm-8 text-end">
@@ -255,43 +387,43 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
                         </div>
                     </div>
                 ) : (
-                <div className="d-md-block d-none header-mid">
-                    <div className="container">
-                        <div className="align-items-center row justify-content-center">
-                            <div className="col">
-                                <div className="hstack gap-3">
-                                    <div id="nav-icon" className={isSidebarActive ? 'open' : ''}>
-                                        <span /> <span /> <span />
-                                    </div>
-                                    <div className="vr" />
-                                    <span className="fw-semibold text-uppercase menu-text">All Section</span>
-                                </div>
-                            </div>
-                            <div className="col-auto">
-                                <div className="align-items-center d-flex gap-3">
-                                    <div className="fs-5 fw-semibold weather-text d-flex align-items-center gap-2">
-                                        {getWeatherIcon(weather.icon)} {weather.temp ? Math.round(weather.temp) : '--'}°C
-                                    </div>
-                                    <Link href="/" className="header-logo">
-                                        <img src="assets/images/logo.png" className="header-logo_dark" alt="" />
-                                        <img src="assets/images/logo-white.png" className="header-logo_white" alt="" />
-                                    </Link>
-                                    <div className="dropdown language-dropdown">
-                                        <button className="btn p-0 dropdown-toggle d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i className="fa-solid fa-earth-americas" />
-                                            <div className="fw-semibold">{locale === 'en' ? 'En' : 'Bn'}</div>
-                                        </button>
-                                        <ul className="dropdown-menu">
-                                            <li><a className={`dropdown-item ${locale === 'bn' ? 'active' : ''}`} href="/bn"><span className="language-text">Bangla</span></a></li>
-                                            <li><a className={`dropdown-item ${locale === 'en' ? 'active' : ''}`} href="/en"><span className="language-text">English</span></a></li>
-                                        </ul>
+                    <div className="d-md-block d-none header-mid">
+                        <div className="container">
+                            <div className="align-items-center row justify-content-center">
+                                <div className="col">
+                                    <div className="hstack gap-3">
+                                        <div id="nav-icon" className={isSidebarActive ? 'open' : ''}>
+                                            <span /> <span /> <span />
+                                        </div>
+                                        <div className="vr" />
+                                        <span className="fw-semibold text-uppercase menu-text">All Section</span>
                                     </div>
                                 </div>
+                                <div className="col-auto">
+                                    <div className="align-items-center d-flex gap-3">
+                                        <div className="fs-5 fw-semibold weather-text d-flex align-items-center gap-2">
+                                            {getWeatherIcon(weather.icon)} {weather.temp ? Math.round(weather.temp) : '--'}°C
+                                        </div>
+                                        <Link href="/" className="header-logo">
+                                            <img src="assets/images/logo.png" className="header-logo_dark" alt="" />
+                                            <img src="assets/images/logo-white.png" className="header-logo_white" alt="" />
+                                        </Link>
+                                        <div className="dropdown language-dropdown">
+                                            <button className="btn p-0 dropdown-toggle d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <i className="fa-solid fa-earth-americas" />
+                                                <div className="fw-semibold text-uppercase" style={{ fontSize: '13px' }}>{locale === 'en' ? 'En' : 'Bn'}</div>
+                                            </button>
+                                            <ul className="dropdown-menu">
+                                                <li><a className={`dropdown-item ${locale === 'bn' ? 'active' : ''}`} href="/bn"><span className="language-text">Bangla</span></a></li>
+                                                <li><a className={`dropdown-item ${locale === 'en' ? 'active' : ''}`} href="/en"><span className="language-text">English</span></a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col text-end fw-semibold text-uppercase date-text">{currentDate}</div>
                             </div>
-                            <div className="col text-end fw-semibold text-uppercase date-text">{currentDate}</div>
                         </div>
                     </div>
-                </div>
                 )}
 
                 {/* START NAVIGATION */}

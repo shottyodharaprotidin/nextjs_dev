@@ -67,15 +67,19 @@ export async function getTags(limit = 10, locale = 'bn') {
 export async function getMenuItems(location = 'header', locale = 'bn') {
   const strapiLocale = getStrapiLocale(locale);
   try {
-    const queryParams = new URLSearchParams({
-      locale: strapiLocale,
-      'filters[location][$eq]': location,
-      'filters[menu_item][id][$null]': 'true', // Get only root items
-      'populate[menu_items][populate]': '*', // Populate children
-      'sort': 'order:asc'
-    });
-    
-    return await fetchAPI(`/menu-items?${queryParams}`, { silent: true });
+    const query = [
+      `locale=${strapiLocale}`,
+      `filters[location][$eq]=${location}`,
+      'populate[menuItems][on][navigation.base-link][populate]=*',
+      'populate[menuItems][on][navigation.menu-button][populate]=*',
+      'populate[menuItems][on][navigation.dropdown-menu][populate][subMenus][on][navigation.base-link][populate]=*',
+      'populate[menuItems][on][navigation.dropdown-menu][populate][subMenus][on][navigation.dropdown-header][populate]=*',
+      'populate[menuItems][on][navigation.dropdown-menu][populate][subMenus][on][navigation.nested-dropdown][populate][subMenus]=*',
+      'populate[menuItems][on][navigation.mega-menu][populate][sections][populate][links][populate]=*',
+      'sort=id:asc'
+    ].join('&');
+
+    return await fetchAPI(`/menu-items?${query}`, { silent: true });
   } catch (error) {
     console.warn(`getMenuItems failed for location: ${location}`, error);
     return { data: [] };
