@@ -9,6 +9,19 @@ export default function StrapiBlocks({ content }) {
 
   // Handle Markdown string (user's current setup)
   if (typeof content === 'string') {
+    // Detect CKEditor HTML output (contains HTML tags like <p>, <h2>, <figure>, etc.)
+    const isHTML = /<[a-z][\s\S]*>/i.test(content);
+    if (isHTML) {
+      return (
+        <div className="post_details_inner">
+          <div className="post_details_block">
+            <div dangerouslySetInnerHTML={{ __html: content }} />
+          </div>
+        </div>
+      );
+    }
+
+    // Otherwise render as Markdown
     return (
       <div className="post_details_inner">
         <div className="post_details_block">
