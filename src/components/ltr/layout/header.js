@@ -49,6 +49,7 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
     const [isLoadingMenu, setIsLoadingMenu] = useState(true);
     const [sidebarMenuItems, setSidebarMenuItems] = useState([]);
     const [expandedSidebarItems, setExpandedSidebarItems] = useState({});
+    const [sidebarData, setSidebarData] = useState(null);
 
     const [instagrams, setInstagrams] = useState([]);
     const [isLoadingInstagrams, setIsLoadingInstagrams] = useState(true);
@@ -86,6 +87,7 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
         getMenuItems('sidebar', locale).then(res => {
             if (setSidebarMenuItems) {
                 setSidebarMenuItems(res?.data || []);
+                setSidebarData(res?.attributes || null);
             }
         });
         
@@ -483,14 +485,16 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
                     <div className="d-flex flex-column h-100">
                         <div className="">
                             <Link href="/" className="d-inline-block my-3">
-                                {globalSettings?.data?.attributes?.favicon?.data ? (
+                                {sidebarData?.logo ? (
+                                    <img src={getStrapiMedia(sidebarData.logo)} alt="Sidebar Logo" height={50} />
+                                ) : globalSettings?.data?.attributes?.favicon?.data ? (
                                     <img src={getStrapiMedia(globalSettings.data.attributes.favicon)} alt={globalSettings?.data?.attributes?.siteName || "Logo"} height={50} />
                                 ) : (
                                     <img src="assets/images/logo-white.png" alt="Logo" height={50} />
                                 )}
                             </Link>
                             <p>
-                                {globalSettings?.data?.attributes?.siteDescription || "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout."}
+                                {sidebarData?.description || globalSettings?.data?.attributes?.siteDescription || "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout."}
                             </p>
                         </div>
                         <ul className="nav d-block flex-column my-4">

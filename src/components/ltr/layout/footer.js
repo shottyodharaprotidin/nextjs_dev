@@ -320,21 +320,7 @@ const Footer = () => {
                     );
                   })
                 ) : (
-                  <>
-                    <li className="list-inline-item">
-                      <Link href={footerAttrs?.privacyLink || 'http://localhost:3000/privacy-policy'}>{t.links.privacy}</Link>
-                    </li>
-                    <li className="list-inline-item">
-                      <Link href={footerAttrs?.contactLink || 'http://localhost:3000/contact'}>{t.links.contact}</Link>
-                    </li>
-
-                    <li className="list-inline-item">
-                      <Link href={footerAttrs?.donationLink || 'http://localhost:3000/donation'}>{t.links.donation}</Link>
-                    </li>
-                    <li className="list-inline-item">
-                      <Link href={footerAttrs?.faqLink || 'http://localhost:3000/faq'}>{t.links.faq}</Link>
-                    </li>
-                  </>
+                  <li className="list-inline-item">No Menu Items</li>
                 )}
               </ul>
             </div>

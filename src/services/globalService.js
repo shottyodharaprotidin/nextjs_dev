@@ -63,39 +63,43 @@ export async function getTags(limit = 10, locale = 'bn') {
 export async function getMenuItems(location = 'header', locale = 'bn') {
   const strapiLocale = getStrapiLocale(locale);
   try {
-    const query = [
-      `locale=${strapiLocale}`,
-      'populate[headerMenu][on][navigation.base-link][populate]=*',
-      'populate[headerMenu][on][navigation.menu-button][populate]=*',
-      'populate[headerMenu][on][navigation.dropdown-menu][populate][subMenus][on][navigation.base-link][populate]=*',
-      'populate[headerMenu][on][navigation.dropdown-menu][populate][subMenus][on][navigation.dropdown-header][populate]=*',
-      'populate[headerMenu][on][navigation.dropdown-menu][populate][subMenus][on][navigation.nested-dropdown][populate][subMenus]=*',
-      'populate[headerMenu][on][navigation.mega-menu][populate][sections][populate][links][populate]=*',
-      'populate[footerMenu][populate]=*',
-      'populate[sidebarMenu][populate]=*'
-    ].join('&');
+    let endpoint = '';
+    let query = '';
 
-    const response = await fetchAPI(`/menu-item?${query}`, { silent: true });
+    if (location === 'header') {
+      endpoint = '/header';
+      query = [
+        `locale=${strapiLocale}`,
+        'populate[menu][on][navigation.base-link][populate]=*',
+        'populate[menu][on][navigation.menu-button][populate]=*',
+        'populate[menu][on][navigation.dropdown-menu][populate][subMenus][on][navigation.base-link][populate]=*',
+        'populate[menu][on][navigation.dropdown-menu][populate][subMenus][on][navigation.dropdown-header][populate]=*',
+        'populate[menu][on][navigation.dropdown-menu][populate][subMenus][on][navigation.nested-dropdown][populate][subMenus]=*',
+        'populate[menu][on][navigation.mega-menu][populate][sections][populate][links][populate]=*'
+      ].join('&');
+    } else if (location === 'footer') {
+      endpoint = '/footer';
+      query = `locale=${strapiLocale}&populate=*`;
+    } else if (location === 'sidebar') {
+      endpoint = '/sidebar';
+      query = `locale=${strapiLocale}&populate=*`;
+    }
+
+    const response = await fetchAPI(`${endpoint}?${query}`, { silent: true });
     
-    // In Strapi single types, the response is usually an object, not an array.
     const firstEntry = response?.data;
     const attributes = firstEntry?.attributes || firstEntry || {};
 
-    let menuData = [];
-    if (location === 'header') {
-      menuData = attributes.headerMenu || [];
-    } else if (location === 'footer') {
-      menuData = attributes.footerMenu || [];
-    } else if (location === 'sidebar') {
-      menuData = attributes.sidebarMenu || [];
-    }
+    // Standardize the return property to `menu` instead of `headerMenu`, `sidebarMenu`, etc.
+    // The APIs now all hold their menu as attributes.menu
+    const menuData = attributes.menu || [];
 
-    // Return the menu array directly
-    return { data: menuData };
+    // We also return attributes so the caller can access things like `logo` and `description` from the sidebar
+    return { data: menuData, attributes };
 
   } catch (error) {
     // Missing menu singleton should not break UI
-    return { data: [] };
+    return { data: [], attributes: {} };
   }
 }
 
