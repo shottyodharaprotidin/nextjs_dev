@@ -1,6 +1,6 @@
 "use client";
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { formatDate, getStrapiMedia, toBengaliNumber } from '@/lib/strapi';
 import { getInstagramPhotos } from '@/services/instagramService';
@@ -30,6 +30,8 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
     const [isSidebarActive, setSidebarActive] = useState(false);
     const [isOverlayActive, setOverlayActive] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+    const router = useRouter();
     const path = usePathname()
    
     const toggleSidebar = () => {
@@ -155,6 +157,15 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
 
     const handleCloseButtonClick = () => {
         setIsSearchOpen(false);
+    };
+
+    const handleSearchSubmit = (e) => {
+        e.preventDefault();
+        if (searchQuery.trim()) {
+            router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+            setIsSearchOpen(false);
+            setSearchQuery('');
+        }
     };
 
     const renderMenuItem = (item, index) => {
@@ -329,45 +340,8 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
     return (
         <>
             <header>
-                {/* START HEADER TOP SECTION */}
-                <div className="header-top">
-                    <div className="container">
-                        <div className="row">
-                            <div className="col">
-                                <div className="d-flex top-left-menu">
-                                    <ul className="align-items-center d-flex flex-wrap">
-                                        <li>
-                                            <div className="header-social">
-                                                <ul className="align-items-center d-flex gap-2">
-                                                    <li><Link href="#"><i className="fab fa-facebook-f" /></Link></li>
-                                                    <li><Link href="#"><i className="fab fa-twitter" /></Link></li>
-                                                    <li><Link href="#"><i className="fab fa-vk" /></Link></li>
-                                                    <li><Link href="#"><i className="fab fa-instagram" /></Link></li>
-                                                    <li><Link href="#"><i className="fab fa-youtube" /></Link></li>
-                                                    <li><Link href="#"><i className="fab fa-vimeo-v" /></Link></li>
-                                                </ul>
-                                            </div>
-                                        </li>
-                                        <li className="d-none d-sm-block"><Link href="#">Contact</Link></li>
-                                        <li className="d-none d-sm-block"><Link href="#">Donation</Link></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div className="col-auto ms-auto">
-                                <div className="header-right-menu">
-                                    <ul className="d-flex justify-content-end">
-                                        <li className="d-md-block d-none">Currency: <Link href="#" className="fw-bold">USD</Link></li>
-                                        <li className="d-md-block d-none">Wishlist: <Link href="#" className="fw-bold">12</Link></li>
-                                        <li><Link href="#"><i className="fa fa-lock" /> Sign Up </Link><span className="fw-bold">or</span><Link href="#"> Login</Link></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 {/* START MIDDLE SECTION */}
-                {hideMiddleHeader || path.includes('/post-template') || path.includes('/article/') ? (
+                {hideMiddleHeader || path.includes('/article/') ? (
                     <div className="d-md-block d-none header-mid">
                         <div className="container">
                             <div className="align-items-center row">
@@ -443,9 +417,17 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
                     <div className={`fullscreen-search-overlay ${isSearchOpen ? 'fullscreen-search-overlay-show' : ''}`} >
                         <Link href="#" className="fullscreen-close" onClick={handleCloseButtonClick} id="fullscreen-close-button"><i className="ti ti-close" /></Link>
                         <div id="fullscreen-search-wrapper">
-                            <form method="get" id="fullscreen-searchform">
-                                <input type="text" defaultValue="" placeholder="Type keyword(s) here" id="fullscreen-search-input" />
-                                <i className="ti ti-search fullscreen-search-icon"><input value="" type="submit" /></i>
+                            <form onSubmit={handleSearchSubmit} id="fullscreen-searchform">
+                                <input 
+                                    type="text" 
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    placeholder="Type keyword(s) here" 
+                                    id="fullscreen-search-input" 
+                                />
+                                <i className="ti ti-search fullscreen-search-icon" onClick={handleSearchSubmit}>
+                                    <input value="" type="submit" style={{ display: 'none' }} />
+                                </i>
                             </form>
                         </div>
                     </div>

@@ -12,7 +12,7 @@ import { useTranslations } from '@/lib/translations';
 import StrapiBlocks from '@/components/article/strapi-blocks';
 
 const ClientArticleDetail = ({ article, mostViewed, popularNews, globalSettings, adsData, locale = 'bn' }) => {
-  useRemoveBodyClass(['None'], ['home-seven', 'home-nine','boxed-layout','home-six','home-two']);
+  useRemoveBodyClass(['None'], ['home-seven', 'home-nine','boxed-layout','home-six']);
   const { t } = useTranslations(locale);
   
   const data = article.attributes || article;

@@ -45,13 +45,9 @@ This file contains the common info of this theme.
     23.  Category page
     24.  Contact Page
     25.  Details page
-    26.  Category Style One
-    27.  Home Style Two
-    28.  About us page
-    29.  F.A.Q us page
-    30.  Utilities
-    31.  Dark skin
-    32.  Layout RTL
+    26.  Utilities
+    27.  Dark skin
+    28.  Layout RTL
 * --------------------------------------------------------------------------- */
 
 
@@ -5371,113 +5367,6 @@ blockquote.no-sign p {
 }
 
 
-/*** 26. Category Style One
-------------------------------------------------------------------------------*/
-
-.categoty-style-1 .row-m {
-    margin-right: -7.5px;
-    margin-left: -7.5px;
-}
-
-.categoty-style-1 .col-p {
-    padding-right: 7.5px;
-    padding-left: 7.5px;
-}
-
-
-/*** 27. Home Style Two
-------------------------------------------------------------------------------*/
-
-.home-two .post-head {
-    border: 1px solid #e0e0e0;
-    margin-bottom: 5px;
-}
-
-.home-two .post-head::before {
-    content: '';
-    width: 0;
-    height: 0;
-    border-top: 12px solid #eb0254;
-    border-right: 12px solid transparent;
-    position: absolute;
-    left: 0px;
-    top: 0px;
-}
-
-.home-two .post-inner-2 .post-head::before {
-    border-top: 12px solid #008900;
-}
-
-.home-two .featured-inner,
-.home-two .post-body,
-.home-two .youtube-wrapper,
-.home-two .add-inner,
-.home-two .archive-wrapper,
-.home-two .tabs-wrapper,
-.home-two .panel_inner,
-.home-two .weather-wrapper,
-.home-two .social-media li a,
-.home-two .posts {
-    border: 1px solid #e0e0e0;
-}
-
-.home-two .post-footer {
-    border: 1px solid #e0e0e0;
-    margin-top: 5px;
-}
-
-.home-two .news-ticker.owl-theme .owl-nav [class*=owl-],
-.home-two .post-slider.owl-theme .owl-nav [class*=owl-] {
-    top: -65px;
-}
-
-.home-two .card-post .posts-inner,
-.home-six .card-post .posts-inner {
-    padding: 30px 15px;
-}
-
-.home-two .posts-inner,
-.home-six .posts-inner {
-    padding: 12px 15px;
-}
-
-/*** 28. About us page
-------------------------------------------------------------------------------*/
-
-.inner-head {
-    position: relative;
-    width: 100%;
-    min-height: auto;
-    overflow-y: hidden;
-    color: white;
-    padding: 70px 0;
-    text-align: center;
-    background-size: cover;
-    background-repeat: no-repeat;
-    margin-bottom: 50px;
-    background-image:url("/assets/images/faq-bg.jpg")
-}
-
-.inner-head::before {
-    bottom: 0;
-    content: "";
-    display: block;
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    background-color: rgba(0, 0, 0, 0.5);
-}
-
-.inner-head h1.entry-title {
-    margin-bottom: 17px;
-    color: #fff;
-    text-shadow: 0px 1px 3px rgba(0, 0, 0, .5);
-    font-weight: 700;
-}
-
-.inner-head .entry-title {
-    color: #fff;
-}
 
 .inner-head .description {
     color: #fff;

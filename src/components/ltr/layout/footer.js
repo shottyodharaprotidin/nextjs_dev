@@ -37,7 +37,6 @@ const dictionary = {
     links: {
       privacy: "Privacy",
       contact: "Contact",
-      about: "About Us",
       donation: "Donation",
       faq: "FAQ"
     }
@@ -69,7 +68,6 @@ const dictionary = {
     links: {
       privacy: "গোপনীয়তা",
       contact: "যোগাযোগ",
-      about: "আমাদের সম্পর্কে",
       donation: "অনুদান",
       faq: "প্রশ্নাবলী"
     }
@@ -329,9 +327,7 @@ const Footer = () => {
                     <li className="list-inline-item">
                       <Link href={footerAttrs?.contactLink || 'http://localhost:3000/contact'}>{t.links.contact}</Link>
                     </li>
-                    <li className="list-inline-item">
-                      <Link href={footerAttrs?.aboutLink || 'http://localhost:3000/about'}>{t.links.about}</Link>
-                    </li>
+
                     <li className="list-inline-item">
                       <Link href={footerAttrs?.donationLink || 'http://localhost:3000/donation'}>{t.links.donation}</Link>
                     </li>

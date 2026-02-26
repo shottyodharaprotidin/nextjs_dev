@@ -5,7 +5,7 @@ import "owl.carousel/dist/assets/owl.theme.default.css";
 import 'animate.css/animate.css'
 
 if (typeof window !== "undefined") {
-    window.$ = window.jQuery = require("jquery");
+    window.$ = window.jQuery = typeof window !== "undefined" && require("jquery");
 }
 // This is for Next.js. On Rect JS remove this line
 const OwlCarousel = dynamic(() => import("react-owl-carousel"), {

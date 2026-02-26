@@ -27,6 +27,13 @@ const Pagination = ({ currentPage, totalPages, basePath }) => {
 
     const prevPage = currentPage > 1 ? currentPage - 1 : 1;
     const nextPage = currentPage < totalPages ? currentPage + 1 : totalPages;
+    
+    // Check if basePath already has query parameters
+    const getPageUrl = (pageNum) => {
+        return basePath.includes('?') 
+            ? `${basePath}&page=${pageNum}` 
+            : `${basePath}?page=${pageNum}`;
+    };
 
     return (
         <div className="post-footer">
@@ -38,7 +45,7 @@ const Pagination = ({ currentPage, totalPages, basePath }) => {
                             {currentPage === 1 ? (
                                 <span className="ti ti-angle-left" />
                             ) : (
-                                <Link href={`${basePath}?page=${prevPage}`} scroll={false}>
+                                <Link href={getPageUrl(prevPage)} scroll={false}>
                                     <span className="ti ti-angle-left" />
                                 </Link>
                             )}
@@ -50,7 +57,7 @@ const Pagination = ({ currentPage, totalPages, basePath }) => {
                                 {currentPage === page ? (
                                     <span>{page}</span>
                                 ) : (
-                                    <Link href={`${basePath}?page=${page}`} scroll={false}>
+                                    <Link href={getPageUrl(page)} scroll={false}>
                                         {page}
                                     </Link>
                                 )}
@@ -62,7 +69,7 @@ const Pagination = ({ currentPage, totalPages, basePath }) => {
                             {currentPage === totalPages ? (
                                 <span className="ti ti-angle-right" />
                             ) : (
-                                <Link href={`${basePath}?page=${nextPage}`} scroll={false}>
+                                <Link href={getPageUrl(nextPage)} scroll={false}>
                                     <span className="ti ti-angle-right" />
                                 </Link>
                             )}

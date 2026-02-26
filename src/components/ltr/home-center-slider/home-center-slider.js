@@ -19,7 +19,7 @@ const dictionary = {
   }
 };
 if (typeof window !== "undefined") {
-    window.$ = window.jQuery = require("jquery");
+    window.$ = window.jQuery = typeof window !== "undefined" && require("jquery");
   }
   const OwlCarousel = dynamic(() => import("react-owl-carousel"), {
     ssr: false,

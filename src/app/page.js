@@ -325,7 +325,7 @@ export default function Home() {
   }, []);
 
   {/* *** ADD AND REMOVE CLASS ON BODY TAG *** */ }
-  useRemoveBodyClass(['home-nine'], ['home-six', 'home-seven', 'home-two', 'boxed-layout', 'layout-rtl']);
+  useRemoveBodyClass(['home-nine'], ['home-six', 'home-seven', 'boxed-layout', 'layout-rtl']);
   {/* *** IMPORT BACKGROUND IMAGE *** */ }
   useBackgroundImageLoader()
   return (

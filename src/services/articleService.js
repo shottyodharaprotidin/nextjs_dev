@@ -328,3 +328,20 @@ export async function incrementViewCount(articleId, currentViews) {
     return null;
   }
 }
+
+export async function searchArticles(query, limit = 20, page = 1, locale = 'bn') {
+  const strapiLocale = getStrapiLocale(locale);
+  const queryParams = new URLSearchParams({
+    'filters[$or][0][title][$contains]': query,
+    'filters[$or][1][content][$contains]': query,
+    'populate[0]': 'cover',
+    'populate[1]': 'category',
+    'populate[2]': 'author',
+    'pagination[page]': page,
+    'pagination[pageSize]': limit,
+    'sort': 'publishedAt:desc',
+    'locale': strapiLocale,
+  });
+
+  return await fetchAPI(`/articles?${queryParams}`);
+}
