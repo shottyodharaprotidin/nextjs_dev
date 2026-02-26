@@ -8,8 +8,8 @@ import { useLanguage } from '@/lib/LanguageContext';
 
 const dictionary = {
   en: {
-    trending: 'Trending',
-    now: 'Now',
+    trending: 'Breaking',
+    now: 'News',
     dummy: [
       { id: 'd1', title: 'Sample News: Revolution in the Tech World', slug: '#' },
       { id: 'd2', title: 'Sample News: Bangladesh Cricket Team Continues Winning Streak', slug: '#' },
@@ -17,8 +17,8 @@ const dictionary = {
     ]
   },
   bn: {
-    trending: 'ট্রেন্ডিং',
-    now: 'এখন',
+    trending: 'সংবাদ শিরোনাম',
+    now: '',
     dummy: [
       { id: 'd1', title: 'নমুনা সংবাদ: প্রযুক্তি বিশ্বে নতুন বিপ্লব', slug: '#' },
       { id: 'd2', title: 'নমুনা সংবাদ: বাংলাদেশ ক্রিকেট দলের জয়ের ধারা অব্যাহত', slug: '#' },
@@ -48,8 +48,8 @@ const NewsTicker = ({ data = [], isLoading = false }) => {
   return (
     <div className="container">
       <div className="newstricker_inner">
-        <div className="trending">
-          <strong>{t.trending}</strong> {t.now}
+        <div className={`trending ${locale === 'en' ? 'trending-en' : 'trending-bn'}`}>
+          {t.trending} {t.now}
         </div>
         <OwlCarousel
           key={isLoading ? 'loading' : 'loaded'}

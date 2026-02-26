@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { formatDate, getStrapiMedia, toBengaliNumber } from '@/lib/strapi';
 import { getInstagramPhotos } from '@/services/instagramService';
 import { getCurrentWeather } from '@/services/weatherService';
+import { getBrowserCoordinates, getIpLocation } from '@/services/locationService';
 import { getMenuItems, getAdsManagement } from '@/services/globalService';
 import { useLanguage } from '@/lib/LanguageContext';
 import { WiDaySunny, WiCloud, WiRain, WiSnow, WiThunderstorm, WiFog } from 'weather-icons-react';
@@ -58,44 +59,6 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
         : '--';
     const weatherUnitText = locale === 'bn' ? '°সে' : '°C';
 
-    const getBrowserCoordinates = () => {
-        return new Promise((resolve) => {
-            if (typeof window === 'undefined' || !navigator.geolocation) {
-                resolve(null);
-                return;
-            }
-
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    resolve({
-                        lat: position.coords.latitude,
-                        lon: position.coords.longitude,
-                    });
-                },
-                () => resolve(null),
-                {
-                    enableHighAccuracy: false,
-                    timeout: 8000,
-                    maximumAge: 600000,
-                }
-            );
-        });
-    };
-
-    const getIpCoordinates = async () => {
-        try {
-            const response = await fetch('https://ipwho.is/', { cache: 'no-store' });
-            if (!response.ok) return null;
-            const data = await response.json();
-            const lat = Number(data?.latitude);
-            const lon = Number(data?.longitude);
-            if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
-            return { lat, lon };
-        } catch {
-            return null;
-        }
-    };
-
     useEffect(() => {
         setIsLoadingInstagrams(true);
         getInstagramPhotos(6).then(res => {
@@ -126,7 +89,7 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
         
         const fetchHeaderWeather = async () => {
             const gpsCoords = await getBrowserCoordinates();
-            const ipCoords = gpsCoords ? null : await getIpCoordinates();
+            const ipCoords = gpsCoords ? null : await getIpLocation();
             const lat = gpsCoords?.lat ?? ipCoords?.lat;
             const lon = gpsCoords?.lon ?? ipCoords?.lon;
 

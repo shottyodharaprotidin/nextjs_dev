@@ -1,5 +1,6 @@
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import "@icon/themify-icons/themify-icons.css"
+import './globals.css'
 
 import ImportJs from '@/components/ltr/import-js/import-js';
 import Providers from './theme-providers';
@@ -44,8 +45,8 @@ export async function generateMetadata() {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <ImportJs />
       <body>
+        <ImportJs />
         <Providers>  
           {children}
         </Providers>

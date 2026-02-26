@@ -1,24 +1,27 @@
 "use client"
 import StickyBox from "react-sticky-box";
-import './globals.css'
+import dynamic from "next/dynamic";
 import NewsTicker from "@/components/ltr/news-ticker-carousal/page";
 import SunnyWeather from "@/components/ltr/sunny-wether/sunny-weather";
 import { useBackgroundImageLoader } from "@/components/ltr/use-background-image/use-background-image";
 import Layout from "@/components/ltr/layout/layout";
-import YoutubeVideo from "@/components/ltr/youtube-video/youtube-video";
 import useRemoveBodyClass from "@/components/ltr/useEffect-hook/useEffect-hook";
-import DatePickerComponents from "@/components/ltr/date-picker/date-picker";
-import PollWidget from "@/components/ltr/poll-widget/poll";
 import HomeFeatureCarousal from "@/components/ltr/home-feature-carousal/home-feature-carousal";
 import HomeCenterSlider from "@/components/ltr/home-center-slider/home-center-slider";
-import Tags from "@/components/ltr/tags/tags";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getFeaturedArticles, getPopularArticles, getTrendingNews, getLatestArticles, getReviewArticles, getArticlesByCategory, getEditorPicks } from "@/services/articleService";
 import { getYoutubeVideos, getActivePoll } from "@/services/mediaService";
 import { getGlobalSettings, getTags, getCategories, getAdsManagement } from "@/services/globalService";
 import { getWeatherForecast } from "@/services/weatherService";
+import { resolveClientLocation } from "@/services/locationService";
 import { getStrapiMedia, formatDate, toBengaliNumber } from "@/lib/strapi";
+import { localizeLocationLabel } from "@/lib/locationLocalization";
+
+const YoutubeVideo = dynamic(() => import("@/components/ltr/youtube-video/youtube-video"), { ssr: false });
+const DatePickerComponents = dynamic(() => import("@/components/ltr/date-picker/date-picker"), { ssr: false });
+const PollWidget = dynamic(() => import("@/components/ltr/poll-widget/poll"), { ssr: false });
+const Tags = dynamic(() => import("@/components/ltr/tags/tags"), { ssr: false });
 
 // Helper: get article data (supports both v4 and v5)
 // Helper: get article data (supports both v4 and v5)
@@ -48,131 +51,6 @@ const fmtWeatherValue = (value, locale = 'bn') => {
   if (value === null || value === undefined || Number.isNaN(Number(value))) return '--';
   const rounded = Math.round(Number(value));
   return locale === 'bn' ? toBengaliNumber(rounded) : rounded;
-};
-
-const BN_LOCATION_MAP = {
-  dhaka: 'ঢাকা',
-  bangladesh: 'বাংলাদেশ',
-  'people\'s republic of bangladesh': 'বাংলাদেশ',
-
-  chattogram: 'চট্টগ্রাম',
-  chittagong: 'চট্টগ্রাম',
-  cumilla: 'কুমিল্লা',
-  comilla: 'কুমিল্লা',
-  "cox's bazar": 'কক্সবাজার',
-  'coxs bazar': 'কক্সবাজার',
-  feni: 'ফেনী',
-  noakhali: 'নোয়াখালী',
-  lakshmipur: 'লক্ষ্মীপুর',
-  laxmipur: 'লক্ষ্মীপুর',
-  chandpur: 'চাঁদপুর',
-  brahmanbaria: 'ব্রাহ্মণবাড়িয়া',
-  khagrachhari: 'খাগড়াছড়ি',
-  rangamati: 'রাঙ্গামাটি',
-  bandarban: 'বান্দরবান',
-
-  gazipur: 'গাজীপুর',
-  narsingdi: 'নরসিংদী',
-  narayanganj: 'নারায়ণগঞ্জ',
-  manikganj: 'মানিকগঞ্জ',
-  munshiganj: 'মুন্সিগঞ্জ',
-  tangail: 'টাঙ্গাইল',
-  kishoreganj: 'কিশোরগঞ্জ',
-  faridpur: 'ফরিদপুর',
-  rajbari: 'রাজবাড়ী',
-  gopalganj: 'গোপালগঞ্জ',
-  madaripur: 'মাদারীপুর',
-  shariatpur: 'শরীয়তপুর',
-
-  mymensingh: 'ময়মনসিংহ',
-  jamalpur: 'জামালপুর',
-  sherpur: 'শেরপুর',
-  netrokona: 'নেত্রকোনা',
-
-  sylhet: 'সিলেট',
-  moulvibazar: 'মৌলভীবাজার',
-  maulvibazar: 'মৌলভীবাজার',
-  habiganj: 'হবিগঞ্জ',
-  sunamganj: 'সুনামগঞ্জ',
-
-  rajshahi: 'রাজশাহী',
-  naogaon: 'নওগাঁ',
-  natore: 'নাটোর',
-  pabna: 'পাবনা',
-  sirajganj: 'সিরাজগঞ্জ',
-  bogura: 'বগুড়া',
-  bogra: 'বগুড়া',
-  joypurhat: 'জয়পুরহাট',
-  chapainawabganj: 'চাঁপাইনবাবগঞ্জ',
-  'chapai nawabganj': 'চাঁপাইনবাবগঞ্জ',
-
-  rangpur: 'রংপুর',
-  dinajpur: 'দিনাজপুর',
-  thakurgaon: 'ঠাকুরগাঁও',
-  panchagarh: 'পঞ্চগড়',
-  nilphamari: 'নীলফামারী',
-  lalmonirhat: 'লালমনিরহাট',
-  gaibandha: 'গাইবান্ধা',
-  kurigram: 'কুড়িগ্রাম',
-
-  khulna: 'খুলনা',
-  jashore: 'যশোর',
-  jessore: 'যশোর',
-  satkhira: 'সাতক্ষীরা',
-  narail: 'নড়াইল',
-  magura: 'মাগুরা',
-  jhenaidah: 'ঝিনাইদহ',
-  kushtia: 'কুষ্টিয়া',
-  chuadanga: 'চুয়াডাঙ্গা',
-  meherpur: 'মেহেরপুর',
-  bagerhat: 'বাগেরহাট',
-
-  barishal: 'বরিশাল',
-  barisal: 'বরিশাল',
-  bhola: 'ভোলা',
-  pirojpur: 'পিরোজপুর',
-  jhalokati: 'ঝালকাঠি',
-  patuakhali: 'পটুয়াখালী',
-  barguna: 'বরগুনা',
-
-  singapore: 'সিঙ্গাপুর',
-  malaysia: 'মালয়েশিয়া',
-  'kuala lumpur': 'কুয়ালালামপুর',
-  'petaling jaya': 'পেটালিং জায়া',
-  puchong: 'পুচং',
-  putrajaya: 'পুত্রাজায়া',
-  'shah alam': 'শাহ আলম',
-  subang: 'সুবাং',
-  'subang jaya': 'সুবাং জায়া',
-  klang: 'ক্লাং',
-  cyberjaya: 'সাইবারজায়া',
-  selangor: 'সেলাঙ্গর',
-  penang: 'পেনাং',
-  johor: 'জোহর',
-  india: 'ভারত',
-  kolkata: 'কলকাতা',
-  delhi: 'দিল্লি',
-  pakistan: 'পাকিস্তান',
-  nepal: 'নেপাল',
-  bhutan: 'ভুটান',
-  sri: 'শ্রী',
-  lanka: 'লঙ্কা',
-  thailand: 'থাইল্যান্ড',
-  indonesia: 'ইন্দোনেশিয়া',
-  jakarta: 'জাকার্তা',
-};
-
-const localizeLocationLabel = (label, locale = 'en') => {
-  if (!label || locale !== 'bn') return label;
-
-  return label
-    .split(',')
-    .map((part) => {
-      const text = part.trim();
-      const key = text.toLowerCase();
-      return BN_LOCATION_MAP[key] || text;
-    })
-    .join(', ');
 };
 
 // ... (rest of page component)
@@ -249,11 +127,11 @@ export default function Home() {
   // Dummy data for loading state
   // Dummy data for loading state
   const dummyArticles = Array(12).fill({
-    title: 'লোড হচ্ছে: সংবাদের শিরোনাম এখানে দেখাবে...',
-    excerpt: 'সংবাদের বিস্তারিত বিবরণ এখানে লোড হবে। অনুগ্রহ করে অপেক্ষা করুন...',
+    title: 'সত্যধারা প্রতিদিনে সর্বশেষ আপডেট দেখুন',
+    excerpt: 'দেশ-বিদেশ, রাজনীতি, অর্থনীতি, খেলাধুলা ও প্রযুক্তির গুরুত্বপূর্ণ খবর এক নজরে।',
     slug: '#',
     category: { data: { attributes: { name: 'ক্যাটাগরি' } } },
-    author: { name: 'লোডিং...' },
+    author: { name: 'ডেস্ক রিপোর্ট' },
     cover: null, // Set null to trigger getStrapiMedia fallback to '/default.jpg'
     createdAt: new Date().toISOString(),
     id: 'dummy'
@@ -283,7 +161,7 @@ export default function Home() {
     locationLabel: '',
     daily: [],
   });
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -339,13 +217,13 @@ export default function Home() {
     openPopup(`https://twitter.com/intent/tweet?url=${encodedShareUrl}&text=${encodedShareText}`);
   };
 
-  const displayFeatured = loading ? dummyArticles : featured;
-  const displayPopular = loading ? dummyArticles : popular;
-  const displayTrending = loading ? dummyArticles : trending;
-  const displayLatest = loading ? dummyArticles : latest;
-  const displayTech = loading ? dummyArticles : techArticles;
-  const displayEditor = loading ? dummyArticles : editorPicks;
-  const displayReviews = loading ? dummyArticles : latestReviews;
+  const displayFeatured = featured.length > 0 ? featured : dummyArticles;
+  const displayPopular = popular.length > 0 ? popular : dummyArticles;
+  const displayTrending = trending.length > 0 ? trending : dummyArticles;
+  const displayLatest = latest.length > 0 ? latest : dummyArticles;
+  const displayTech = techArticles.length > 0 ? techArticles : dummyArticles;
+  const displayEditor = editorPicks.length > 0 ? editorPicks : dummyArticles;
+  const displayReviews = latestReviews.length > 0 ? latestReviews : dummyArticles;
 
   const handlePageChange = async (page) => {
     if (page < 1 || page > totalPages) return;
@@ -368,109 +246,6 @@ export default function Home() {
     }
   };
 
-  const getBrowserCoordinates = () => {
-    return new Promise((resolve) => {
-      if (typeof window === 'undefined' || !navigator.geolocation) {
-        resolve(null);
-        return;
-      }
-
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          resolve({
-            lat: position.coords.latitude,
-            lon: position.coords.longitude,
-          });
-        },
-        () => resolve(null),
-        {
-          enableHighAccuracy: false,
-          timeout: 8000,
-          maximumAge: 600000,
-        }
-      );
-    });
-  };
-
-  const getIpLocation = async () => {
-    const providers = [
-      async () => {
-        const response = await fetch('https://ipapi.co/json/', { cache: 'no-store' });
-        if (!response.ok) return null;
-        const data = await response.json();
-        return {
-          lat: Number(data?.latitude),
-          lon: Number(data?.longitude),
-          city: data?.city || '',
-          country: data?.country_name || '',
-        };
-      },
-      async () => {
-        const response = await fetch('https://ipwho.is/', { cache: 'no-store' });
-        if (!response.ok) return null;
-        const data = await response.json();
-        return {
-          lat: Number(data?.latitude),
-          lon: Number(data?.longitude),
-          city: data?.city || '',
-          country: data?.country || '',
-        };
-      },
-    ];
-
-    for (const provider of providers) {
-      try {
-        const result = await provider();
-        const lat = Number(result?.lat);
-        const lon = Number(result?.lon);
-        if (!Number.isFinite(lat) || !Number.isFinite(lon)) continue;
-
-        const city = result?.city || '';
-        const country = result?.country || '';
-        const label = city && country ? `${city}, ${country}` : city || country || '';
-
-        return { lat, lon, label };
-      } catch {
-      }
-    }
-
-    return null;
-  };
-
-  const getTimezoneLocation = async () => {
-    try {
-      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
-      if (!timezone.includes('/')) return null;
-
-      const timezoneParts = timezone.split('/');
-      const cityGuess = timezoneParts[timezoneParts.length - 1]?.replace(/_/g, ' ');
-      if (!cityGuess) return null;
-
-      const language = locale === 'bn' ? 'bn' : 'en';
-      const response = await fetch(
-        `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(cityGuess)}&count=1&language=${language}&format=json`,
-        { cache: 'no-store' }
-      );
-      if (!response.ok) return null;
-
-      const data = await response.json();
-      const result = data?.results?.[0];
-      if (!result) return null;
-
-      const lat = Number(result?.latitude);
-      const lon = Number(result?.longitude);
-      if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
-
-      const city = result?.name || cityGuess;
-      const country = result?.country || '';
-      const label = city && country ? `${city}, ${country}` : city || country || '';
-
-      return { lat, lon, label };
-    } catch {
-      return null;
-    }
-  };
-
   useEffect(() => {
     // Remove RTL direction
     document.documentElement.removeAttribute('dir', 'rtl');
@@ -479,23 +254,36 @@ export default function Home() {
     
     // Fetch data dari API
     async function fetchData() {
+      let skeletonReleased = false;
+      const releaseSkeleton = () => {
+        if (!skeletonReleased) {
+          setLoading(false);
+          skeletonReleased = true;
+        }
+      };
+
       try {
-        const userCoords = await getBrowserCoordinates();
-        const [ipLocation, timezoneLocation] = await Promise.all([
-          getIpLocation(),
-          getTimezoneLocation(),
-        ]);
+        const resolvedLocation = await resolveClientLocation(locale);
+        const weatherLat = resolvedLocation?.lat;
+        const weatherLon = resolvedLocation?.lon;
+        const detectedLocationLabel = resolvedLocation?.fallbackLabel || '';
 
-        const weatherLat = userCoords?.lat ?? ipLocation?.lat ?? timezoneLocation?.lat;
-        const weatherLon = userCoords?.lon ?? ipLocation?.lon ?? timezoneLocation?.lon;
-        const detectedLocationLabel = ipLocation?.label || timezoneLocation?.label || '';
-
-
-        const [featuredRes, popularRes, trendingRes, latestRes, youtubeRes, pollRes, globalRes, tagsRes, techRes, editorRes, reviewRes, categoriesRes, adsRes, weatherRes] = await Promise.allSettled([
+        const [featuredRes, popularRes, trendingRes, latestRes] = await Promise.allSettled([
           getFeaturedArticles(10, locale),
           getPopularArticles(10, locale),
           getTrendingNews(15, locale),
           getLatestArticles(1, 20, locale),
+        ]);
+
+        setFeatured(featuredRes.value?.data || []);
+        setPopular(popularRes.value?.data || []);
+        setTrending(trendingRes.value?.data || []);
+        setLatest(latestRes.value?.data || []);
+        setTotalPages(latestRes.value?.meta?.pagination?.pageCount || 1);
+
+        releaseSkeleton();
+
+        const [youtubeRes, pollRes, globalRes, tagsRes, techRes, editorRes, reviewRes, categoriesRes, adsRes, weatherRes] = await Promise.allSettled([
           getYoutubeVideos(locale),
           getActivePoll(locale),
           getGlobalSettings(locale),
@@ -508,11 +296,6 @@ export default function Home() {
           getWeatherForecast(weatherLat, weatherLon, locale),
         ]);
 
-        setFeatured(featuredRes.value?.data || []);
-        setPopular(popularRes.value?.data || []);
-        setTrending(trendingRes.value?.data || []);
-        setLatest(latestRes.value?.data || []);
-        setTotalPages(latestRes.value?.meta?.pagination?.pageCount || 1);
         setYoutubeData(youtubeRes.value?.data || []);
         setPollData(pollRes.value?.data?.[0] || null); // Poll returns array, take first
         setGlobalSettings(globalRes.value || null);
@@ -531,10 +314,10 @@ export default function Home() {
           }
           setWeatherData(nextWeatherData);
         }
-        setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
-        setLoading(false);
+      } finally {
+        releaseSkeleton();
       }
     }
 
@@ -550,7 +333,7 @@ export default function Home() {
       {/* *** START PAGE MAIN CONTENT *** */}
       <main className="page_main_wrapper">
         {/* START NEWSTRICKER */}
-        <NewsTicker data={trending} isLoading={loading} />
+        <NewsTicker data={displayTrending} isLoading={false} />
         {/*  END OF /. NEWSTRICKER */}
         {/* START FEATURE SECTION */}
         <div
@@ -558,7 +341,7 @@ export default function Home() {
           data-image-src="/default.jpg"
         >
           <div className="container">
-            <HomeFeatureCarousal data={featured} isLoading={loading} />
+            <HomeFeatureCarousal data={displayFeatured} isLoading={false} />
           </div>
         </div>
         {/* END OF /. FEATURE SECTION */}
@@ -615,7 +398,7 @@ export default function Home() {
               </div>
               <div className="col-md-6 col-xxl-4 thm-padding">
                 <div className="slider-wrapper">
-                  <HomeCenterSlider data={displayPopular} isLoading={loading} />
+                  <HomeCenterSlider data={displayPopular} isLoading={false} />
                 </div>
               </div>
               <div className="col-md-6 col-xxl-4 thm-padding">
@@ -805,7 +588,7 @@ export default function Home() {
             </div>
             {/* END OF /. MAIN CONTENT */}
             {/* START SIDE CONTENT */}
-            <div className="col-sm-5 col-md-4 col-xl-3 rightSidebar">
+            <div className={`col-sm-5 col-md-4 col-xl-3 rightSidebar ${locale === 'bn' ? 'rightSidebar-locale-bn' : 'rightSidebar-locale-en'}`}>
               <StickyBox>
                 {/* START SOCIAL COUNTER TEXT */}
                 <div className="align-items-center d-flex fs-6 justify-content-center mb-1 text-center social-counter-total">
@@ -892,11 +675,10 @@ export default function Home() {
                 </div>
                 {/* END OF /. TRENDING TOPICS */}
                 {/* START LATEST REVIEWS */}
-                <div className="panel_inner review-inner">
+                <div className="panel_inner review-inner recent-reviews-panel">
                   <div className="panel_header">
                     <h4><strong>{t.recentReviews}</strong></h4>
                   </div>
-                  <div className="panel_body">
                   <div className="panel_body">
                     {displayReviews.length > 0 && (() => {
                       const a = getArt(displayReviews[0]);
@@ -940,7 +722,6 @@ export default function Home() {
                       })}
                     </div>
                   </div>
-                  </div>
                 </div>
                 {/* END OF /. LATEST REVIEWS */}
               </StickyBox>
@@ -959,17 +740,17 @@ export default function Home() {
                 </p>
               </div>
             </div>
-            <YoutubeVideo data={youtubeData} isLoading={loading} />
+            <YoutubeVideo data={youtubeData} isLoading={false} />
           </div>
         </div>
         {/* END OF /. YOUTUBE VIDEO */}
         <section className="articles-wrapper">
           <div className="container">
             <div className="row gx-lg-5">
-              <div className="col-md-3 leftSidebar d-none d-xl-block">
+              <div className={`col-md-3 leftSidebar d-none d-lg-block ${locale === 'bn' ? 'leftSidebar-locale-bn' : 'leftSidebar-locale-en'}`}>
                 <StickyBox>
                   {/* START TECH & INNOVATION */}
-                  <div className="panel_inner">
+                  <div className="panel_inner tech-innovation-panel">
                     <div className="panel_header">
                       <h4><strong>{t.techInnovation}</strong></h4>
                     </div>
@@ -1005,7 +786,7 @@ export default function Home() {
                   </div>
                   {/* END OF /. TECH & INNOVATION */}
                   {/* START EDITOR'S PICKS */}
-                  <div className="panel_inner mb-0">
+                  <div className="panel_inner mb-0 editor-picks-panel">
                     <div className="panel_header">
                       <h4><strong>{t.editorsChoice}</strong></h4>
                     </div>
@@ -1045,7 +826,7 @@ export default function Home() {
               <div className="col-sm-7 col-md-8 col-xl-6 border-start border-end main-content">
                 <StickyBox>
                   {/* START POST CATEGORY STYLE FOUR (Latest articles ) */}
-                  <div className="post-inner">
+                  <div className={`post-inner recent-articles-panel ${locale === 'bn' ? 'recent-articles-panel-bn' : 'recent-articles-panel-en'}`}>
                     {/*post header*/}
                     <div className="post-head">
                       <h2 className="title recent-articles-title">{t.recentArticles}</h2>
@@ -1300,10 +1081,10 @@ export default function Home() {
                   </div>
                   {/* END OF /. ARCHIVE */}
                   {/* START POLL WIDGET */}
-                  <PollWidget data={pollData} isLoading={loading} />
+                  <PollWidget data={pollData} isLoading={false} />
                   {/* END OF /. POLL WIDGET */}
                   {/* START TAGS */}
-                  <Tags data={tags} isLoading={loading} />
+                  <Tags data={tags} isLoading={false} />
                   {/* END OF /. TAGS */}
                 </StickyBox>
               </div>

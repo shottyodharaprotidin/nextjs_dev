@@ -1,5 +1,6 @@
 const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'https://app.shottyodharaprotidin.com';
 const API_TOKEN = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
+const DEFAULT_TIMEOUT_MS = Number(process.env.NEXT_PUBLIC_API_TIMEOUT_MS || 8000);
 
 /**
  * Helper to make requests to Strapi API
@@ -16,10 +17,17 @@ export async function fetchAPI(path, options = {}) {
     defaultOptions.headers.Authorization = `Bearer ${API_TOKEN}`;
   }
 
-  const { silent, ...fetchOptions } = options;
+  const { silent, timeoutMs = DEFAULT_TIMEOUT_MS, signal: externalSignal, ...fetchOptions } = options;
+  const timeoutController = externalSignal ? null : new AbortController();
+  const signal = externalSignal || timeoutController?.signal;
+  const timeoutId = timeoutController
+    ? setTimeout(() => timeoutController.abort(), timeoutMs)
+    : null;
+
   const mergedOptions = {
     ...defaultOptions,
     ...fetchOptions,
+    signal,
   };
 
   const requestUrl = `${STRAPI_URL}/api${path}`;
@@ -31,16 +39,35 @@ export async function fetchAPI(path, options = {}) {
       if (!silent) {
         console.error(`Strapi API Error: ${response.status} ${response.statusText}`);
       }
-      throw new Error(`Failed to fetch from Strapi: ${response.statusText}`);
+      const error = new Error(`Failed to fetch from Strapi: ${response.statusText}`);
+      error.status = response.status;
+      error.statusText = response.statusText;
+      error.url = requestUrl;
+      throw error;
     }
     
     const data = await response.json();
     return data;
   } catch (error) {
+    if (error?.name === 'AbortError') {
+      const timeoutError = new Error(`Strapi request timeout after ${timeoutMs}ms`);
+      timeoutError.status = 408;
+      timeoutError.statusText = 'Request Timeout';
+      timeoutError.url = requestUrl;
+      if (!silent) {
+        console.error('Strapi fetch timeout:', timeoutError);
+      }
+      throw timeoutError;
+    }
+
     if (!silent) {
       console.error('Strapi fetch error:', error);
     }
     throw error;
+  } finally {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
   }
 }
 

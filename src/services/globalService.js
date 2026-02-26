@@ -6,10 +6,7 @@ export async function getGlobalSettings(locale = 'bn') {
   try {
     return await fetchAPI(`/global?populate=*&locale=${strapiLocale}`, { silent: true });
   } catch (error) {
-    // Silent fail for 404/403 as per user request (no global data yet)
-    if (error.status !== 404 && error.status !== 403) {
-      console.warn("getGlobalSettings failed.", error);
-    }
+    // Silent fallback when global singleton is missing/unpublished/unreachable
     return { data: null };
   }
 }
@@ -18,8 +15,7 @@ export async function getFooterData(locale = 'bn') {
   const strapiLocale = getStrapiLocale(locale);
   try {
     return await fetchAPI(`/footer?populate=*&locale=${strapiLocale}`, { silent: true });
-  } catch (error) {
-    console.warn("getFooterData failed.", error);
+  } catch {
     return { data: null };
   }
 }
@@ -98,7 +94,7 @@ export async function getMenuItems(location = 'header', locale = 'bn') {
     return { data: menuData };
 
   } catch (error) {
-    console.warn(`getMenuItems failed for location: ${location}`, error);
+    // Missing menu singleton should not break UI
     return { data: [] };
   }
 }
@@ -106,8 +102,7 @@ export async function getMenuItems(location = 'header', locale = 'bn') {
 export async function getAdsManagement() {
   try {
     return await fetchAPI(`/ads-management?populate=*`, { silent: true });
-  } catch (error) {
-    console.warn('getAdsManagement failed.', error);
+  } catch {
     return { data: null };
   }
 }

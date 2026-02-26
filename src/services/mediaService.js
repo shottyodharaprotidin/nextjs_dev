@@ -12,8 +12,12 @@ export async function getYoutubeVideos(locale = 'bn') {
     'pagination[limit]': 5,
   });
 
-  const data = await fetchAPI(`/latest-ytvideo-news?${queryParams}`);
-  return data;
+  try {
+    const data = await fetchAPI(`/latest-ytvideo-news?${queryParams}`);
+    return data;
+  } catch {
+    return { data: [] };
+  }
 }
 
 /**
@@ -29,6 +33,10 @@ export async function getActivePoll(locale = 'bn') {
     'pagination[limit]': 1,
   });
 
-  const data = await fetchAPI(`/polls?${queryParams}`);
-  return data;
+  try {
+    const data = await fetchAPI(`/polls?${queryParams}`);
+    return data;
+  } catch {
+    return { data: [] };
+  }
 }
