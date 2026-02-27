@@ -446,64 +446,88 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
                                             {/* Start header social */}
                                             <div className="header-social">
                                                 <ul className="align-items-center d-flex gap-2">
+                                                    {headerTopData?.socialFacebookUrl && (
                                                     <li>
-                                                        <Link href={headerTopData?.socialFacebookUrl || "#"} target="_blank">
+                                                        <Link href={headerTopData.socialFacebookUrl} target="_blank">
                                                             <i className="fab fa-facebook-f" />
                                                         </Link>
                                                     </li>
+                                                    )}
+                                                    {headerTopData?.socialTwitterUrl && (
                                                     <li>
-                                                        <Link href={headerTopData?.socialTwitterUrl || "#"} target="_blank">
+                                                        <Link href={headerTopData.socialTwitterUrl} target="_blank">
                                                             <i className="fab fa-twitter" />
                                                         </Link>
                                                     </li>
+                                                    )}
+                                                    {headerTopData?.socialVkUrl && (
                                                     <li>
-                                                        <Link href={headerTopData?.socialVkUrl || "#"} target="_blank">
+                                                        <Link href={headerTopData.socialVkUrl} target="_blank">
                                                             <i className="fab fa-vk" />
                                                         </Link>
                                                     </li>
+                                                    )}
+                                                    {headerTopData?.socialInstagramUrl && (
                                                     <li>
-                                                        <Link href={headerTopData?.socialInstagramUrl || "#"} target="_blank">
+                                                        <Link href={headerTopData.socialInstagramUrl} target="_blank">
                                                             <i className="fab fa-instagram" />
                                                         </Link>
                                                     </li>
+                                                    )}
+                                                    {headerTopData?.socialYoutubeUrl && (
                                                     <li>
-                                                        <Link href={headerTopData?.socialYoutubeUrl || "#"} target="_blank">
+                                                        <Link href={headerTopData.socialYoutubeUrl} target="_blank">
                                                             <i className="fab fa-youtube" />
                                                         </Link>
                                                     </li>
+                                                    )}
+                                                    {headerTopData?.socialVimeoUrl && (
                                                     <li>
-                                                        <Link href={headerTopData?.socialVimeoUrl || "#"} target="_blank">
+                                                        <Link href={headerTopData.socialVimeoUrl} target="_blank">
                                                             <i className="fab fa-vimeo-v" />
                                                         </Link>
                                                     </li>
+                                                    )}
                                                 </ul>
                                             </div>
                                             {/* End of /. header social */}
                                         </li>
+                                        {headerTopData?.contactLabel && (
                                         <li className="d-none d-sm-block">
-                                            <Link href={headerTopData?.contactUrl || "#"}>Contact</Link>
+                                            <Link href={headerTopData?.contactUrl || "#"}>{headerTopData.contactLabel}</Link>
                                         </li>
+                                        )}
+                                        {headerTopData?.donationLabel && (
                                         <li className="d-none d-sm-block">
-                                            <Link href={headerTopData?.donationUrl || "#"}>Donation</Link>
+                                            <Link href={headerTopData?.donationUrl || "#"}>{headerTopData.donationLabel}</Link>
                                         </li>
+                                        )}
                                     </ul>
                                 </div>
                                 {/* End of /. top left menu */}
                             </div>
                             {/* Start header top right menu */}
+                            {(headerTopData?.signUpLabel || headerTopData?.loginLabel) && (
                             <div className="col-auto ms-auto">
                                 <div className="header-right-menu">
                                     <ul className="d-flex justify-content-end">
                                         <li>
+                                            {headerTopData?.signUpLabel && (
                                             <Link href={headerTopData?.signUpUrl || "#"}>
-                                                <i className="fa fa-lock" /> Sign Up{" "}
+                                                <i className="fa fa-lock" /> {headerTopData.signUpLabel}{" "}
                                             </Link>
-                                            <span className="fw-bold">or</span>
-                                            <Link href={headerTopData?.loginUrl || "#"}> Login</Link>
+                                            )}
+                                            {headerTopData?.signUpLabel && headerTopData?.loginLabel && (
+                                            <span className="fw-bold">{headerTopData?.orLabel || "or"}</span>
+                                            )}
+                                            {headerTopData?.loginLabel && (
+                                            <Link href={headerTopData?.loginUrl || "#"}> {headerTopData.loginLabel}</Link>
+                                            )}
                                         </li>
                                     </ul>
                                 </div>
                             </div>
+                            )}
                             {/* end of /. header top right menu */}
                         </div>
                         {/* end of /. row */}
