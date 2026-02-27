@@ -6,8 +6,9 @@ import { getStrapiMedia, formatDate, toBengaliNumber } from '@/lib/strapi';
 import { useTranslations } from '@/lib/translations';
 import ImageWithFallback from "@/components/ui/ImageWithFallback";
 
-const ArticleSidebar = ({ mostViewed, popularNews, globalSettings, adsData, locale = 'bn' }) => {
+const ArticleSidebar = ({ mostViewed, popularNews, globalSettings: rawGlobalSettings, adsData, locale = 'bn' }) => {
   const { t } = useTranslations(locale);
+  const globalSettings = rawGlobalSettings?.attributes || rawGlobalSettings;
 
   return (
     <StickyBox offsetTop={100} offsetBottom={20}>
@@ -70,7 +71,7 @@ const ArticleSidebar = ({ mostViewed, popularNews, globalSettings, adsData, loca
             </Link>
           </li>
           <li className="col-4">
-            <Link href={globalSettings?.socialPinterestUrl || '#'} className="pin" target="_blank">
+            <Link href={globalSettings?.socialPinterestUrl || '#'} className="pint" target="_blank">
               <i className="fab fa-pinterest-p" />
               <div>{globalSettings?.socialPinterestFollowers || 0}</div>
               <p className="social-text follower-label-text">{t('followers')}</p>

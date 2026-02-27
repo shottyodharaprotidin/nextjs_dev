@@ -111,10 +111,15 @@ const YoutubeVideo = ({ data = [], isLoading = false }) => {
     } else if (data && data.length > 0) {
       const formattedVideos = data.map(item => {
         const v = item.attributes || item;
-        const videoId = getVideoId(v.youtubeUrl);
+        const videoId = getVideoId(v.youtubeUrl || v.videoUrl);
+        
+        // Handle thumbnail from dedicated collection or fallback to youtube default
+        const thumbData = v.thumbnail?.data?.attributes || v.thumbnail?.attributes || v.thumbnail?.data || v.thumbnail;
+        const thumbUrl = thumbData ? getStrapiMedia(thumbData) : `https://i.ytimg.com/vi/${videoId}/default.jpg`;
+
         return {
           id: videoId || 'rqJDO3TWnac', // fallback
-          thumbnailUrl: v.thumbnail?.data ? getStrapiMedia(v.thumbnail?.data?.attributes?.url || v.thumbnail) : `https://i.ytimg.com/vi/${videoId}/default.jpg`,
+          thumbnailUrl: thumbUrl,
           title: v.title,
           author: 'Youtube',
         };

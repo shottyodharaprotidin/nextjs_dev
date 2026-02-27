@@ -235,20 +235,6 @@ export async function getVideoArticles(limit = 6, locale = 'bn') {
   }
 }
 
-export async function getYoutubeVideos(limit = 5, locale = 'bn') {
-  const strapiLocale = getStrapiLocale(locale);
-  try {
-    const queryParams = new URLSearchParams({
-      'populate': '*',
-      'pagination[limit]': limit,
-      'sort': 'createdAt:desc',
-      'locale': strapiLocale,
-    });
-    return await fetchAPI(`/latest-ytvideo-news?${queryParams}`);
-  } catch (error) {
-    return { data: [] };
-  }
-}
 
 export async function getEditorPicks(limit = 4, locale = 'bn') {
   const strapiLocale = getStrapiLocale(locale);

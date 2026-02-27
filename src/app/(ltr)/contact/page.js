@@ -7,7 +7,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import React, { useState, useEffect } from "react";
 import StickyBox from "react-sticky-box";
-import { submitContact } from "@/services/contactService";
+import { submitContact, getContactInfo } from "@/services/contactService";
 import { getGlobalSettings } from "@/services/globalService";
 
 const dictionary = {
@@ -75,13 +75,19 @@ const page = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [status, setStatus] = useState({ type: '', message: '' });
     const [globalSettings, setGlobalSettings] = useState(null);
+    const [contactData, setContactData] = useState(null);
 
     useEffect(() => {
         getGlobalSettings('bn').then(res => {
             const data = res?.data?.attributes || res?.data || null;
             setGlobalSettings(data);
         }).catch(err => console.error(err));
-    }, []);
+        
+        getContactInfo(locale).then(res => {
+            const data = res?.data?.attributes || res?.data || null;
+            setContactData(data);
+        }).catch(err => console.error(err));
+    }, [locale]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -127,7 +133,7 @@ const page = () => {
                     <div className="align-items-center row">
                         <div className="col">
                             <h1 className="mb-sm-0">
-                                <strong>{t.title}</strong>
+                                <strong>{contactData?.pageTitle || t.title}</strong>
                             </h1>
                         </div>
                         <div className="col-12 col-sm-auto">
@@ -137,7 +143,7 @@ const page = () => {
                                         <Link href="/">Home</Link>
                                     </li>
                                     <li className="breadcrumb-item active" aria-current="page">
-                                        Contact
+                                        {contactData?.pageTitle || t.title}
                                     </li>
                                 </ol>
                             </nav>
@@ -158,24 +164,18 @@ const page = () => {
                                     <div className="panel_inner">
                                         <div className="panel_header">
                                             <h4>
-                                                <strong>{t.subTitle}</strong>
+                                                <strong>{contactData?.formSubtitle || t.subTitle}</strong>
                                             </h4>
                                         </div>
                                         <div className="panel_body">
                                             <p>
-                                                Lorem Ipsum is simply dummy text of the printing and
-                                                typesetting industry. Lorem Ipsum has been the industry's
-                                                standard dummy text ever since the 1500s, when an unknown
-                                                printer took a galley of type and scrambled it to make a
-                                                type specimen book. It has survived not only five centuries,
-                                                but also the leap into electronic typesetting, remaining
-                                                essentially unchanged.
+                                                {contactData?.contactDescription || ""}
                                             </p>
                                             <form className="comment-form" onSubmit={handleSubmit}>
                                                 <div className="row">
                                                     <div className="col-sm-6">
                                                         <div className="form-group">
-                                                            <label htmlFor="name">{t.formName}*</label>
+                                                            <label htmlFor="name">{contactData?.formNameLabel || t.formName}*</label>
                                                             <input
                                                                 type="text"
                                                                 className="form-control"
@@ -183,13 +183,13 @@ const page = () => {
                                                                 name="name"
                                                                 value={formData.name}
                                                                 onChange={handleChange}
-                                                                placeholder={t.formName}
+                                                                placeholder={contactData?.formNameLabel || t.formName}
                                                                 required
                                                             />
                                                         </div>
                                                     </div>
                                                     <div className="col-sm-6">
-                                                        <label htmlFor="email">{t.formEmail}*</label>
+                                                        <label htmlFor="email">{contactData?.formEmailLabel || t.formEmail}*</label>
                                                         <div className="form-group">
                                                             <input
                                                                 type="email"
@@ -198,14 +198,14 @@ const page = () => {
                                                                 name="email"
                                                                 value={formData.email}
                                                                 onChange={handleChange}
-                                                                placeholder={t.formEmail}
+                                                                placeholder={contactData?.formEmailLabel || t.formEmail}
                                                                 required
                                                             />
                                                         </div>
                                                     </div>
                                                     <div className="col-sm-6">
                                                         <div className="form-group">
-                                                            <label htmlFor="website">{t.formWebsite}</label>
+                                                            <label htmlFor="website">{contactData?.formWebsiteLabel || t.formWebsite}</label>
                                                             <input
                                                                 type="text"
                                                                 className="form-control"
@@ -213,12 +213,12 @@ const page = () => {
                                                                 name="website"
                                                                 value={formData.website}
                                                                 onChange={handleChange}
-                                                                placeholder={t.formWebsite}
+                                                                placeholder={contactData?.formWebsiteLabel || t.formWebsite}
                                                             />
                                                         </div>
                                                     </div>
                                                     <div className="col-sm-6">
-                                                        <label htmlFor="subject">{t.formSubject}</label>
+                                                        <label htmlFor="subject">{contactData?.formSubjectLabel || t.formSubject}</label>
                                                         <div className="form-group">
                                                             <input
                                                                 type="text"
@@ -227,20 +227,20 @@ const page = () => {
                                                                 name="subject"
                                                                 value={formData.subject}
                                                                 onChange={handleChange}
-                                                                placeholder={t.formSubject}
+                                                                placeholder={contactData?.formSubjectLabel || t.formSubject}
                                                             />
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div className="form-group">
-                                                    <label htmlFor="message">{t.formMessage}*</label>
+                                                    <label htmlFor="message">{contactData?.formMessageLabel || t.formMessage}*</label>
                                                     <textarea
                                                         className="form-control"
                                                         id="message"
                                                         name="message"
                                                         value={formData.message}
                                                         onChange={handleChange}
-                                                        placeholder={t.formMessage}
+                                                        placeholder={contactData?.formMessageLabel || t.formMessage}
                                                         rows={5}
                                                         required
                                                     />
@@ -253,7 +253,7 @@ const page = () => {
                                                 )}
 
                                                 <button type="submit" className="btn btn-news" disabled={isSubmitting}>
-                                                    {isSubmitting ? t.formSubmitting : t.formSubmit}
+                                                    {isSubmitting ? t.formSubmitting : (contactData?.formSubmitButtonText || t.formSubmit)}
                                                 </button>
                                             </form>
                                         </div>
@@ -268,21 +268,21 @@ const page = () => {
                                 <div className="panel_inner">
                                     <div className="panel_header">
                                         <h4>
-                                            <strong>{t.contactInfo}</strong>
+                                            <strong>{contactData?.contactInfoTitle || t.contactInfo}</strong>
                                         </h4>
                                     </div>
                                     <div className="panel_body">
                                         <address>
                                             {" "}
                                             <strong>{globalSettings?.siteName || 'News'}</strong>
-                                            <br /> {globalSettings?.contactAddress || 'Address not set'}
-                                            <br /> <abbr title="Phone">P:</abbr> {globalSettings?.contactPhone || 'Phone not set'}{" "}
+                                            <br /> {contactData?.contactAddress || 'Address not set'}
+                                            <br /> <abbr title="Phone">P:</abbr> {contactData?.contactPhone || 'Phone not set'}{" "}
                                         </address>
                                         <address>
                                             {" "}
                                             <strong>Email</strong>
-                                            <br /> <a href={`mailto:${globalSettings?.contactEmail}`}>
-                                                {globalSettings?.contactEmail || 'Email not set'}
+                                            <br /> <a href={`mailto:${contactData?.contactEmail}`}>
+                                                {contactData?.contactEmail || 'Email not set'}
                                             </a>{" "}
                                         </address>
                                     </div>
@@ -350,8 +350,8 @@ const page = () => {
                         <div className="panel_body">
                             {/* The element that will contain Google Map. This is used in both the Javascript and CSS above. */}
                             <GoogleMapComponents 
-                                lat={globalSettings?.contactMapLat} 
-                                lng={globalSettings?.contactMapLng} 
+                                lat={contactData?.contactMapLat ?? 23.8103968} 
+                                lng={contactData?.contactMapLng ?? 90.41256666} 
                             />
                         </div>
                     </div>

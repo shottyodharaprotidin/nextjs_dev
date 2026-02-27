@@ -75,7 +75,8 @@ export async function getMenuItems(location = 'header', locale = 'bn') {
         'populate[menu][on][navigation.dropdown-menu][populate][subMenus][on][navigation.base-link][populate]=*',
         'populate[menu][on][navigation.dropdown-menu][populate][subMenus][on][navigation.dropdown-header][populate]=*',
         'populate[menu][on][navigation.dropdown-menu][populate][subMenus][on][navigation.nested-dropdown][populate][subMenus]=*',
-        'populate[menu][on][navigation.mega-menu][populate][sections][populate][links][populate]=*'
+        'populate[menu][on][navigation.mega-menu][populate][sections][populate][links][populate]=*',
+        'populate[menu][on][navigation.video-menu][populate][videos][populate][thumbnail][fields][0]=url&populate[menu][on][navigation.video-menu][populate][videos][populate][thumbnail][fields][1]=alternativeText&populate[menu][on][navigation.video-menu][populate][videos][populate][thumbnail][fields][2]=width&populate[menu][on][navigation.video-menu][populate][videos][populate][thumbnail][fields][3]=height'
       ].join('&');
     } else if (location === 'footer') {
       endpoint = '/footer';
@@ -106,6 +107,15 @@ export async function getMenuItems(location = 'header', locale = 'bn') {
 export async function getAdsManagement() {
   try {
     return await fetchAPI(`/ads-management?populate=*`, { silent: true });
+  } catch {
+    return { data: null };
+  }
+}
+
+export async function getHeaderTop(locale = 'bn') {
+  const strapiLocale = getStrapiLocale(locale);
+  try {
+    return await fetchAPI(`/header-top?populate=*&locale=${strapiLocale}`, { silent: true });
   } catch {
     return { data: null };
   }

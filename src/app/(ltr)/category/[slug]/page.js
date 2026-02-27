@@ -245,7 +245,8 @@ const CategoryPage = () => {
                 setPagination(articlesRes?.meta?.pagination || null);
                 setMostViewed(mostViewedRes?.data || []);
                 setPopularNews(popularRes?.data || []);
-                setGlobalSettings(globalRes?.data?.attributes || globalRes?.attributes || null);
+                const globalRaw = globalRes?.data || globalRes || null;
+                setGlobalSettings(globalRaw?.attributes || globalRaw);
             } catch (e) {
                 console.error('CategoryPage fetch error:', e);
             } finally {
@@ -386,7 +387,7 @@ const CategoryPage = () => {
                                 <div className="align-items-center d-flex fs-6 justify-content-center mb-1 text-center social-counter-total">
                                     <i className="fa-solid fa-heart text-primary me-1" /> {t.join}{" "}
                                     <span className="fw-bold mx-1">
-                                        {globalSettings?.socialTotalFollowers ? parseFloat(globalSettings.socialTotalFollowers / 1000000).toFixed(1) + 'M' : '2.5M'}
+                                        {globalSettings?.socialTotalFollowers || '0'}
                                     </span> {t.followers}
                                 </div>
                                 {/* SOCIAL ICONS */}

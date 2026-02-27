@@ -1,15 +1,16 @@
-import { fetchAPI } from "@/lib/strapi";
+import { fetchAPI, getStrapiLocale } from "@/lib/strapi";
 
 /**
  * Get Youtube videos
  * @param {string} locale
  */
 export async function getYoutubeVideos(locale = 'bn') {
+  const strapiLocale = getStrapiLocale(locale);
   const queryParams = new URLSearchParams({
-    locale: locale,
+    locale: strapiLocale,
     'sort[0]': 'createdAt:desc',
     populate: '*',
-    'pagination[limit]': 5,
+    'pagination[limit]': 20,
   });
 
   try {

@@ -162,6 +162,7 @@ export default function Home() {
     daily: [],
   });
   const [loading, setLoading] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
   
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -217,13 +218,13 @@ export default function Home() {
     openPopup(`https://twitter.com/intent/tweet?url=${encodedShareUrl}&text=${encodedShareText}`);
   };
 
-  const displayFeatured = featured.length > 0 ? featured : dummyArticles;
-  const displayPopular = popular.length > 0 ? popular : dummyArticles;
-  const displayTrending = trending.length > 0 ? trending : dummyArticles;
-  const displayLatest = latest.length > 0 ? latest : dummyArticles;
-  const displayTech = techArticles.length > 0 ? techArticles : dummyArticles;
-  const displayEditor = editorPicks.length > 0 ? editorPicks : dummyArticles;
-  const displayReviews = latestReviews.length > 0 ? latestReviews : dummyArticles;
+  const displayFeatured = isInitialLoading ? dummyArticles : featured;
+  const displayPopular = isInitialLoading ? dummyArticles : popular;
+  const displayTrending = isInitialLoading ? dummyArticles : trending;
+  const displayLatest = isInitialLoading ? dummyArticles : latest;
+  const displayTech = isInitialLoading ? dummyArticles : techArticles;
+  const displayEditor = isInitialLoading ? dummyArticles : editorPicks;
+  const displayReviews = isInitialLoading ? dummyArticles : latestReviews;
 
   const handlePageChange = async (page) => {
     if (page < 1 || page > totalPages) return;
@@ -257,7 +258,7 @@ export default function Home() {
       let skeletonReleased = false;
       const releaseSkeleton = () => {
         if (!skeletonReleased) {
-          setLoading(false);
+          setIsInitialLoading(false);
           skeletonReleased = true;
         }
       };
@@ -298,7 +299,9 @@ export default function Home() {
 
         setYoutubeData(youtubeRes.value?.data || []);
         setPollData(pollRes.value?.data?.[0] || null); // Poll returns array, take first
-        setGlobalSettings(globalRes.value || null);
+        const globalRaw = globalRes.value?.data || globalRes.value || null;
+        const globalData = globalRaw?.attributes || globalRaw;
+        setGlobalSettings(globalData);
         setTags(tagsRes.value?.data || []);
         setTechArticles(techRes.value?.data || []);
         setEditorPicks(editorRes.value?.data || []);

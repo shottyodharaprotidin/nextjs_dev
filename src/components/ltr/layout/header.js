@@ -1,12 +1,11 @@
 "use client";
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { formatDate, getStrapiMedia, toBengaliNumber } from '@/lib/strapi';
-import { getInstagramPhotos } from '@/services/instagramService';
 import { getCurrentWeather } from '@/services/weatherService';
 import { getBrowserCoordinates, getIpLocation } from '@/services/locationService';
-import { getMenuItems, getAdsManagement } from '@/services/globalService';
+import { getMenuItems, getAdsManagement, getHeaderTop } from '@/services/globalService';
 import { useLanguage } from '@/lib/LanguageContext';
 import { WiDaySunny, WiCloud, WiRain, WiSnow, WiThunderstorm, WiFog } from 'weather-icons-react';
 import ThemeChanger from '../style-selectors/style-selector';
@@ -51,9 +50,9 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
     const [expandedSidebarItems, setExpandedSidebarItems] = useState({});
     const [sidebarData, setSidebarData] = useState(null);
 
-    const [instagrams, setInstagrams] = useState([]);
-    const [isLoadingInstagrams, setIsLoadingInstagrams] = useState(true);
+    const [headerTopData, setHeaderTopData] = useState(null);
     const [adsData, setAdsData] = useState(null);
+    const navbarNavRef = useRef(null);
 
     const hasWeatherTemp = weather.temp !== null && weather.temp !== undefined && !Number.isNaN(Number(weather.temp));
     const roundedHeaderTemp = hasWeatherTemp ? Math.round(Number(weather.temp)) : null;
@@ -63,16 +62,13 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
     const weatherUnitText = locale === 'bn' ? '°সে' : '°C';
 
     useEffect(() => {
-        setIsLoadingInstagrams(true);
-        getInstagramPhotos(6).then(res => {
-            setInstagrams(res?.data || []);
-        }).finally(() => {
-            setIsLoadingInstagrams(false);
-        });
         getAdsManagement().then(res => {
             setAdsData(res?.data || res || null);
         });
-    }, []);
+        getHeaderTop(locale).then(res => {
+            setHeaderTopData(res?.data || res || null);
+        });
+    }, [locale]);
 
     useEffect(() => {
         // Fetch header menu items from the relocated structure
@@ -136,7 +132,63 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
                 navIcon.removeEventListener('click', toggleSidebar);
             }
         };
-    }, [isSidebarActive, isOverlayActive]); 
+    }, [isSidebarActive, isOverlayActive]);
+
+    // Auto-shrink navbar font to fit in one row
+    useEffect(() => {
+        const navEl = navbarNavRef.current;
+        if (!navEl) return;
+
+        const fitNav = () => {
+            // Only apply on desktop (lg+)
+            if (window.innerWidth < 992) {
+                navEl.style.fontSize = '';
+                return;
+            }
+            
+            const container = navEl.closest('.container');
+            if (!container) return;
+            
+            // Calculate available width by subtracting siblings
+            let siblingsWidth = 0;
+            const collapse = navEl.closest('.navbar-collapse');
+            if (collapse && collapse.parentElement) {
+                Array.from(collapse.parentElement.children).forEach(child => {
+                    if (child !== collapse && window.getComputedStyle(child).display !== 'none') {
+                        siblingsWidth += child.offsetWidth;
+                    }
+                });
+            }
+            
+            const maxWidth = container.clientWidth - siblingsWidth - 20;
+            
+            // Reset to max font first
+            navEl.style.fontSize = '16px';
+            
+            // Shrink until it fits
+            let fontSize = 16;
+            while (navEl.scrollWidth > maxWidth && fontSize > 8) {
+                fontSize -= 0.5;
+                navEl.style.fontSize = fontSize + 'px';
+            }
+        };
+
+        // Use ResizeObserver to detect zoom/resize changes reliably
+        const container = navEl.closest('.container');
+        let ro;
+        if (container && typeof ResizeObserver !== 'undefined') {
+            ro = new ResizeObserver(() => fitNav());
+            ro.observe(container);
+        }
+
+        // Also run on initial render
+        const timer = setTimeout(fitNav, 200);
+        
+        return () => {
+            clearTimeout(timer);
+            if (ro) ro.disconnect();
+        };
+    }, [menuItems]);
 
     useEffect(() => {
         const fullSkinSearch = () => {
@@ -299,6 +351,46 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
             );
         }
 
+        // Handle Component: Navigation.video-menu
+        if (component === 'navigation.video-menu') {
+            const videos = data.videos || [];
+            return (
+                <li className="nav-item dropdown mega-menu-content d-none d-lg-block" key={index}>
+                    <Link className="nav-link dropdown-toggle" href="#" id={`megavideo-${index}`} data-bs-toggle="dropdown" aria-expanded="false">
+                        {data.title}
+                    </Link>
+                    <ul className="dropdown-menu mega-menu p-3 megamenu-content" aria-labelledby={`megavideo-${index}`}>
+                        <li className="g-3 row">
+                            {videos.slice(0, 5).map((video, vIndex) => {
+                                const videoSlug = video.url || '#';
+                                const videoUrl = videoSlug.startsWith('http') || videoSlug === '#' ? videoSlug : (videoSlug.startsWith('/') ? videoSlug : `/${videoSlug}`);
+                                
+                                return (
+                                    <div className="col-menu-video col-md-3" key={vIndex}>
+                                        <Link className="video-nav-item" href={videoUrl}>
+                                            <div className="img-wrapper">
+                                                <img
+                                                    src={getStrapiMedia(video.thumbnail) || "assets/images/gallery-235x160-1.jpg"}
+                                                    alt={video.title}
+                                                    className="img-fluid"
+                                                />
+                                                <div className="link-icon">
+                                                    <i className="ti ti-video-camera" />
+                                                </div>
+                                            </div>
+                                            <h4>
+                                                {video.title}
+                                            </h4>
+                                        </Link>
+                                    </div>
+                                );
+                            })}
+                        </li>
+                    </ul>
+                </li>
+            );
+        }
+
         // Fallback for old menu items structure (backward compatibility)
         const children = data.menu_items?.data || [];
         const hasChildren = children.length > 0;
@@ -342,6 +434,84 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
     return (
         <>
             <header>
+                {/* START HEADER TOP */}
+                <div className="header-top">
+                    <div className="container">
+                        <div className="row">
+                            <div className="col">
+                                {/* Start top left menu */}
+                                <div className="d-flex top-left-menu">
+                                    <ul className="align-items-center d-flex flex-wrap">
+                                        <li>
+                                            {/* Start header social */}
+                                            <div className="header-social">
+                                                <ul className="align-items-center d-flex gap-2">
+                                                    <li>
+                                                        <Link href={headerTopData?.socialFacebookUrl || "#"} target="_blank">
+                                                            <i className="fab fa-facebook-f" />
+                                                        </Link>
+                                                    </li>
+                                                    <li>
+                                                        <Link href={headerTopData?.socialTwitterUrl || "#"} target="_blank">
+                                                            <i className="fab fa-twitter" />
+                                                        </Link>
+                                                    </li>
+                                                    <li>
+                                                        <Link href={headerTopData?.socialVkUrl || "#"} target="_blank">
+                                                            <i className="fab fa-vk" />
+                                                        </Link>
+                                                    </li>
+                                                    <li>
+                                                        <Link href={headerTopData?.socialInstagramUrl || "#"} target="_blank">
+                                                            <i className="fab fa-instagram" />
+                                                        </Link>
+                                                    </li>
+                                                    <li>
+                                                        <Link href={headerTopData?.socialYoutubeUrl || "#"} target="_blank">
+                                                            <i className="fab fa-youtube" />
+                                                        </Link>
+                                                    </li>
+                                                    <li>
+                                                        <Link href={headerTopData?.socialVimeoUrl || "#"} target="_blank">
+                                                            <i className="fab fa-vimeo-v" />
+                                                        </Link>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            {/* End of /. header social */}
+                                        </li>
+                                        <li className="d-none d-sm-block">
+                                            <Link href={headerTopData?.contactUrl || "#"}>Contact</Link>
+                                        </li>
+                                        <li className="d-none d-sm-block">
+                                            <Link href={headerTopData?.donationUrl || "#"}>Donation</Link>
+                                        </li>
+                                    </ul>
+                                </div>
+                                {/* End of /. top left menu */}
+                            </div>
+                            {/* Start header top right menu */}
+                            <div className="col-auto ms-auto">
+                                <div className="header-right-menu">
+                                    <ul className="d-flex justify-content-end">
+                                        <li>
+                                            <Link href={headerTopData?.signUpUrl || "#"}>
+                                                <i className="fa fa-lock" /> Sign Up{" "}
+                                            </Link>
+                                            <span className="fw-bold">or</span>
+                                            <Link href={headerTopData?.loginUrl || "#"}> Login</Link>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            {/* end of /. header top right menu */}
+                        </div>
+                        {/* end of /. row */}
+                    </div>
+                    {/* end of /. container */}
+                </div>
+                {/* END HEADER TOP */}
+
                 {/* START MIDDLE SECTION */}
                 {hideMiddleHeader || path.includes('/article/') ? (
                     <div className="d-md-block d-none header-mid">
@@ -458,7 +628,7 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
                             </div>
                             
                             {/* Dynamic Menu Items */}
-                            <ul className="navbar-nav">
+                            <ul className="navbar-nav" ref={navbarNavRef}>
                                 {isLoadingMenu ? (
                                     <li className="nav-item"><span className="nav-link">Loading...</span></li>
                                 ) : menuItems.length > 0 ? (
@@ -519,29 +689,6 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
                                 <li className="nav-item h5"><span className="nav-link">No menu item</span></li>
                             )}
                         </ul>
-                        <h5 className="wiget-title">Instagram</h5>
-                        {isLoadingInstagrams ? (
-                             <ul className="g-1 insta_thumb list-unstyled p-0 row">
-                                {Array(4).fill(0).map((_, i) => (
-                                    <li key={i} className="col-6">
-                                        <div className="insta_effect d-inline-block position-relative" style={{ width: '100%', height: '100px', backgroundColor: '#e0e0e0', animation: 'pulse 1.5s infinite ease-in-out', borderRadius: '4px' }}></div>
-                                    </li>
-                                ))}
-                            </ul>
-                        ) : instagrams.length > 0 ? (
-                            <ul className="g-1 insta_thumb list-unstyled p-0 row">
-                                {instagrams.slice(0, 4).map((item, index) => {
-                                     const imgUrl = getStrapiMedia(item?.attributes?.image);
-                                     return (
-                                        <li key={index} className="col-6">
-                                            <a href={item?.attributes?.link || "#"} target="_blank" rel="noopener noreferrer" className="insta_effect d-inline-block position-relative w-100">
-                                                <img src={imgUrl || "assets/images/instagram-1.jpg"} className="img-fluid w-100" alt="Instagram" style={{ height: '100px', objectFit: 'cover' }} />
-                                            </a>
-                                        </li>
-                                     );
-                                })}
-                            </ul>
-                        ) : <p>No Instagram photos available.</p>}
                     </div>
                 </nav>
                 <div className={`overlay ${isOverlayActive ? 'active' : ''}`} onClick={closeSidebar} />

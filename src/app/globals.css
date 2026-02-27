@@ -734,6 +734,8 @@ article:hover figure a:before,
     border-top: 1px solid #e7e7e7;
     border-bottom: 1px solid #e7e7e7;
     --bs-navbar-toggler-icon-bg: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30"><path stroke="%23212529" stroke-linecap="round" stroke-miterlimit="10" stroke-width="3" d="M4 7h22M4 15h22M4 23h22"/></svg>');
+    overflow-x: hidden;
+    max-width: 100vw;
 }
 
 .home-seven .navbar {
@@ -799,11 +801,24 @@ article:hover figure a:before,
     }
 
     .navbar-expand-lg .navbar-nav .nav-link {
-        padding: 15px 15px;
+        padding: 15px 10px;
         font-weight: 600;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
+        letter-spacing: 0;
         border-radius: 0;
+        white-space: nowrap;
+        font-size: inherit !important;
+    }
+
+    .navbar-expand-lg .navbar-nav {
+        flex-wrap: nowrap;
+        flex: 1;
+        min-width: 0;
+    }
+
+    .navbar-expand-lg .navbar-collapse {
+        overflow: visible;
+        min-width: 0;
     }
 
 }
@@ -4451,6 +4466,26 @@ abbr[title] {
     text-align: center;
 }
 
+/* CKEditor image classes applied directly to <img> (when not wrapped in <figure>) */
+.post_details_block img.image-style-align-left {
+    float: left;
+    margin-right: 1.5em;
+    margin-bottom: 1em;
+    max-width: 50%;
+    height: auto;
+}
+.post_details_block img.image-style-align-right,
+.post_details_block img.image-style-side {
+    float: right;
+    margin-left: 1.5em;
+    margin-bottom: 1em;
+    max-width: 50%;
+    height: auto;
+}
+.post_details_block img.image_resized {
+    height: auto;
+}
+
 .post_details_block h2 {
     color: #111;
     font-weight: 400;
@@ -4721,15 +4756,15 @@ figure.social-icon:hover a:nth-child(5) i {
 }
 
 .article-content p,
-.article-content .article-p {
+.article-content .article-p,
+.post_details_block p {
     font-size: 16px;
     line-height: 27px;
     margin-bottom: 25px;
+    clear: none !important;
 }
 
-/* Clear float on paragraphs coming after an image block so they don't wrap */
-.article-content .article-p + p,
-.post_details_block .article-p + p,
+/* Removed clear: both on paragraphs coming after an image block so they CAN wrap */
 .article-content .article-p + h1,
 .article-content .article-p + h2,
 .article-content .article-p + h3,
@@ -4827,8 +4862,10 @@ figure.social-icon:hover a:nth-child(5) i {
 }
 
 /* Mapping standard lists to arrow_list */
-.article-content ul {
-    list-style: none;
+.article-content ul,
+.arrow_list {
+    list-style-type: none !important;
+    list-style: none !important;
     margin-left: 15px;
     margin-bottom: 26px;
     padding: 0;
@@ -4896,18 +4933,24 @@ figure.social-icon:hover a:nth-child(5) i {
 .article-content .image-left,
 .post_details_block figure.align-left,
 .post_details_block .align-left {
-    float: left;
-    margin: 6px 20px 6px 0;
+    float: left !important;
+    display: block !important;
+    width: auto !important;
     max-width: 50%;
+    margin: 6px 20px 15px 0 !important;
+    clear: none !important;
 }
 
 .article-content figure.align-right,
 .article-content .image-right,
 .post_details_block figure.align-right,
 .post_details_block .align-right {
-    float: right;
-    margin: 6px 0 20px 20px;
+    float: right !important;
+    display: block !important;
+    width: auto !important;
     max-width: 50%;
+    margin: 6px 0 20px 20px !important;
+    clear: none !important;
 }
 
 .article-content img.align-left,
@@ -5966,7 +6009,7 @@ blockquote.no-sign p {
 /*** 31. Dark skin
 ------------------------------------------------------------------------------*/
 /*common style*/
-:root[data-theme=skin-dark], [data-bs-theme=light] {
+:root[data-theme=skin-dark], [data-bs-theme=dark] {
     --bs-body-color: #aaa;
     --bs-body-bg: #141414;
 }
@@ -6046,6 +6089,14 @@ blockquote.no-sign p {
 [data-theme=skin-dark] a {
     color: #fff;
 }
+
+/* Ensure social icon backgrounds persist in dark mode */
+[data-theme='skin-dark'] .social-icon i.fa-facebook-f, [data-bs-theme='dark'] .social-icon i.fa-facebook-f, [data-theme='skin-dark'] .social-icon .fa-facebook-f { background-color: #4c66a3 !important; }
+[data-theme='skin-dark'] .social-icon i.fa-twitter, [data-bs-theme='dark'] .social-icon i.fa-twitter, [data-theme='skin-dark'] .social-icon .fa-twitter { background-color: #2fc2ee !important; }
+[data-theme='skin-dark'] .social-icon i.fa-instagram, [data-bs-theme='dark'] .social-icon i.fa-instagram, [data-theme='skin-dark'] .social-icon .fa-instagram { background-color: #e4405f !important; }
+[data-theme='skin-dark'] .social-icon i.fa-linkedin-in, [data-bs-theme='dark'] .social-icon i.fa-linkedin-in, [data-theme='skin-dark'] .social-icon .fa-linkedin-in { background-color: #0077B5 !important; }
+[data-theme='skin-dark'] .social-icon i.fa-pinterest-p, [data-bs-theme='dark'] .social-icon i.fa-pinterest-p, [data-theme='skin-dark'] .social-icon .fa-pinterest-p, [data-theme='skin-dark'] .pint, [data-theme='skin-dark'] .social-media .pint { background-color: #cb2028 !important; }
+[data-theme='skin-dark'] .social-media li .pint, [data-bs-theme='dark'] .social-media li .pint { background-color: #cb2028 !important; }
 
 [data-theme=skin-dark] .featured-inner,
 [data-theme=skin-dark] .post-body,
@@ -7365,8 +7416,8 @@ blockquote.no-sign p {
     color: #fff; }
 .RYPP .RYPP-playlist > header {
     width: 100%;
-    height: 64px;
-    padding: 16px 0 0 8px;
+    height: auto;
+    padding: 20px 15px;
     background: #eb0254;
     border-left: 8px solid #eb0254;
     border-right: 8px solid #eb0254;
@@ -7374,10 +7425,10 @@ blockquote.no-sign p {
     z-index: 2;
 }
 .RYPP .RYPP-playlist > header ._h1 {
-    margin: 0 0 4px 0;
+    margin: 0 0 8px 0;
     padding: 0;
-    font-size: 16px;
-    font-weight: 400;
+    font-size: 18px;
+    font-weight: 600;
     color: #fff; }
 .RYPP .RYPP-playlist > header p {
     margin: 0;

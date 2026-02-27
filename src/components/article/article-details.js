@@ -74,13 +74,13 @@ const ClientArticleDetail = ({ article, mostViewed, popularNews, globalSettings,
                                 alt={title}
                                 onError={(e) => e.target.style.display = 'none'}
                             />
-                            {/* Social Share (Static for now, can be made dynamic) */}
+                            {/* Social Share matched from template */}
                             <div>
-                                <Link href="#" className="fb"><i className="fab fa-facebook-f" /></Link>
-                                <Link href="#" className="tw"><i className="fab fa-twitter" /></Link>
-                                <Link href="#" className="insta"><i className="fab fa-instagram" /></Link>
+                                <Link href="#"><i className="fab fa-facebook-f" /></Link>
+                                <Link href="#"><i className="fab fa-twitter" /></Link>
+                                <Link href="#"><i className="fab fa-instagram" /></Link>
                                 <Link href="#" className="d-md-block d-none"><i className="fab fa-linkedin-in" /></Link>
-                                <Link href="#" className="d-md-block d-none"><i className="fab fa-pinterest-p" /></Link>
+                                <Link href="#" className="d-md-block d-none pint"><i className="fab fa-pinterest-p" /></Link>
                             </div>
                         </figure>
                     )}

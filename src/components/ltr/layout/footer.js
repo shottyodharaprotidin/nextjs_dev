@@ -5,8 +5,8 @@ import Link from 'next/link';
 import ScrollToTopUI from '../scroll-to-top/scroll-to-top';
 import { useBackgroundImageLoader } from '../use-background-image/use-background-image';
 import { getLatestArticles } from '@/services/articleService';
-import { getCategories, getTags, getFooterData, getMenuItems } from '@/services/globalService';
-import { getStrapiMedia, formatDate, toBengaliNumber } from '@/lib/strapi';
+import { getCategories, getTags, getFooterData, getMenuItems, getGlobalSettings } from '@/services/globalService';
+import { getStrapiMedia, formatDate, toBengaliNumber, getStrapiLocale } from '@/lib/strapi';
 import { useLanguage } from '@/lib/LanguageContext';
 
 const dictionary = {
@@ -84,24 +84,37 @@ const Footer = () => {
   const [hotTopics, setHotTopics] = useState([]);
 
   const [footerData, setFooterData] = useState(null);
+  const [globalSettings, setGlobalSettings] = useState(null);
   const [footerMenuItems, setFooterMenuItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [recentRes, catRes, tagRes, footerDataRes, footerMenuRes] = await Promise.all([
-          getLatestArticles(1, 3, locale), // Fetch 3 recent posts
+        const strapiLocale = getStrapiLocale(locale);
+        const [recentRes, catRes, tagRes, footerDataRes, footerMenuRes, globalRes] = await Promise.all([
+          getLatestArticles(1, 3, strapiLocale), // Fetch 3 recent posts
           getCategories(6, locale), // Fetch 6 categories (generic)
           getTags(12, locale), // Fetch 12 tags for hot topics
           getFooterData(locale), // Fetch footer data
-          getMenuItems('footer', locale) // Fetch footer menu
+          getMenuItems('footer', locale), // Fetch footer menu
+          getGlobalSettings(locale)
         ]);
 
-        setRecentPosts(recentRes?.data || []);
+        let recentPostsData = recentRes?.data || [];
+        // Fallback to 'bn' if 'bn-BD' is empty for articles
+        if (recentPostsData.length === 0 && strapiLocale === 'bn-BD') {
+          const fallbackRes = await getLatestArticles(1, 3, 'bn');
+          recentPostsData = fallbackRes?.data || [];
+        }
+
+        setRecentPosts(recentPostsData);
         setCategories(catRes?.data || []);
         setHotTopics(tagRes?.data || []);
         setFooterData(footerDataRes?.data || null);
+        
+        const globalRaw = globalRes?.data || globalRes || null;
+        setGlobalSettings(globalRaw?.attributes || globalRaw);
         
         const footerItems = footerMenuRes?.data || [];
         setFooterMenuItems(footerItems);
@@ -169,11 +182,34 @@ const Footer = () => {
                   </button>
                 </div>
                 <div className="form-text mt-2 text-white">
-                  {footerAttrs?.newsletterText || t.subscribe.text}
-                  <a href="#" className="text-decoration-underline text-primary ms-1">
-                    {t.subscribe.privacy}
-                  </a>
-                  {t.subscribe.agree}
+                  {(() => {
+                    const text = footerAttrs?.newsletterText;
+                    if (text) {
+                      const placeholder = "[privacy_policy]";
+                      if (text.includes(placeholder)) {
+                        const parts = text.split(placeholder);
+                        return (
+                          <>
+                            {parts[0]}
+                            <Link href={footerAttrs?.privacyPolicyUrl || "#"} className="text-decoration-underline text-primary">
+                              {t.subscribe.privacy}
+                            </Link>
+                            {parts[1]}
+                          </>
+                        );
+                      }
+                      return text;
+                    }
+                    return (
+                      <>
+                        {t.subscribe.text}
+                        <Link href={footerAttrs?.privacyPolicyUrl || "#"} className="text-decoration-underline text-primary ms-1">
+                          {t.subscribe.privacy}
+                        </Link>
+                        {t.subscribe.agree}
+                      </>
+                    );
+                  })()}
                 </div>
               </form>
             </div>
@@ -203,10 +239,10 @@ const Footer = () => {
             <div className="col-sm-6 col-lg-3 footer-box py-4">
                <h5 className="wiget-title">{t.social}</h5>
                 <ul className="list-unstyled m-0 menu-services">
-                    <li><a href="#">{t.socialLinks.fb}</a></li>
-                    <li><a href="#">{t.socialLinks.tw}</a></li>
-                    <li><a href="#">{t.socialLinks.yt}</a></li>
-                    <li><a href="#">{t.socialLinks.ig}</a></li>
+                    <li><a href={globalSettings?.socialFacebookUrl || "#"} target="_blank">{t.socialLinks.fb}</a></li>
+                    <li><a href={globalSettings?.socialTwitterUrl || "#"} target="_blank">{t.socialLinks.tw}</a></li>
+                    <li><a href={globalSettings?.socialYoutubeUrl || "#"} target="_blank">{t.socialLinks.yt}</a></li>
+                    <li><a href={globalSettings?.socialInstagramUrl || "#"} target="_blank">{t.socialLinks.ig}</a></li>
                 </ul>
             </div>
             {/* END OF /. FOOTER BOX (Social Contact) */}
@@ -249,8 +285,6 @@ const Footer = () => {
                   const p = post.attributes || post;
                   const img = getStrapiMedia(p.cover);
                   const date = formatDate(p.createdAt || p.publishedAt, locale);
-                  // Manually convert date numbers if formatDate doesn't do it fully or just in case
-                  // formatDate usually respects locale 'bn-BD' which handles numbers.
                   
                   return (
                     <div className="news-list-item" key={i}>
