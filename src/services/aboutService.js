@@ -6,9 +6,12 @@ export async function getAboutData(locale = 'bn') {
   try {
     const queryParams = new URLSearchParams({
       'locale': strapiLocale,
-      'populate[heroImage]': '*',
-      'populate[logo]': '*',
-      'populate[teamMembers][populate][photo]': '*',
+      'populate[heroImage][fields][0]': 'url',
+      'populate[heroImage][fields][1]': 'alternativeText',
+      'populate[logo][fields][0]': 'url',
+      'populate[logo][fields][1]': 'alternativeText',
+      'populate[teamMembers][populate][photo][fields][0]': 'url',
+      'populate[teamMembers][populate][photo][fields][1]': 'alternativeText',
       'populate[teamMembers][populate][socialLinks]': '*',
     });
 

@@ -56,7 +56,7 @@ const AboutPage = () => {
     const teamMembers = aboutData?.teamMembers || [];
 
     return (
-        <Layout hideMiddleHeader={false} globalSettings={globalSettings}>
+        <Layout hideMiddleHeader={true} globalSettings={globalSettings}>
             {/* *** START PAGE MAIN CONTENT *** */}
             <main className="page_main_wrapper">
                 {/* START PAGE HEADER */}

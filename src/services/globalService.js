@@ -71,7 +71,6 @@ export async function getMenuItems(location = 'header', locale = 'bn') {
       query = [
         `locale=${strapiLocale}`,
         'populate[logo][fields][0]=url&populate[logo][fields][1]=alternativeText',
-        'populate[logoWhite][fields][0]=url&populate[logoWhite][fields][1]=alternativeText',
         'populate[menu][on][navigation.base-link][populate]=*',
         'populate[menu][on][navigation.menu-button][populate]=*',
         'populate[menu][on][navigation.dropdown-menu][populate][subMenus][on][navigation.base-link][populate]=*',
