@@ -8627,3 +8627,15 @@ h3, .h3, .section-title { font-size: 21px !important; }
     font-size: 20px !important;
     line-height: 1.5 !important;
 }
+
+/* Not Found Page Custom Styling */
+.not-found-title {
+    font-size: clamp(100px, 15vw, 10px) !important;
+    line-height: 1 !important;
+    color: #1a1a1a !important;
+}
+
+[data-theme="skin-dark"] .not-found-title,
+[data-bs-theme="dark"] .not-found-title {
+    color: #ffffff !important;
+}
