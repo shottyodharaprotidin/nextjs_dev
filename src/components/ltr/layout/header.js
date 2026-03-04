@@ -532,7 +532,7 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
                 {/* START MIDDLE SECTION */}
                 {hideMiddleHeader || path.includes('/article/') ? (
                     <div className="d-md-block d-none header-mid pt-2 pb-2" style={{ height: '96px' }}>
-                        <div className="container" style={{ maxWidth: '1040px', margin: '0 auto' }}>
+                        <div className="container">
                             <div className="align-items-center row">
                                 <div className="col-sm-4">
                                     <Link href="/" className="header-logo">
@@ -603,6 +603,7 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
                 {/* START NAVIGATION */}
                 <nav 
                     className="custom-navbar navbar navbar-expand-lg sticky-top flex-column no-logo border-top border-bottom"
+                    style={{ minHeight: '53px', maxHeight: '53px', padding: 0 }}
                 >
                     <div className={`fullscreen-search-overlay ${isSearchOpen ? 'fullscreen-search-overlay-show' : ''}`} >
                         <Link href="#" className="fullscreen-close" onClick={handleCloseButtonClick} id="fullscreen-close-button"><i className="ti ti-close" /></Link>
