@@ -83,6 +83,7 @@ const ClientArticleDetail = ({ article, mostViewed, popularNews, globalSettings,
                                 <Link href={gs?.socialTwitterUrl || '#'} target="_blank"><i className="fab fa-twitter" /></Link>
                                 <Link href={gs?.socialInstagramUrl || '#'} target="_blank"><i className="fab fa-instagram" /></Link>
                                 <Link href={gs?.socialPinterestUrl || '#'} target="_blank" className="d-md-block d-none pint"><i className="fab fa-pinterest-p" /></Link>
+                                <Link href={gs?.socialLinkedinUrl || '#'} target="_blank"><i className="fab fa-linkedin-in" /></Link>
                             </div>
                         </figure>
                     )}
