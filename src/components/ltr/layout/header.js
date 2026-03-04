@@ -601,6 +601,18 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
                 )}
 
                 {/* START NAVIGATION */}
+                <style>{`
+                    .custom-navbar .nav-link {
+                        padding-top: 0 !important;
+                        padding-bottom: 0 !important;
+                        display: flex !important;
+                        align-items: center !important;
+                        height: 51px !important; /* menyesuaikan tinggi 53px dikurangi border 2px */
+                    }
+                    .custom-navbar .navbar-nav {
+                        margin-bottom: 0 !important;
+                    }
+                `}</style>
                 <nav 
                     className="custom-navbar navbar navbar-expand-lg sticky-top flex-column no-logo border-top border-bottom"
                     style={{ minHeight: '53px', maxHeight: '53px', padding: 0 }}
