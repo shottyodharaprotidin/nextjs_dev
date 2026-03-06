@@ -29,7 +29,8 @@ const dictionary = {
         followers: "Followers",
         subscribers: "Subscribers",
         fans: "Fans",
-        noNews: "No news found in this category."
+        noNews: "No news found in this category.",
+        by: "by"
     },
     bn: {
         loading: "লোড হচ্ছে...",
@@ -41,7 +42,8 @@ const dictionary = {
         followers: "অনুসরণকারীরা",
         subscribers: "সাবস্ক্রাইবার",
         fans: "ফ্যান",
-        noNews: "এই বিভাগে কোনো সংবাদ পাওয়া যায়নি।"
+        noNews: "এই বিভাগে কোনো সংবাদ পাওয়া যায়নি।",
+        by: "by"
     }
 };
 
@@ -91,12 +93,12 @@ function getAttr(article) {
     return article?.attributes || article || {};
 }
 
-function ArticleCard({ article, categoryName }) {
+function ArticleCard({ article, categoryName, locale }) {
     const a = getAttr(article);
     const coverUrl = getStrapiMedia(a.cover, '/default.jpg');
     const slug = a.slug || article?.id || '#';
     const title = a.title || '';
-    const date = formatDate(a.publishedAt || a.createdAt);
+    const date = formatDate(a.publishedAt || a.createdAt, locale);
     const catName = categoryName || a.category?.data?.attributes?.name || a.category?.name || '';
     const authorName = a.author?.data?.attributes?.name || a.author?.name || '';
 
@@ -125,12 +127,12 @@ function ArticleCard({ article, categoryName }) {
     );
 }
 
-function SliderItem({ article, categoryName }) {
+function SliderItem({ article, categoryName, locale }) {
     const a = getAttr(article);
     const coverUrl = getStrapiMedia(a.cover, '/default.jpg');
     const slug = a.slug || article?.id || '#';
     const title = a.title || '';
-    const date = formatDate(a.publishedAt || a.createdAt);
+    const date = formatDate(a.publishedAt || a.createdAt, locale);
     const catName = categoryName || a.category?.data?.attributes?.name || a.category?.name || '';
     const authorName = a.author?.data?.attributes?.name || a.author?.name || '';
     const views = a.viewCount || 0;
@@ -161,12 +163,12 @@ function SliderItem({ article, categoryName }) {
     );
 }
 
-function GridItem({ article, categoryName }) {
+function GridItem({ article, categoryName, locale }) {
     const a = getAttr(article);
     const coverUrl = getStrapiMedia(a.cover, '/default.jpg');
     const slug = a.slug || article?.id || '#';
     const title = a.title || '';
-    const date = formatDate(a.publishedAt || a.createdAt);
+    const date = formatDate(a.publishedAt || a.createdAt, locale);
     const catName = categoryName || a.category?.data?.attributes?.name || a.category?.name || '';
     const authorName = a.author?.data?.attributes?.name || a.author?.name || '';
 
@@ -401,42 +403,42 @@ const CategoryPage = () => {
                                             <a href={globalSettings?.socialRssUrl || '#'} className="rss" target="_blank" rel="noopener noreferrer">
                                                 <i className="fas fa-rss" />
                                                 <div>{globalSettings?.socialRssSubscribers || '0'}</div>
-                                                <p>Subscribers</p>
+                                                <p>{t.subscribers}</p>
                                             </a>
                                         </li>
                                         <li className="col-4">
                                             <a href={globalSettings?.socialFacebookUrl || '#'} className="fb" target="_blank" rel="noopener noreferrer">
                                                 <i className="fab fa-facebook-f" />
                                                 <div>{globalSettings?.socialFacebookFans || '0'}</div>
-                                                <p>Fans</p>
+                                                <p>{t.fans}</p>
                                             </a>
                                         </li>
                                         <li className="col-4">
                                             <a href={globalSettings?.socialInstagramUrl || '#'} className="insta" target="_blank" rel="noopener noreferrer">
                                                 <i className="fab fa-instagram" />
                                                 <div>{globalSettings?.socialInstagramFollowers || '0'}</div>
-                                                <p>Followers</p>
+                                                <p>{t.followers}</p>
                                             </a>
                                         </li>
                                         <li className="col-4">
                                             <a href={globalSettings?.socialYoutubeUrl || '#'} className="you_tube" target="_blank" rel="noopener noreferrer">
                                                 <i className="fab fa-youtube" />
                                                 <div>{globalSettings?.socialYoutubeSubscribers || '0'}</div>
-                                                <p>Subscribers</p>
+                                                <p>{t.subscribers}</p>
                                             </a>
                                         </li>
                                         <li className="col-4">
                                             <a href={globalSettings?.socialTwitterUrl || '#'} className="twitter" target="_blank" rel="noopener noreferrer">
                                                 <i className="fab fa-twitter" />
                                                 <div>{globalSettings?.socialTwitterFollowers || '0'}</div>
-                                                <p>Followers</p>
+                                                <p>{t.followers}</p>
                                             </a>
                                         </li>
                                         <li className="col-4">
                                             <a href={globalSettings?.socialPinterestUrl || '#'} className="pint" target="_blank" rel="noopener noreferrer">
                                                 <i className="fab fa-pinterest-p" />
                                                 <div>{globalSettings?.socialPinterestFollowers || '0'}</div>
-                                                <p>Followers</p>
+                                                <p>{t.followers}</p>
                                             </a>
                                         </li>
                                     </ul>
