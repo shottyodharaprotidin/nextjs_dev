@@ -11,14 +11,6 @@ export async function getGlobalSettings(locale = 'bn') {
   }
 }
 
-export async function getFooterData(locale = 'bn') {
-  const strapiLocale = getStrapiLocale(locale);
-  try {
-    return await fetchAPI(`/footer?populate=*&populate[socialLinks]=*&locale=${strapiLocale}`, { silent: true });
-  } catch {
-    return { data: null };
-  }
-}
 
 export async function getAuthors(locale = 'bn') {
   const strapiLocale = getStrapiLocale(locale);
@@ -81,7 +73,7 @@ export async function getMenuItems(location = 'header', locale = 'bn') {
       ].join('&');
     } else if (location === 'footer') {
       endpoint = '/footer';
-      query = `locale=${strapiLocale}&populate=*`;
+      query = `locale=${strapiLocale}&populate[menu]=*&populate[logo]=*&populate[appQrImage]=*&populate[backgroundImage]=*&populate[socialLinks]=*&populate[footerCategoryLinks]=*`;
     } else if (location === 'sidebar') {
       endpoint = '/sidebar';
       query = `locale=${strapiLocale}&populate=*`;

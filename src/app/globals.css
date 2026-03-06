@@ -454,11 +454,10 @@ nav.navbar ul.nav li.dropdown.on>a,
 nav.navbar-dark ul.nav li.dropdown.on>a {
     color: #eb0254 !important;
 }
-.dropdown:hover > .dropdown-menu, .dropend:hover> .dropdown-menu
-{
-    display:block;
-}
 @media(min-width: 992px){
+    .dropdown:hover > .dropdown-menu, .dropend:hover> .dropdown-menu {
+        display:block;
+    }
     .dropend:hover> .dropdown-menu{
         position:absolute;
         top:0;
@@ -5912,6 +5911,12 @@ blockquote.no-sign p {
     padding: 18px 0;
 }
 
+@media (max-width: 767px) {
+    .feature-section .news-list-item {
+        padding: 0;
+    }
+}
+
 .feature-section .news-list-item .img-wrapper {
     width: 120px;
     max-width: 120px;
@@ -5929,6 +5934,14 @@ blockquote.no-sign p {
 .feature-section .post-info-2 h5 .title {
     font-size: 24px;
     line-height: 30px;
+}
+
+@media (max-width: 767px) {
+    .feature-section .post-info-2 h5,
+    .feature-section .post-info-2 h5 .title {
+        font-size: 18px;
+        line-height: 22px;
+    }
 }
 
 .feature-section .post-info-2 .post-category {
@@ -7916,6 +7929,30 @@ h3, .h3, .section-title { font-size: 21px !important; }
     line-height: 1.35 !important;
 }
 
+@media (max-width: 767px) {
+    .slider-wrapper .slider-post .post-text h1,
+    .slider-wrapper .slider-post .post-text h1 a {
+        display: -webkit-box !important;
+        -webkit-line-clamp: 3;
+        line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    
+    .slider-post .post-text h2,
+    .slider-post .post-text h2 a,
+    .slider-post .post-text h4,
+    .slider-post .post-text h4 a {
+        font-size: 18px !important;
+        line-height: 1.35 !important;
+        display: -webkit-box !important;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+}
+
 .slider-post .post-category {
     font-size: 17px !important;
     line-height: 24px !important;
@@ -8485,8 +8522,11 @@ h3, .h3, .section-title { font-size: 21px !important; }
 
 /* Mobile Collapse Menu Items */
 @media (max-width: 991px) {
-    .header-locale-bn #navbarSupportedContent .nav-link {
-        font-size: 28px !important;
+    .header-locale-bn #navbarSupportedContent .nav-link,
+    .header-locale-bn #navbarSupportedContent .dropdown-toggle,
+    .header-locale-bn #navbarSupportedContent .dropdown-item,
+    .header-locale-bn #navbarSupportedContent .dropdown-header {
+        font-size: 22px !important;
         line-height: 1.3 !important;
     }
     

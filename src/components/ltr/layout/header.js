@@ -271,7 +271,7 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
             const subMenus = data.subMenus || [];
             return (
                 <li className="nav-item dropdown" key={index}>
-                    <Link className="nav-link dropdown-toggle" href="#" id={`dropdown-${index}`} data-bs-toggle="dropdown" aria-expanded="false">
+                    <Link className="nav-link dropdown-toggle" href="#" id={`dropdown-${index}`} data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
                         {data.title}
                     </Link>
                     <ul className="dropdown-menu" aria-labelledby={`dropdown-${index}`}>
@@ -497,6 +497,20 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
                                 </div>
                                 {/* End of /. top left menu */}
                             </div>
+                            {/* Language Switcher - Mobile Only (centered) */}
+                            <div className="col-auto d-flex d-lg-none justify-content-center align-items-center w-100" style={{ position: 'absolute', left: 0, pointerEvents: 'none' }}>
+                                <div className="dropdown language-dropdown" style={{ pointerEvents: 'auto' }}>
+                                    <button className="btn p-0 dropdown-toggle d-flex align-items-center gap-1" type="button" data-bs-toggle="dropdown" aria-expanded="false" style={{ color: '#fff', fontSize: '0.781rem', letterSpacing: '0.5px', textTransform: 'uppercase' }}>
+                                        <i className="fa-solid fa-earth-americas" />
+                                        <span className="fw-semibold">{locale === 'en' ? 'En' : 'বাং'}</span>
+                                    </button>
+                                    <ul className="dropdown-menu">
+                                        <li><a className={`dropdown-item ${locale === 'bn' ? 'active' : ''}`} href="/bn"><span className="language-text">বাংলা</span></a></li>
+                                        <li><a className={`dropdown-item ${locale === 'en' ? 'active' : ''}`} href="/en"><span className="language-text">English</span></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            {/* end of /. Language Switcher */}
                             {/* Start header top right menu */}
                             {headerTopData?.rightMenu?.length > 0 && (
                             <div className="col-auto ms-auto">

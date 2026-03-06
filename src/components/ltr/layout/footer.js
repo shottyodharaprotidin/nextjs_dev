@@ -80,7 +80,6 @@ const Footer = ({ hideMiddleHeader = false }) => {
   const isBanglaLocale = (locale || '').toLowerCase().startsWith('bn');
   const t = dictionary[locale] || dictionary.bn;
   const [recentPosts, setRecentPosts] = useState([]);
-  const [categories, setCategories] = useState([]);
   const [hotTopics, setHotTopics] = useState([]);
 
   const [footerData, setFooterData] = useState(null);
@@ -92,12 +91,10 @@ const Footer = ({ hideMiddleHeader = false }) => {
     const fetchData = async () => {
       try {
         const strapiLocale = getStrapiLocale(locale);
-        const [recentRes, catRes, tagRes, footerDataRes, footerMenuRes, globalRes] = await Promise.all([
+        const [recentRes, tagRes, footerMenuRes, globalRes] = await Promise.all([
           getRecentPostArticles(3, locale), // Fetch 3 recent posts (isRecentPost=true)
-          getCategories(6, locale), // Fetch 6 categories (generic)
           getTags(12, locale), // Fetch 12 tags for hot topics
-          getFooterData(locale), // Fetch footer data
-          getMenuItems('footer', locale), // Fetch footer menu
+          getMenuItems('footer', locale), // Fetch footer menu & attributes
           getGlobalSettings(locale)
         ]);
 
@@ -109,15 +106,15 @@ const Footer = ({ hideMiddleHeader = false }) => {
         }
 
         setRecentPosts(recentPostsData);
-        setCategories(catRes?.data || []);
         setHotTopics(tagRes?.data || []);
-        setFooterData(footerDataRes?.data || null);
+        const footerItems = footerMenuRes?.data || [];
+        const footerAttrs = footerMenuRes?.attributes || {};
+        
+        setFooterMenuItems(footerItems);
+        setFooterData(footerAttrs);
         
         const globalRaw = globalRes?.data || globalRes || null;
         setGlobalSettings(globalRaw?.attributes || globalRaw);
-        
-        const footerItems = footerMenuRes?.data || [];
-        setFooterMenuItems(footerItems);
       } catch (error) {
         console.error("Error fetching footer data:", error);
       } finally {
@@ -128,12 +125,18 @@ const Footer = ({ hideMiddleHeader = false }) => {
     fetchData();
   }, [locale]);
 
-  // Split categories into two columns
-  const midIndex = Math.ceil(categories.length / 2);
-  const leftCategories = categories.slice(0, midIndex);
-  const rightCategories = categories.slice(midIndex);
-
   const footerAttrs = footerData?.attributes || footerData || {};
+  
+  // Determine which categories to use
+  const footerCategories = footerAttrs?.footerCategoryLinks || [];
+  
+  const displayCategories = footerCategories;
+
+  // Split categories into two columns
+  const midIndex = Math.ceil(displayCategories.length / 2);
+  const leftCategories = displayCategories.slice(0, midIndex);
+  const rightCategories = displayCategories.slice(midIndex);
+
   const footerPrimaryText = footerAttrs?.description || t.description || '';
   const hasBanglaFooterText = /[\u0980-\u09FF]/.test(footerPrimaryText);
   const applyBanglaFooterClass = isBanglaLocale || hasBanglaFooterText;
@@ -170,20 +173,26 @@ const Footer = ({ hideMiddleHeader = false }) => {
               {/* Form */}
               <form className="row row-cols-lg-auto g-2 align-items-center justify-content-end">
                 <div className="col-12">
-                  <input
-                    type="email"
-                    className="form-control"
-                    placeholder={t.subscribe.placeholder}
-                  />
-                </div>
-                <div className="col-12">
-                  <button type="submit" className="btn btn-news m-0">
-                    {t.subscribe.btn}
-                  </button>
+                    <input
+                      type="email"
+                      className="form-control"
+                      placeholder={footerAttrs?.newsletterPlaceholder || t.subscribe.placeholder}
+                    />
+                  </div>
+                  <div className="col-12">
+                    <button type="submit" className="btn btn-news m-0">
+                      {footerAttrs?.newsletterButtonText || t.subscribe.btn}
+                    </button>
                 </div>
                 <div className="form-text mt-2 text-white">
                   {(() => {
                     const text = footerAttrs?.newsletterText;
+                    // Find Privacy link from menu
+                    const privacyItem = footerMenuItems.find(item => 
+                      (item.attributes?.title || item.title || '').toLowerCase().includes('privacy')
+                    );
+                    const privacyUrl = privacyItem?.attributes?.url || privacyItem?.url || "#";
+
                     if (text) {
                       const placeholder = "[privacy_policy]";
                       if (text.includes(placeholder)) {
@@ -191,7 +200,7 @@ const Footer = ({ hideMiddleHeader = false }) => {
                         return (
                           <>
                             {parts[0]}
-                            <Link href={footerAttrs?.privacyPolicyUrl || "#"} className="text-decoration-underline text-primary">
+                            <Link href={privacyUrl} className="text-decoration-underline text-primary">
                               {t.subscribe.privacy}
                             </Link>
                             {parts[1]}
@@ -203,7 +212,7 @@ const Footer = ({ hideMiddleHeader = false }) => {
                     return (
                       <>
                         {t.subscribe.text}
-                        <Link href={footerAttrs?.privacyPolicyUrl || "#"} className="text-decoration-underline text-primary ms-1">
+                        <Link href={privacyUrl} className="text-decoration-underline text-primary ms-1">
                           {t.subscribe.privacy}
                         </Link>
                         {t.subscribe.agree}
@@ -239,7 +248,7 @@ const Footer = ({ hideMiddleHeader = false }) => {
             
             {/* START FOOTER BOX (Social Contact - Dynamic) */}
             <div className="col-sm-6 col-lg-3 footer-box py-4">
-               <h5 className="wiget-title">{t.social}</h5>
+               <h5 className="wiget-title">{footerAttrs?.socialTitle || t.social}</h5>
                 <ul className="list-unstyled m-0 menu-services">
                     {footerAttrs?.socialLinks && footerAttrs.socialLinks.length > 0 ? (
                         footerAttrs.socialLinks.map((link, i) => (
@@ -263,14 +272,14 @@ const Footer = ({ hideMiddleHeader = false }) => {
 
             {/* START FOOTER BOX (Category) */}
             <div className="col-sm-6 col-lg-3 footer-box py-4">
-              <h5 className="wiget-title">{t.category}</h5>
+              <h5 className="wiget-title">{footerAttrs?.categoryTitle || t.category}</h5>
               <div className="row">
                 <div className="col-6">
                   <ul className="list-unstyled m-0 menu-services">
                     {leftCategories.map((cat, i) => (
                       <li key={i}>
-                        <Link href={`/category/${cat.attributes?.slug || cat.slug || '#'}`}>
-                          {cat.attributes?.name || cat.name}
+                        <Link href={cat.url || '#'}>
+                          {cat.title || cat.attributes?.name || cat.name}
                         </Link>
                       </li>
                     ))}
@@ -280,8 +289,8 @@ const Footer = ({ hideMiddleHeader = false }) => {
                   <ul className="list-unstyled m-0 menu-services">
                     {rightCategories.map((cat, i) => (
                       <li key={i}>
-                        <Link href={`/category/${cat.attributes?.slug || cat.slug || '#'}`}>
-                          {cat.attributes?.name || cat.name}
+                        <Link href={cat.url || '#'}>
+                          {cat.title || cat.attributes?.name || cat.name}
                         </Link>
                       </li>
                     ))}
@@ -330,18 +339,7 @@ const Footer = ({ hideMiddleHeader = false }) => {
             {/* END OF /. FOOTER BOX (Recent Post) */}
 
           </div>
-          {/* START HOT TOPICS */}
-          <h5 className="wiget-title">{t.hotTopics}</h5>
-          <ul className="lh-lg list-inline mb-0 text-primary-hover hot-topics">
-            {hotTopics.map((tag, i) => (
-              <li className="list-inline-item" key={i}>
-                <Link href={`/bn/tag/${tag.attributes?.slug || '#'}`}>
-                   {tag.attributes?.name}
-                </Link>
-              </li>
-            ))}
-          </ul>
-          {/* END OF /. HOT TOPICS */}
+
         </div>
       </footer>
       {/* *** END OF /. FOOTER *** */}
