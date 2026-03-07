@@ -18,11 +18,10 @@ export async function getActivePolls(locale = 'bn') {
  */
 export async function votePoll(pollId, optionIndex) {
   try {
-    const response = await fetchAPI(`/polls/${pollId}`, {
+    const response = await fetchAPI(`/polls/${pollId}/vote`, {
       method: 'PUT',
       body: JSON.stringify({
-        // Increment logic would go here
-        // This would need custom controller in Strapi
+        optionIndex: optionIndex
       })
     });
     return response;
