@@ -546,19 +546,18 @@ ul.cart-list>li.total>.btn:focus {
     height: 34px !important;
     width: 34px !important;
     border-radius: 50% !important;
-    width: 34px !important;
     color: #fff !important;
     padding: 0 !important;
-    line-height: 34px !important;
-    text-align: center !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
     background-color: #eb0254 !important;
     border: 1px solid #eb0254 !important;
 }
 .scroll-to-top>svg {
-    width: 20px;
+    width: 16px;
     height: 16px;
     fill: #ffffff !important;
-    margin-bottom:5px;
 }
 
 /* Force scroll-to-top to always show on mobile */
