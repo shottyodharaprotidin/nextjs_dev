@@ -33,7 +33,7 @@ const Tags = ({ data = [], isLoading = false }) => {
                 return (
                     <a
                         key={i}
-                        href={t.slug !== '#' ? `/bn/topic/${t.slug}` : '#'}
+                        href={t.slug !== '#' ? `/tag/${t.slug}` : '#'}
                         className="ui tag text-uppercase fw-semibold border"
                     >
                         {t.name}

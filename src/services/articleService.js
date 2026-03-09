@@ -259,3 +259,44 @@ export async function searchArticles(query, limit = 20, page = 1, locale = 'bn')
 
   return await fetchAPI(`/articles?${queryParams}`);
 }
+
+// Tag-filtered section fetchers for sidebar
+function createTagSectionFetcher(flagName, defaultLimit = 10) {
+  return async function(tagSlug, limit = defaultLimit, locale = 'bn') {
+    const strapiLocale = getStrapiLocale(locale);
+    try {
+      const queryParams = new URLSearchParams({
+        [`filters[${flagName}][$eq]`]: 'true',
+        'filters[tags][slug][$eq]': tagSlug,
+        'populate[0]': 'cover',
+        'populate[1]': 'author',
+        'populate[2]': 'category',
+        'pagination[limit]': limit,
+        'sort': 'createdAt:desc',
+        'locale': strapiLocale,
+      });
+      return await fetchAPI(`/articles?${queryParams}`);
+    } catch (error) {
+      return { data: [] };
+    }
+  };
+}
+
+export const getMostViewedByTag = createTagSectionFetcher('isMostRead', 5);
+export const getPopularByTag = createTagSectionFetcher('isPopularNews', 5);
+export const getTopSliderByTag = createTagSectionFetcher('isTopSlider', 10);
+export const getHeadlineByTag = createTagSectionFetcher('isHeadline', 10);
+
+export async function getArticlesByTagEnhanced(tagSlug, limit = 10, options = {}, locale = 'bn') {
+  const strapiLocale = getStrapiLocale(locale);
+  const queryParams = new URLSearchParams({
+    'filters[tags][slug][$eq]': tagSlug,
+    'populate': '*',
+    'pagination[pageSize]': limit,
+    'pagination[page]': options.page || 1,
+    'sort': options.sort || 'createdAt:desc',
+    'locale': strapiLocale,
+  });
+
+  return await fetchAPI(`/articles?${queryParams}`);
+}

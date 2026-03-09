@@ -15,3 +15,14 @@ export async function getPopularTags(limit = 20, locale = 'bn') {
     return { data: [] };
   }
 }
+
+export async function getTagBySlug(slug, locale = 'bn') {
+  const strapiLocale = getStrapiLocale(locale);
+  try {
+    const data = await fetchAPI(`/tags?populate=*&filters[slug][$eq]=${encodeURIComponent(slug)}&locale=${strapiLocale}`);
+    return data?.data?.[0] || null;
+  } catch (error) {
+    console.error("Error fetching tag by slug:", error);
+    return null;
+  }
+}
