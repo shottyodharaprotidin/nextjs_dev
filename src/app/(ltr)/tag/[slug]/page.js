@@ -3,7 +3,7 @@
 import Layout from '@/components/ltr/layout/layout';
 import useRemoveBodyClass from '@/components/ltr/useEffect-hook/useEffect-hook';
 import Link from 'next/link';
-import { useParams, useSearchParams } from 'next/navigation';
+import { useParams, useSearchParams, notFound } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import StickyBox from 'react-sticky-box';
 import dynamic from 'next/dynamic';
@@ -218,6 +218,7 @@ const TagPage = () => {
     const t = dictionary[locale] || dictionary.bn;
 
     const [loading, setLoading] = useState(true);
+    const [isNotFound, setIsNotFound] = useState(false);
     const [tagName, setTagName] = useState('');
     const [articles, setArticles] = useState([]);
     const [pagination, setPagination] = useState(null);
@@ -241,6 +242,12 @@ const TagPage = () => {
                     getTopSliderByTag(slug, 5, locale).catch(() => ({ data: [] })),
                     getHeadlineByTag(slug, 4, locale).catch(() => ({ data: [] })),
                 ]);
+
+                if (!tagData) {
+                    setIsNotFound(true);
+                    return;
+                }
+
                 const name = tagData?.attributes?.name || tagData?.name || slug;
                 setTagName(name);
                 setArticles(articlesRes?.data || []);
@@ -253,12 +260,17 @@ const TagPage = () => {
                 setGridData(gridRes?.data || []);
             } catch (e) {
                 console.error('TagPage fetch error:', e);
+                setIsNotFound(true);
             } finally {
                 setLoading(false);
             }
         };
         fetchData();
-    }, [slug, page]);
+    }, [slug, page, locale]);
+
+    if (isNotFound) {
+        return notFound();
+    }
 
     // Slider & grid use flagged articles; main content uses general tag articles
     const sliderArticles = loading ? SKELETON_ARTICLES.slice(0, 5) : sliderData;

@@ -3,7 +3,7 @@
 import Layout from '@/components/ltr/layout/layout';
 import useRemoveBodyClass from '@/components/ltr/useEffect-hook/useEffect-hook';
 import Link from 'next/link';
-import { useParams, useSearchParams } from 'next/navigation';
+import { useParams, useSearchParams, notFound } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import StickyBox from 'react-sticky-box';
 import dynamic from 'next/dynamic';
@@ -216,6 +216,7 @@ const CategoryPage = () => {
     const t = dictionary[locale] || dictionary.bn;
 
     const [loading, setLoading] = useState(true);
+    const [isNotFound, setIsNotFound] = useState(false);
     const [categoryName, setCategoryName] = useState('');
     const [featuredImage, setFeaturedImage] = useState(null);
     const [articles, setArticles] = useState([]);
@@ -240,6 +241,12 @@ const CategoryPage = () => {
                     getTopSliderByCategory(slug, 5, locale).catch(() => ({ data: [] })),
                     getHeadlineByCategory(slug, 4, locale).catch(() => ({ data: [] })),
                 ]);
+
+                if (!catData) {
+                    setIsNotFound(true);
+                    return;
+                }
+
                 const name = catData?.attributes?.name || catData?.name || slug;
                 setCategoryName(name);
                 setFeaturedImage(catData?.attributes?.featuredImage || catData?.featuredImage || null);
@@ -253,12 +260,17 @@ const CategoryPage = () => {
                 setGridData(gridRes?.data || []);
             } catch (e) {
                 console.error('CategoryPage fetch error:', e);
+                setIsNotFound(true);
             } finally {
                 setLoading(false);
             }
         };
         fetchData();
-    }, [slug, page]);
+    }, [slug, page, locale]);
+
+    if (isNotFound) {
+        return notFound();
+    }
 
     // Slider & grid use flagged articles; main content uses general category articles
     const sliderArticles = loading ? SKELETON_ARTICLES.slice(0, 5) : sliderData;
