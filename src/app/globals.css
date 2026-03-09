@@ -8026,6 +8026,20 @@ h3, .h3, .section-title { font-size: 21px !important; }
         -webkit-box-orient: vertical;
         overflow: hidden;
     }
+
+    /* Use gradient overlay on mobile for non-carousel items */
+    .slider-post .post-text {
+        background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0) 100%) !important;
+        backdrop-filter: none !important;
+        padding: 15px 10px 10px !important;
+    }
+    
+    /* Keep overlay background exclusively for the carousel */
+    .owl-carousel .slider-post .post-text {
+        background: rgba(0, 0, 0, 0.55) !important;
+        backdrop-filter: blur(4px) !important;
+        padding: 15px 15px !important;
+    }
 }
 
 .slider-post .post-category {
