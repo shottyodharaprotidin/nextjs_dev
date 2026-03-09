@@ -1524,7 +1524,7 @@ nav.navbar.custom-navbar .dropdown-menu.megamenu-content .col-menu-video:first-c
 
 @media (max-width: 767px) {
     .newstricker_inner {
-        padding: 0 0 0 135px;
+        padding: 0 0 0 105px;
     }
 
     .trending {
@@ -7953,14 +7953,28 @@ h3, .h3, .section-title { font-size: 21px !important; }
 .slider-post .post-text h1 a,
 .slider-post .post-text h1 {
     font-size: 34px !important;
-    line-height: 1.25 !important;
+    line-height: 1.4 !important;
+    font-weight: 700 !important;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.8) !important;
+    color: #fff !important;
+}
+
+/* Modern Slider Text Overlay */
+.slider-post .post-text {
+    background: rgba(0, 0, 0, 0.55) !important;
+    backdrop-filter: blur(4px) !important;
+    padding: 15px 20px !important;
+    border-radius: 0 0 6px 6px !important;
+    max-width: 100% !important;
 }
 
 .slider-wrapper .slider-post .post-text h1,
 .slider-wrapper .slider-post .post-text h1 a {
     font-size: 38px !important;
-    line-height: 1.28 !important;
-    font-weight: 400 !important;
+    line-height: 1.4 !important;
+    font-weight: 700 !important;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.8) !important;
+    color: #fff !important;
 }
 
 .slider-wrapper .slider-post .post-category {
@@ -7984,7 +7998,10 @@ h3, .h3, .section-title { font-size: 21px !important; }
 .slider-post .post-text h4,
 .slider-post .post-text h4 a {
     font-size: 26px !important;
-    line-height: 1.35 !important;
+    line-height: 1.45 !important;
+    font-weight: 700 !important;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.8) !important;
+    color: #fff !important;
 }
 
 @media (max-width: 767px) {
@@ -8012,9 +8029,14 @@ h3, .h3, .section-title { font-size: 21px !important; }
 }
 
 .slider-post .post-category {
-    font-size: 12px !important;
+    font-size: 13px !important;
     line-height: 18px !important;
-    padding: 2px 8px !important;
+    padding: 4px 10px !important;
+    background: #e60023 !important;
+    color: white !important;
+    font-weight: 600 !important;
+    border-radius: 4px !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3) !important;
 }
 
 /* Category small news title: 17-18px */

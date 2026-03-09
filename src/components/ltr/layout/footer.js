@@ -198,12 +198,12 @@ const Footer = ({ hideMiddleHeader = false }) => {
       <footer
         id="footer"
         className={`main-footer ${applyBanglaFooterClass ? 'footer-locale-bn' : ''}`}
-        style={{
-          backgroundImage: `url(${getStrapiMedia(footerAttrs?.backgroundImage) || "/assets/images/1920x1000-1.jpg"})`,
+        style={footerAttrs?.backgroundImage ? {
+          backgroundImage: `url(${getStrapiMedia(footerAttrs?.backgroundImage)})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat'
-        }}
+        } : {}}
       >
         <div className="container position-relative z-1">
           <div className="g-3 row">
