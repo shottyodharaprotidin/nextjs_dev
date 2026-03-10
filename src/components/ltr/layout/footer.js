@@ -45,6 +45,11 @@ const dictionary = {
       success: "Subscribed successfully!",
       duplicate: "This email is already subscribed.",
       error: "Subscription failed. Please try again."
+    },
+    contact: {
+      address: "Address",
+      email: "Email",
+      phone: "Phone"
     }
   },
   bn: {
@@ -81,6 +86,11 @@ const dictionary = {
       success: "সফলভাবে সাবস্ক্রাইব হয়েছে!",
       duplicate: "এই ইমেইল ইতিমধ্যে সাবস্ক্রাইব করা আছে।",
       error: "সাবস্ক্রিপশন ব্যর্থ হয়েছে। আবার চেষ্টা করুন।"
+    },
+    contact: {
+      address: "ঠিকানা",
+      email: "ইমেইল",
+      phone: "ফোন"
     }
   }
 };
@@ -327,6 +337,9 @@ const Footer = ({ hideMiddleHeader = false }) => {
                     {/* /. End Qr Code Image */}
                   </div>
                   <p>{footerAttrs?.appDescription || t.app.text}</p>
+                  
+
+                  
                 </div>
               </div>
             )}
@@ -424,6 +437,25 @@ const Footer = ({ hideMiddleHeader = false }) => {
             </div>
             {/* END OF /. FOOTER BOX (Recent Post) */}
 
+          </div>
+
+          <div className="row mt-1 mb-0 pb-0">
+            <div className="col-12 text-start">
+              <div className="contact-info text-white">
+                <p className="mb-0" style={{ fontSize: '14px', lineHeight: '1.4' }}>
+                  <i className="fa fa-map-marker me-2"></i>
+                  <strong>{t.contact.address}:</strong> {footerAttrs?.contactAddress || "-"}
+                </p>
+                <p className="mb-0" style={{ fontSize: '14px', lineHeight: '1.4' }}>
+                  <i className="fa fa-envelope me-2"></i>
+                  <strong>{t.contact.email}:</strong> <a href={`mailto:${footerAttrs?.contactEmail || ""}`} className="text-white">{footerAttrs?.contactEmail || "-"}</a>
+                </p>
+                <p className="mb-0" style={{ fontSize: '14px', lineHeight: '1.4' }}>
+                  <i className="fa fa-phone me-2"></i>
+                  <strong>{t.contact.phone}:</strong> <a href={`tel:${footerAttrs?.contactPhone || ""}`} className="text-white">{footerAttrs?.contactPhone || "-"}</a>
+                </p>
+              </div>
+            </div>
           </div>
 
         </div>

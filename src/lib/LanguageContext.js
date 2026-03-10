@@ -20,6 +20,14 @@ export const LanguageProvider = ({ children }) => {
         }
     }, []);
 
+    useEffect(() => {
+        if (typeof document !== 'undefined') {
+            document.body.classList.remove('locale-bn', 'locale-en');
+            document.body.classList.add(`locale-${locale}`);
+            document.documentElement.lang = locale;
+        }
+    }, [locale]);
+
     return (
         <LanguageContext.Provider value={{ locale, setLocale }}>
             {children}

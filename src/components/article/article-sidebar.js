@@ -130,7 +130,7 @@ const ArticleSidebar = ({ mostViewed, popularNews, globalSettings: rawGlobalSett
                             <li key={index}>
                               <span className="count">0{index + 1}</span>
                               <span className="text">
-                                <Link href={`/${locale === 'en' ? 'en/article' : 'article'}/${data.slug}${locale === 'bn' ? '-bn' : ''}`}>
+                                <Link href={`/article/${data.slug}`}>
                                   {data.title}
                                 </Link>
                               </span>
@@ -157,7 +157,7 @@ const ArticleSidebar = ({ mostViewed, popularNews, globalSettings: rawGlobalSett
                     return (
                       <div className="p-post" key={index}>
                         <h4>
-                          <Link href={`/${locale === 'en' ? 'en/article' : 'article'}/${data.slug}${locale === 'bn' ? '-bn' : ''}`}>
+                          <Link href={`/article/${data.slug}`}>
                             {data.title}
                           </Link>
                         </h4>

@@ -1116,11 +1116,13 @@ export default function Home() {
                   {/* END OF /. WEATHER */}
                   {/* START ADVERTISEMENT */}
                   <div className="add-inner">
-                    <img
-                      src="/default.jpg"
-                      className="img-fluid"
-                      alt=""
-                    />
+                    <Link href={adsData?.homeSidebarBannerLink || '#'} target="_blank">
+                      <img
+                        src={getStrapiMedia(adsData?.homeSidebarBanner) || "/assets/images/add/sidebar.jpg"}
+                        className="img-fluid"
+                        alt="Sidebar Banner"
+                      />
+                    </Link>
                   </div>
                   {/* END OF /. ADVERTISEMENT */}
                   {/* START ARCHIVE */}

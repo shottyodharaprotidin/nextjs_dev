@@ -134,7 +134,7 @@ const ArticleRelated = ({ articles, locale = 'bn', articleSlug = '', articleTitl
             <div className="post-footer">
                 <div className="row thm-margin">
                     <div className="col-md-8 thm-padding">
-                        <Link href={`/${locale === 'en' ? 'en/' : ''}news${locale === 'bn' ? '-bn' : ''}`} className="more-btn">
+                        <Link href="/news" className="more-btn">
                             {t('morePopularPosts')}
                         </Link>
                     </div>

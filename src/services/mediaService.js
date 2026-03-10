@@ -26,8 +26,9 @@ export async function getYoutubeVideos(locale = 'bn') {
  * @param {string} locale
  */
 export async function getActivePoll(locale = 'bn') {
+  const strapiLocale = getStrapiLocale(locale);
   const queryParams = new URLSearchParams({
-    locale: locale,
+    locale: strapiLocale,
     'filters[isActive][$eq]': 'true',
     'sort[0]': 'publishedAt:desc',
     populate: '*',

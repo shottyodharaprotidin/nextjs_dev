@@ -30,11 +30,17 @@ const Tags = ({ data = [], isLoading = false }) => {
           <div className="tags-inner d-flex flex-wrap gap-2">
             {tags.map((tag, i) => {
                 const t = tag.attributes || tag;
+                const hasColor = !!t.color;
                 return (
                     <a
                         key={i}
                         href={t.slug !== '#' ? `/tag/${t.slug}` : '#'}
-                        className="ui tag text-uppercase fw-semibold border"
+                        className={`ui tag text-uppercase fw-semibold ${!hasColor ? 'border' : ''}`}
+                        style={{ 
+                            backgroundColor: t.color || 'transparent',
+                            color: hasColor ? '#fff' : 'inherit',
+                            borderColor: hasColor ? 'transparent' : 'inherit'
+                        }}
                     >
                         {t.name}
                     </a>
