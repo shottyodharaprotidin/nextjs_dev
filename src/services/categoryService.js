@@ -38,7 +38,7 @@ export async function getCategoriesWithChildren(locale = 'bn') {
 
     // Build tree: Categories without parents or whose parent is themselves are roots.
     const roots = allCategories.filter(cat => {
-      if (cat.showInMenu === false) return false;
+      if (cat.showInMenu !== true) return false;
       const parentId = cat.parent?.id || cat.parent?.data?.id;
       if (!parentId) return true;
       if (parentId === cat.id) return true; // Fix circular references
@@ -53,7 +53,7 @@ export async function getCategoriesWithChildren(locale = 'bn') {
       const childrenData = root.children?.data || root.children || [];
       const children = childrenData
         .map(c => c.attributes || c)
-        .filter(c => c.showInMenu !== false && c.id !== root.id && !rootIds.has(c.id))
+        .filter(c => c.showInMenu === true && c.id !== root.id && !rootIds.has(c.id))
         .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
       return { ...root, children };
     });
