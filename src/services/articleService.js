@@ -31,25 +31,27 @@ export async function getArticleBySlug(slug, locale = 'bn') {
 }
 
 export async function getArticleBySlugPreview(slug, locale = 'bn-BD') {
-  // getStrapiLocale maps 'bn' -> 'bn-BD'. Passing 'bn-BD' directly falls through unchanged.
   const strapiLocale = getStrapiLocale(locale) || locale;
-  // Strapi v5 uses status=draft instead of deprecated publicationState=preview
   const queryParams = new URLSearchParams({
     'filters[slug][$eq]': slug,
     'populate[0]': 'cover',
     'populate[1]': 'author',
     'populate[2]': 'category',
     'populate[3]': 'tags',
-    'populate[4]': 'blocks',
-    'populate[5]': 'seo.shareImage',
+    'populate[4]': 'seo.shareImage',
     'locale': strapiLocale,
     'status': 'draft',
   });
   const url = `/articles?${queryParams}`;
   console.log('Fetching preview article by slug:', url);
-  const data = await fetchAPI(url);
-  console.log('Preview article data length:', data?.data?.length);
-  return data?.data?.[0] || null;
+  try {
+    const data = await fetchAPI(url);
+    console.log('Preview article data length:', data?.data?.length);
+    return data?.data?.[0] || null;
+  } catch (e) {
+    console.log(`Preview slug lookup failed for '${slug}':`, e.message);
+    return null;
+  }
 }
 
 export async function getArticleByDocumentIdPreview(documentId, locale) {
@@ -62,8 +64,7 @@ export async function getArticleByDocumentIdPreview(documentId, locale) {
     'populate[1]': 'author',
     'populate[2]': 'category',
     'populate[3]': 'tags',
-    'populate[4]': 'blocks',
-    'populate[5]': 'seo.shareImage',
+    'populate[4]': 'seo.shareImage',
     'status': 'draft',
   });
   if (strapiLocale) {

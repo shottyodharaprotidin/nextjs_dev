@@ -1,6 +1,34 @@
 import { draftMode, cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { getArticleBySlugPreview, getArticleByDocumentIdPreview } from '@/services/articleService';
+import { fetchAPI } from '@/lib/strapi';
+
+// Single types with their API endpoint and target page
+const SINGLE_TYPES = [
+  { endpoint: 'contact', page: '/contact' },
+  { endpoint: 'header', page: '/' },
+  { endpoint: 'header-top', page: '/' },
+  { endpoint: 'footer', page: '/' },
+  { endpoint: 'sidebar', page: '/' },
+  { endpoint: 'home-page', page: '/' },
+];
+
+/**
+ * Detect which single type a documentId belongs to by querying Strapi
+ */
+async function findSingleTypeByDocumentId(documentId) {
+  for (const st of SINGLE_TYPES) {
+    try {
+      const data = await fetchAPI(`/${st.endpoint}`, { silent: true });
+      if (data?.data?.documentId === documentId) {
+        return st.page;
+      }
+    } catch {
+      // skip
+    }
+  }
+  return null;
+}
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
@@ -9,51 +37,55 @@ export async function GET(request) {
   const locale = searchParams.get('locale') || 'bn-BD';
 
   if (!process.env.PREVIEW_SECRET) {
-      return new Response('PREVIEW_SECRET not set', { status: 500 });
+    return new Response('PREVIEW_SECRET not set', { status: 500 });
   }
 
   if (secret !== process.env.PREVIEW_SECRET) {
-    console.error('Invalid token:', secret);
     return new Response('Invalid token', { status: 401 });
   }
-
-  console.log('Preview route accessed:', { slug, locale });
 
   if (!slug) {
     return new Response('Missing slug', { status: 400 });
   }
 
-  // 1. Try to fetch by slug (assuming slug param is a real slug)
-  let article = await getArticleBySlugPreview(slug, locale);
+  console.log('Preview route:', { slug, locale });
 
-  // 2. If not found, assume slug param is actually a documentId (Strapi behavior)
-  if (!article) {
-      console.log(`Article not found by slug '${slug}'. Trying as documentId...`);
-      article = await getArticleByDocumentIdPreview(slug, locale);
-  }
-
-  if (!article) {
-      return new Response('Article not found', { status: 404 });
-  }
-
-  // 3. Get the REAL slug from the fetched article
-  const realSlug = article.attributes?.slug || article.slug;
-  console.log('Redirecting to real slug:', realSlug);
-
-  if (!realSlug) {
-      return new Response('Article has no slug', { status: 500 });
-  }
-
-  // Map Strapi locale (bn-BD) to Next.js app locale (bn)
   const localeMap = { 'bn-BD': 'bn', 'en': 'en' };
   const appLocale = localeMap[locale] || locale;
 
-  // Enable Draft Mode by setting the cookie
-  draftMode().enable();
+  // 1. Try as article slug
+  let article = null;
+  try {
+    article = await getArticleBySlugPreview(slug, locale);
+  } catch {
+    // not a slug
+  }
 
-  // Also set the NEXT_LOCALE cookie so the web UI shows in the correct language
-  cookies().set('NEXT_LOCALE', appLocale, { path: '/' });
+  // 2. Try as article documentId
+  if (!article) {
+    article = await getArticleByDocumentIdPreview(slug, locale);
+  }
 
-  // Redirect using the app locale format
-  redirect(`/article/${realSlug}?locale=${appLocale}`);
+  // 3. Found article → redirect to article page with draft mode
+  if (article) {
+    const realSlug = article.attributes?.slug || article.slug;
+    if (realSlug) {
+      console.log('Article preview →', realSlug);
+      draftMode().enable();
+      cookies().set('NEXT_LOCALE', appLocale, { path: '/' });
+      redirect(`/article/${realSlug}?locale=${appLocale}`);
+    }
+  }
+
+  // 4. Not an article — check single types (Header, Footer, Contact, etc.)
+  console.log('Not an article. Checking single types...');
+  const targetPage = await findSingleTypeByDocumentId(slug);
+  if (targetPage) {
+    console.log(`Single type preview → ${targetPage}`);
+    redirect(targetPage);
+  }
+
+  // 5. Fallback to homepage
+  console.log('Unknown content type. Redirecting to homepage.');
+  redirect('/');
 }
