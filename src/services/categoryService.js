@@ -36,23 +36,24 @@ export async function getCategoriesWithChildren(locale = 'bn') {
     );
     const allCategories = (res?.data || []).map(c => c.attributes || c);
 
-    // Build tree: User requested to not filter out categories even if they have parents.
-    // So any category with `showInMenu !== false` becomes a root column.
+    // Build tree: Categories without parents or whose parent is themselves are roots.
     const roots = allCategories.filter(cat => {
-      const showInMenu = cat.showInMenu !== false;
-      // Removed `hasParent` filter based on user request ('gausah di filter')
-      return showInMenu;
+      if (cat.showInMenu === false) return false;
+      const parentId = cat.parent?.id || cat.parent?.data?.id;
+      if (!parentId) return true;
+      if (parentId === cat.id) return true; // Fix circular references
+      return false;
     });
 
     // Create a Set of root IDs for quick lookup
     const rootIds = new Set(roots.map(r => r.id));
 
-    // For each root, attach its children (filter by showInMenu and prevent circular refs/roots)
+    // For each root, attach its children
     return roots.map(root => {
       const childrenData = root.children?.data || root.children || [];
       const children = childrenData
         .map(c => c.attributes || c)
-        .filter(c => c.showInMenu !== false && !rootIds.has(c.id) && c.id !== root.id)
+        .filter(c => c.showInMenu !== false && c.id !== root.id && !rootIds.has(c.id))
         .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
       return { ...root, children };
     });
