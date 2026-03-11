@@ -4,7 +4,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { formatDate, getStrapiMedia, toBengaliNumber } from '@/lib/strapi';
 import { getCurrentWeather } from '@/services/weatherService';
-import { getBrowserCoordinates, getIpLocation } from '@/services/locationService';
+import { getIpLocation } from '@/services/locationService';
 import { getMenuItems, getAdsManagement, getHeaderTop } from '@/services/globalService';
 import { getCategoriesWithChildren } from '@/services/categoryService';
 import { useLanguage } from '@/lib/LanguageContext';
@@ -99,10 +99,9 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
         });
         
         const fetchHeaderWeather = async () => {
-            const gpsCoords = await getBrowserCoordinates();
-            const ipCoords = gpsCoords ? null : await getIpLocation();
-            const lat = gpsCoords?.lat ?? ipCoords?.lat;
-            const lon = gpsCoords?.lon ?? ipCoords?.lon;
+            const ipCoords = await getIpLocation();
+            const lat = ipCoords?.lat;
+            const lon = ipCoords?.lon;
 
             const data = await getCurrentWeather(lat, lon, locale);
             setWeather(data);
