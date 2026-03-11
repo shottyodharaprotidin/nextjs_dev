@@ -84,13 +84,13 @@ const ClientArticleDetail = ({ article, mostViewed, popularNews, globalSettings,
                     )}
                     
                     <h2>{title}</h2>
-                    <ul className="authar-info d-flex flex-wrap small">
+                    <ul className="authar-info d-flex flex-wrap align-items-center small gap-3">
                       <li>
-                        <Link href="#" className="link">
-                          {t('by')} {authorName}
+                        <Link href="#" className="link text-muted">
+                          <span className="fw-semibold text-dark">{t('by')}</span> {authorName}
                         </Link>
                       </li>
-                      <li>{formatDate(publishedAt, locale)}</li>
+                      <li className="text-muted"><i className="far fa-clock me-1"></i>{formatDate(publishedAt, locale)}</li>
                     </ul>
 
                     {videoEmbedUrl && (

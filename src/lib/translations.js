@@ -7,7 +7,7 @@ export const translations = {
     home: 'হোম',
     
     // Article Details
-    by: 'দ্বারা',
+    by: 'রিপোর্ট:',
     views: 'ভিউ',
     shareThisPost: 'এই পোস্টটি শেয়ার করুন',
     tags: 'ট্যাগ',
