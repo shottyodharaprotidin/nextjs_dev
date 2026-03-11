@@ -724,7 +724,9 @@ article:hover figure a:before,
 }
 
 .header-logo img {
-    height: 56px;
+    height: 48px !important;
+    width: auto !important;
+    object-fit: contain;
 }
 
 /*** 03. Navbar
@@ -1516,7 +1518,7 @@ nav.navbar.custom-navbar .dropdown-menu.megamenu-content .col-menu-video:first-c
 }
 
 .news-ticker .item a {
-    font-size: 15px;
+    font-size: 16px !important;
     -o-text-overflow: ellipsis;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -1525,7 +1527,7 @@ nav.navbar.custom-navbar .dropdown-menu.megamenu-content .col-menu-video:first-c
 }
 
 .locale-bn .news-ticker .item a {
-    font-size: 22px;
+    font-size: 20px !important;
     line-height: 36px;
     padding-left: 4px;
     margin-left: 0;
@@ -1559,15 +1561,15 @@ nav.navbar.custom-navbar .dropdown-menu.megamenu-content .col-menu-video:first-c
     }
 
     .news-ticker .item a {
-        font-size: 13px !important;
+        font-size: 15px !important;
+    }
+
+    .locale-bn .news-ticker .item a {
+        font-size: 18px !important;
     }
 
     .news-ticker.owl-carousel {
         padding-right: 0;
-    }
-
-    .news-ticker .item a {
-        font-size: 14px;
     }
 
     .news-ticker.owl-theme .owl-nav {
@@ -8119,13 +8121,41 @@ body.layout-rtl .style-settings-content ul li select {
         line-height: 1.35 !important;
     }
 
-    /* Carousel author info – Bengali mobile override */
+    /* Mobile override for author info and dates (Hero/Slider/Grid/etc) */
+    .slider-wrapper .slider-post .authar-info,
+    .slider-wrapper .slider-post .authar-info li,
+    .slider-wrapper .slider-post .post-date,
+    .slider-wrapper .slider-post .post-atuthor,
+    .slider-wrapper .slider-post .post-atuthor span,
+    .slider-wrapper .slider-post .post-atuthor a,
+    .slider-post .authar-info,
+    .slider-post .authar-info li,
+    .slider-post .authar-info span,
+    .slider-post .authar-info a,
+    .slider-post .authar-info .editor-name,
     .locale-bn .slider-wrapper .slider-post .authar-info,
     .locale-bn .slider-wrapper .slider-post .authar-info li,
     .locale-bn .slider-wrapper .slider-post .post-date,
+    .locale-bn .slider-wrapper .slider-post .post-atuthor,
     .locale-bn .slider-wrapper .slider-post .post-atuthor span,
-    .locale-bn .slider-wrapper .slider-post .post-atuthor a {
-        font-size: 16px !important;
+    .locale-bn .slider-wrapper .slider-post .post-atuthor a,
+    .locale-bn .slider-post .authar-info,
+    .locale-bn .slider-post .authar-info li,
+    .locale-bn .slider-post .authar-info span,
+    .locale-en .slider-wrapper .slider-post .authar-info,
+    .locale-en .slider-wrapper .slider-post .authar-info li,
+    .locale-en .slider-wrapper .slider-post .post-date,
+    .locale-en .slider-wrapper .slider-post .post-atuthor,
+    .locale-en .slider-wrapper .slider-post .post-atuthor span,
+    .locale-en .slider-wrapper .slider-post .post-atuthor a,
+    .locale-en .slider-post .authar-info,
+    .locale-en .slider-post .authar-info li,
+    .locale-en .slider-post .authar-info span,
+    .post-info .authar-info,
+    .post-info .authar-info li,
+    .post-info .authar-info span,
+    .post-info .authar-info a {
+        font-size: 12px !important;
         line-height: 1.3 !important;
     }
 
@@ -8135,7 +8165,8 @@ body.layout-rtl .style-settings-content ul li select {
     }
 }
 
-.slider-post .post-category {
+.slider-post .post-category,
+.news-list-item .post-category {
     font-size: 11px !important;
     line-height: 14px !important;
     padding: 2px 6px !important;
@@ -8147,7 +8178,8 @@ body.layout-rtl .style-settings-content ul li select {
     text-transform: uppercase !important;
 }
 
-.locale-bn .slider-post .post-category {
+.locale-bn .slider-post .post-category,
+.locale-bn .news-list-item .post-category {
     font-size: 16px !important;
     padding: 2px 10px !important;
     line-height: 20px !important;
@@ -8891,4 +8923,13 @@ body.layout-rtl .style-settings-content ul li select {
 .locale-en .about-content p { font-size: 15px !important; line-height: 24px !important; }
 .locale-en .RYPP .RYPP-playlist > header ._h1 { font-size: 16px !important; }
 
-
+/* --- Center Ad Banners and Calendar --- */
+.add-inner,
+.calendar-locale-en,
+.calendar-locale-bn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    width: 100%;
+}

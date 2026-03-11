@@ -56,7 +56,7 @@ const HomeFeatureCarousal = ({ data = [], isLoading = false }) => {
             </div>
           </Link>
         </div>
-        <div className="post-info-2">
+        <div className="post-info-2 pt-3 pt-md-0">
           <span className="post-category">{category}</span>
           <h5 className="mb-0">
             <Link href={isPlaceholder ? '#' : `/article/${slug}`} className="title">
