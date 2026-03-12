@@ -29,7 +29,7 @@ export async function generateMetadata() {
     const metaImage = getStrapiMedia(seo.metaImage || seo.shareImage);
 
     return {
-      title: seo.metaTitle || attrs.siteName || 'Satyadhara Pratidin',
+      title: attrs.siteName || seo.metaTitle || 'Satyadhara Pratidin',
       description: seo.metaDescription || attrs.siteDescription || 'সত্যধারা প্রতিদিন - সত্যের সন্ধানে সর্বদা',
       keywords: seo.keywords || 'news, portal, bangladesh, update',
       icons: faviconUrl ? {
@@ -38,14 +38,14 @@ export async function generateMetadata() {
         apple: [faviconUrl]
       } : defaultIcons,
       openGraph: {
-        title: seo.metaTitle || attrs.siteName || 'Satyadhara Pratidin',
+        title: attrs.siteName || seo.metaTitle || 'Satyadhara Pratidin',
         description: seo.metaDescription || attrs.siteDescription || 'সত্যধারা প্রতিদিন - সত্যের সন্ধানে সর্বদা',
         images: metaImage ? [{ url: metaImage }] : [],
         type: 'website',
       },
       twitter: {
         card: 'summary_large_image',
-        title: seo.metaTitle || attrs.siteName || 'Satyadhara Pratidin',
+        title: attrs.siteName || seo.metaTitle || 'Satyadhara Pratidin',
         description: seo.metaDescription || attrs.siteDescription || 'সত্যধারা প্রতিদিন - সত্যের সন্ধানে সর্বদা',
         images: metaImage ? [metaImage] : [],
       }

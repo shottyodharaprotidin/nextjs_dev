@@ -117,6 +117,24 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
     useEffect(() => {
         // Set current date on mount to avoid hydration mismatch
         setCurrentDate(formatDate(new Date().toISOString(), locale));
+
+        // Update document title and html lang when locale changes
+        if (typeof document !== 'undefined') {
+            document.documentElement.lang = locale === 'bn' ? 'bn' : 'en';
+            
+            // Fetch global settings for the current locale to get the right site name
+            import('@/services/globalService').then(({ getGlobalSettings }) => {
+                getGlobalSettings(locale).then(res => {
+                    const attrs = res?.data?.attributes || res?.data || {};
+                    const seo = attrs.defaultSeo || {};
+                    const title = attrs.siteName || seo.metaTitle || 
+                        (locale === 'bn' ? 'সত্যধারা প্রতিদিন' : 'Satyadhara Pratidin');
+                    document.title = title;
+                }).catch(() => {
+                    document.title = locale === 'bn' ? 'সত্যধারা প্রতিদিন' : 'Satyadhara Pratidin';
+                });
+            });
+        }
     }, [locale]);
 
     useEffect(() => {
