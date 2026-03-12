@@ -589,7 +589,7 @@ figure a::before,
     opacity: 0;
     pointer-events: none;
     position: absolute;
-    background-color: rgba(0, 0, 0, .3);
+    background-color: rgba(0, 0, 0, .4);
     -webkit-transition: all .5s ease;
     -o-transition: all .5s ease;
     transition: all .5s ease;
@@ -1798,13 +1798,18 @@ figure img {
     padding: 40px 20px;
     position: absolute;
     left: 0;
+    top: 0;
     bottom: 0;
     width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
     pointer-events: none;
-    background-image: -o-linear-gradient(to bottom, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, .7) 100%);
-    background-image: -o-linear-gradient(top, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, .7) 100%);
-    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(0, 0, 0, 0)), color-stop(50%, rgba(0, 0, 0, 0.4)), to(rgba(0, 0, 0, .7)));
-    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, .7) 100%);
+    background-image: -o-linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.4) 40%, rgba(0, 0, 0, 0.9) 100%);
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(0, 0, 0, 0)), color-stop(40%, rgba(0, 0, 0, 0.4)), to(rgba(0, 0, 0, 0.9)));
+    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.4) 40%, rgba(0, 0, 0, 0.9) 100%);
 }
 
 .post-category {
@@ -7973,13 +7978,22 @@ body.layout-rtl .style-settings-content ul li select {
 }
 
 /* 5. Menu / Navigation Bar */
-.locale-bn .navbar-nav > .nav-item > .nav-link,
-.locale-bn .navbar-nav .dropdown-menu.megamenu-content .title {
+.locale-bn .navbar-nav > .nav-item > .nav-link {
     font-size: 20px !important;
 }
 
+.locale-bn .navbar-nav .dropdown-menu.megamenu-content .title {
+    font-size: 24px !important;
+    margin-bottom: 12px !important;
+}
+
+.locale-bn .navbar-nav .dropdown-menu.megamenu-content .menu-col li {
+    margin-bottom: 6px !important;
+}
+
 .locale-bn .navbar-nav .dropdown-menu.megamenu-content .menu-col li a {
-    font-size: 16px !important;
+    font-size: 19px !important;
+    line-height: normal !important;
 }
 
 /* Revert regular dropdowns and sidebar to 17px */
@@ -8081,10 +8095,7 @@ body.layout-rtl .style-settings-content ul li select {
 
 /* Carousel hero only – solid overlay + blur */
 .owl-carousel .slider-post .post-text {
-    background: rgba(0, 0, 0, 0.55) !important;
-    backdrop-filter: blur(4px) !important;
-    -webkit-backdrop-filter: blur(4px) !important;
-    padding: 15px 20px !important;
+    /* Removed background blur so it matches the hero's transparent linear-gradient */
     border-radius: 0 0 6px 6px !important;
 }
 

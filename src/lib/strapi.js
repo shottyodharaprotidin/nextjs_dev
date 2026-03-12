@@ -114,7 +114,7 @@ export function getStrapiLocale(locale) {
  * Format Strapi date to readable format
  * Supports 'bn' (Bengali) and 'en' (English)
  */
-export function formatDate(dateString, localeArg) {
+export function formatDate(dateString, localeArg, includeBanglaDate = false) {
   const date = new Date(dateString);
   const locale = localeArg || 'bn'; 
   
@@ -135,19 +135,22 @@ export function formatDate(dateString, localeArg) {
   const weekday = gregorianParts.length > 1 ? gregorianParts[0] : '';
   const datePart = gregorianParts.length > 1 ? gregorianParts.slice(1).join(' ') : formattedGregorian;
   
-  // Convert to Bengali Date
-  try {
-    const { BanglaDateConverter } = require('bangla-date-converter');
-    // Ensure accurate offset handling by creating a new date locally
-    // to match Bangladesh time just in case.
-    const converter = new BanglaDateConverter(date);
-    const banglaDate = converter.format('DD MMMM YYYY').replace(',', '');
-    
-    // Day name, english calendar, bangla calendar
-    const finalDateStr = `${weekday}, ${datePart}, ${banglaDate}`;
-    return toBengaliNumber(finalDateStr);
-  } catch (err) {
-    console.error('Error formatting bangla date:', err);
-    return toBengaliNumber(formattedGregorian);
+  // Convert to Bengali Date only if requested
+  if (includeBanglaDate) {
+    try {
+      const { BanglaDateConverter } = require('bangla-date-converter');
+      const converter = new BanglaDateConverter(date);
+      const banglaDate = converter.format('DD MMMM YYYY').replace(',', '');
+      
+      const finalDateStr = `${weekday}, ${datePart}, ${banglaDate}`;
+      return toBengaliNumber(finalDateStr);
+    } catch (err) {
+      console.error('Error formatting bangla date:', err);
+      // Fallback
+    }
   }
+
+  // Without bangla date
+  const finalDateStr = `${weekday}, ${datePart}`;
+  return locale === 'bn' ? toBengaliNumber(finalDateStr) : finalDateStr;
 }

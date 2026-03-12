@@ -115,8 +115,8 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
     };
 
     useEffect(() => {
-        // Set current date on mount to avoid hydration mismatch
-        setCurrentDate(formatDate(new Date().toISOString(), locale));
+        // Set current date on mount to avoid hydration mismatch, including Bangla Date
+        setCurrentDate(formatDate(new Date().toISOString(), locale, true));
 
         // Update document title and html lang when locale changes
         if (typeof document !== 'undefined') {
