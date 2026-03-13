@@ -317,6 +317,9 @@ a {
     .archive-wrapper {
         padding: 10px;
     }
+    .add-inner {
+        padding-bottom: 16px !important;
+    }
 }
 
 .featured-inner,
@@ -3113,6 +3116,22 @@ div.bhoechie-tab .weather-temp-wrap:not(.active) {
     .home-nine .social-media li p {
         font-size: 9px;
     }
+}
+
+/* Increase font size for Bengali social follower elements globally - MASSIVE OVERRIDE */
+.locale-bn .social-media li a p,
+.locale-bn .social-media li a p.social-text,
+.locale-bn .social-media li a .follower-label-text {
+    font-size: 18px !important;
+}
+
+.locale-bn .social-counter-total,
+.locale-bn .social-counter-total span {
+    font-size: 25px !important;
+}
+
+.locale-bn .social-media li a div {
+    font-size: 24px !important;
 }
 
 @media(min-width:768px) and (max-width:1199px) {
@@ -6441,7 +6460,8 @@ blockquote.no-sign p {
 
 [data-theme=skin-dark] .weather-text,
 [data-theme=skin-dark] .menu-text,
-[data-theme=skin-dark] .date-text {
+[data-theme=skin-dark] .date-text,
+[data-theme=skin-dark] .date-text-mobile {
     color: #fff;
 }
 
@@ -8338,15 +8358,20 @@ body.layout-rtl .style-settings-content ul li select {
     font-size: 12px !important;
 }
 
-.rightSidebar.rightSidebar-locale-bn .social-counter-total {
-    font-size: 18px !important;
+.rightSidebar.rightSidebar-locale-bn .social-counter-total,
+.rightSidebar.rightSidebar-locale-bn .social-counter-total span {
+    font-size: 24px !important;
 }
 
 .rightSidebar.rightSidebar-locale-bn .social-media li p,
 .rightSidebar.rightSidebar-locale-bn .social-media li p.social-text,
 .rightSidebar.rightSidebar-locale-bn .follower-label-text {
-    font-size: 15px !important;
+    font-size: 18px !important;
     line-height: 1.2 !important;
+}
+
+.rightSidebar.rightSidebar-locale-bn .social-media li a div {
+    font-size: 24px !important;
 }
 
 .rightSidebar .tabs-wrapper-bn .most-viewed .content li .text {
