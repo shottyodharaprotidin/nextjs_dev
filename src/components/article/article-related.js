@@ -185,7 +185,7 @@ const ArticleRelated = ({ articles, locale = 'bn', articleSlug = '', articleTitl
                                         onClick={handleCopyLink}
                                         title={isSaved ? "Saved!" : "Save article"}
                                     >
-                                        <i className={isSaved ? "ti ti-check" : "ti ti-heart"} style={{ color: isSaved ? '#eb0254' : 'inherit' }} />
+                                        <i className={isSaved ? "ti ti-heart" : "ti ti-heart"} style={{ color: isSaved ? '#eb0254' : 'inherit' }} />
                                     </button>
                                 </li>
                                 <li>

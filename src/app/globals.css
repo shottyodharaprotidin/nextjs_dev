@@ -3134,6 +3134,26 @@ div.bhoechie-tab .weather-temp-wrap:not(.active) {
     font-size: 24px !important;
 }
 
+.locale-bn .error-desc {
+    font-size: 20px !important;
+}
+
+.locale-bn .not-found-title {
+    font-size: 80px !important;
+}
+
+.locale-bn .error-content .btn-news {
+    font-size: 18px !important;
+}
+
+.locale-bn .comment-form h3 {
+    font-size: 28px !important;
+}
+
+.locale-bn .comment-form label {
+    font-size: 22px !important;
+}
+
 @media(min-width:768px) and (max-width:1199px) {
     .social-media li a {
         padding: 15px 5px;

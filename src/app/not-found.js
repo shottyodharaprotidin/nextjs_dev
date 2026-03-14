@@ -50,7 +50,7 @@ export default function NotFound() {
                   {subtitle}
                 </p>
                 <div className="button-group mt-4">
-                  <Link href="/" className="btn btn-news btn-lg rounded-0 px-3 py-2 fw-bold text-uppercase" style={{ letterSpacing: '1px' }}>
+                  <Link href="/" className="btn btn-news rounded-0 px-3 py-1 fw-bold text-uppercase" style={{ letterSpacing: '1px', fontSize: '14px' }}>
                     {notFoundSettings?.notFoundButtonLabel || (locale === "bn" ? "হোম পেজে ফিরে যান" : "Back to Home")}
                   </Link>
                 </div>
