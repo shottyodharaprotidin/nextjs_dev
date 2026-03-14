@@ -48,6 +48,7 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
     const [menuItems, setMenuItems] = useState([]);
     const [isLoadingMenu, setIsLoadingMenu] = useState(true);
     const [sidebarMenuItems, setSidebarMenuItems] = useState([]);
+    const [mobileMenuItems, setMobileMenuItems] = useState([]);
     const [expandedSidebarItems, setExpandedSidebarItems] = useState({});
     const [sidebarData, setSidebarData] = useState(null);
     const [categoryTree, setCategoryTree] = useState([]);
@@ -78,9 +79,10 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
         setIsLoadingMenu(true);
         getMenuItems('header', locale).then(res => {
             setMenuItems(res?.data || []);
-            // Extract logo from header attributes
+            // Extract logo and mobile menu from header attributes
             const attrs = res?.attributes || {};
             if (attrs.logo) setHeaderLogo(getStrapiMedia(attrs.logo));
+            setMobileMenuItems(attrs.mobileMenu || []);
         }).finally(() => {
             setIsLoadingMenu(false);
         });
@@ -259,7 +261,7 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
         }
     };
 
-    const renderMenuItem = (item, index) => {
+    const renderMenuItem = (item, index, visibilityClass = "") => {
         const component = item.__component;
         const data = item.attributes || item; // Handle both direct component data and relation data
         
@@ -268,7 +270,7 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
             const slug = data.url || data.slug || '#';
             const url = slug.startsWith('http') || slug === '#' ? slug : (slug.startsWith('/') ? slug : `/${slug}`);
             return (
-                <li className="nav-item" key={index}>
+                <li className={`nav-item ${visibilityClass}`} key={index}>
                     <Link className="nav-link" href={url} target={data.openInNewTab ? "_blank" : "_self"}>
                         {data.title}
                     </Link>
@@ -282,7 +284,7 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
             const url = slug.startsWith('http') || slug === '#' ? slug : (slug.startsWith('/') ? slug : `/${slug}`);
             const btnClass = data.buttonType === 'primary' ? 'btn-primary' : (data.buttonType === 'secondary' ? 'btn-secondary' : 'btn-outline-primary');
             return (
-                <li className="nav-item d-flex align-items-center ms-lg-2" key={index}>
+                <li className={`nav-item d-flex align-items-center ms-lg-2 ${visibilityClass}`} key={index}>
                     <Link className={`btn ${btnClass} btn-sm text-white`} href={url}>
                         {data.title}
                     </Link>
@@ -353,7 +355,7 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
             // Auto-populate from categories API when no sections are configured
             if (sections.length === 0 && categoryTree.length > 0) {
                 return (
-                    <li className="nav-item dropdown mega-menu-content d-none d-lg-block" key={index}>
+                    <li className={`nav-item dropdown mega-menu-content d-none d-lg-block ${visibilityClass}`} key={index}>
                         <Link className="nav-link dropdown-toggle" href="#" id={`mega-${index}`} data-bs-toggle="dropdown" aria-expanded="false">
                             {data.title}
                         </Link>
@@ -387,7 +389,7 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
 
             // Manual sections from CMS
             return (
-                <li className="nav-item dropdown mega-menu-content d-none d-lg-block" key={index}>
+                <li className={`nav-item dropdown mega-menu-content d-none d-lg-block ${visibilityClass}`} key={index}>
                     <Link className="nav-link dropdown-toggle" href="#" id={`mega-${index}`} data-bs-toggle="dropdown" aria-expanded="false">
                         {data.title}
                     </Link>
@@ -429,7 +431,7 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
         if (component === 'navigation.video-menu') {
             const videos = data.videos || [];
             return (
-                <li className="nav-item dropdown mega-menu-content d-none d-lg-block" key={index}>
+                <li className={`nav-item dropdown mega-menu-content ${visibilityClass}`} key={index}>
                     <Link className="nav-link dropdown-toggle" href="#" id={`megavideo-${index}`} data-bs-toggle="dropdown" aria-expanded="false">
                         {data.title}
                     </Link>
@@ -497,7 +499,7 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
         }
 
         return (
-            <li className="nav-item" key={index}>
+            <li className={`nav-item ${visibilityClass}`} key={index}>
                 <Link className={`nav-link ${isActive ? 'active' : ''}`} href={url}>
                     {data.title}
                 </Link>
@@ -734,10 +736,14 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
                             <ul className="navbar-nav" ref={navbarNavRef}>
                                 {isLoadingMenu ? (
                                     <li className="nav-item"><span className="nav-link">Loading...</span></li>
-                                ) : menuItems.length > 0 ? (
-                                    menuItems.map((item, index) => renderMenuItem(item, index))
                                 ) : (
-                                    <li className="nav-item"><Link className="nav-link" href="#">No Menu Items</Link></li>
+                                    <>
+                                        {/* Desktop Menu - Hidden on mobile */}
+                                        {menuItems.map((item, index) => renderMenuItem(item, index, "d-none d-lg-block"))}
+                                        
+                                        {/* Mobile Menu - Only shown on mobile view */}
+                                        {mobileMenuItems.map((item, index) => renderMenuItem(item, index, "d-lg-none"))}
+                                    </>
                                 )}
                             </ul>
                         </div>

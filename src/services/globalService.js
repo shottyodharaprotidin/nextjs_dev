@@ -69,7 +69,12 @@ export async function getMenuItems(location = 'header', locale = 'bn') {
         'populate[menu][on][navigation.dropdown-menu][populate][subMenus][on][navigation.dropdown-header][populate]=*',
         'populate[menu][on][navigation.dropdown-menu][populate][subMenus][on][navigation.nested-dropdown][populate][subMenus]=*',
         'populate[menu][on][navigation.mega-menu][populate][sections][populate][links][populate]=*',
-        'populate[menu][on][navigation.video-menu][populate][videos][populate][thumbnail][fields][0]=url&populate[menu][on][navigation.video-menu][populate][videos][populate][thumbnail][fields][1]=alternativeText&populate[menu][on][navigation.video-menu][populate][videos][populate][thumbnail][fields][2]=width&populate[menu][on][navigation.video-menu][populate][videos][populate][thumbnail][fields][3]=height'
+        'populate[menu][on][navigation.video-menu][populate][videos][populate][thumbnail][fields][0]=url&populate[menu][on][navigation.video-menu][populate][videos][populate][thumbnail][fields][1]=alternativeText&populate[menu][on][navigation.video-menu][populate][videos][populate][thumbnail][fields][2]=width&populate[menu][on][navigation.video-menu][populate][videos][populate][thumbnail][fields][3]=height',
+        // Populate mobileMenu
+        'populate[mobileMenu][on][navigation.base-link][populate]=*',
+        'populate[mobileMenu][on][navigation.dropdown-menu][populate][subMenus][on][navigation.base-link][populate]=*',
+        'populate[mobileMenu][on][navigation.dropdown-menu][populate][subMenus][on][navigation.dropdown-header][populate]=*',
+        'populate[mobileMenu][on][navigation.dropdown-menu][populate][subMenus][on][navigation.nested-dropdown][populate][subMenus]=*'
       ].join('&');
     } else if (location === 'footer') {
       endpoint = '/footer';

@@ -347,7 +347,7 @@ export default function Home() {
     }
 
     fetchData();
-  }, []);
+  }, [locale]);
 
   {/* *** ADD AND REMOVE CLASS ON BODY TAG *** */ }
   useRemoveBodyClass(['home-nine'], ['home-six', 'home-seven', 'boxed-layout', 'layout-rtl']);
