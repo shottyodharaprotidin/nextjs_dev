@@ -116,13 +116,14 @@ const ClientArticleDetail = ({ article, mostViewed, popularNews, globalSettings,
 
                 </div>
 
-                {/* START RELATED ARTICLES */}
-                {/* START RELATED ARTICLES */}
-                <ArticleRelated articles={mostViewed} locale={locale} articleSlug={data.slug} articleTitle={title} />
+                {/* START RELATED ARTICLES - Hide if isAbout is true */}
+                {!data.isAbout && (
+                  <>
+                    <ArticleRelated articles={mostViewed} locale={locale} articleSlug={data.slug} articleTitle={title} />
+                    <ArticleComments articleSlug={data.slug} articleDocumentId={article.documentId || article.id} locale={locale} />
+                  </>
+                )}
                 {/* END OF /. RELATED ARTICLES */}
-                {/* END OF /. RELATED ARTICLES */}
-
-                <ArticleComments articleSlug={data.slug} articleDocumentId={article.documentId || article.id} locale={locale} />
               
               </StickyBox>
             </div>

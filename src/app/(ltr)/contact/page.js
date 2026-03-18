@@ -29,6 +29,9 @@ const dictionary = {
         addressNotSet: "Address not set",
         phoneNotSet: "Phone not set",
         emailNotSet: "Email not set",
+        addressLabel: "Address",
+        phoneLabel: "Phone",
+        emailLabel: "Email",
         successMessage: "Thank you! Your message has been sent successfully.",
         errorMessage: "Failed to send message. Please try again later."
     },
@@ -50,6 +53,9 @@ const dictionary = {
         addressNotSet: "ঠিকানা সেট করা হয়নি",
         phoneNotSet: "ফোন নম্বর সেট করা হয়নি",
         emailNotSet: "ইমেল সেট করা হয়নি",
+        addressLabel: "ঠিকানা",
+        phoneLabel: "ফোন",
+        emailLabel: "ইমেল",
         successMessage: "ধন্যবাদ! আপনার বার্তা সফলভাবে পাঠানো হয়েছে।",
         errorMessage: "বার্তা পাঠাতে ব্যর্থ হয়েছে। অনুগ্রহ করে পরে আবার চেষ্টা করুন।"
     }
@@ -164,18 +170,18 @@ const page = () => {
                                     <div className="panel_inner">
                                         <div className="panel_header">
                                             <h4>
-                                                <strong>{contactData?.formSubtitle || t.subTitle}</strong>
+                                                <strong style={{ fontSize: '1.5rem', color: '#eee' }}>{contactData?.formSubtitle || t.subTitle}</strong>
                                             </h4>
                                         </div>
                                         <div className="panel_body">
-                                            <p>
+                                            <p className="fs-5">
                                                 {contactData?.contactDescription || ""}
                                             </p>
                                             <form className="comment-form" onSubmit={handleSubmit}>
                                                 <div className="row">
                                                     <div className="col-sm-6">
                                                         <div className="form-group">
-                                                            <label htmlFor="name">{contactData?.formNameLabel || t.formName}*</label>
+                                                            <label htmlFor="name" style={{ color: '#bbb', fontSize: '12px', fontWeight: '400' }}>{contactData?.formNameLabel || t.formName}*</label>
                                                             <input
                                                                 type="text"
                                                                 className="form-control"
@@ -189,7 +195,7 @@ const page = () => {
                                                         </div>
                                                     </div>
                                                     <div className="col-sm-6">
-                                                        <label htmlFor="email">{contactData?.formEmailLabel || t.formEmail}*</label>
+                                                        <label htmlFor="email" style={{ color: '#bbb', fontSize: '12px', fontWeight: '400' }}>{contactData?.formEmailLabel || t.formEmail}*</label>
                                                         <div className="form-group">
                                                             <input
                                                                 type="email"
@@ -205,7 +211,7 @@ const page = () => {
                                                     </div>
                                                     <div className="col-sm-6">
                                                         <div className="form-group">
-                                                            <label htmlFor="website">{contactData?.formWebsiteLabel || t.formWebsite}</label>
+                                                            <label htmlFor="website" style={{ color: '#bbb', fontSize: '12px', fontWeight: '400' }}>{contactData?.formWebsiteLabel || t.formWebsite}</label>
                                                             <input
                                                                 type="text"
                                                                 className="form-control"
@@ -218,7 +224,7 @@ const page = () => {
                                                         </div>
                                                     </div>
                                                     <div className="col-sm-6">
-                                                        <label htmlFor="subject">{contactData?.formSubjectLabel || t.formSubject}</label>
+                                                        <label htmlFor="subject" style={{ color: '#bbb', fontSize: '12px', fontWeight: '400' }}>{contactData?.formSubjectLabel || t.formSubject}</label>
                                                         <div className="form-group">
                                                             <input
                                                                 type="text"
@@ -232,8 +238,8 @@ const page = () => {
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div className="form-group">
-                                                    <label htmlFor="message">{contactData?.formMessageLabel || t.formMessage}*</label>
+                                                 <div className="form-group">
+                                                    <label htmlFor="message" style={{ color: '#bbb', fontSize: '12px', fontWeight: '400' }}>{contactData?.formMessageLabel || t.formMessage}*</label>
                                                     <textarea
                                                         className="form-control"
                                                         id="message"
@@ -268,21 +274,17 @@ const page = () => {
                                 <div className="panel_inner">
                                     <div className="panel_header">
                                         <h4>
-                                            <strong>{contactData?.contactInfoTitle || t.contactInfo}</strong>
+                                            <strong style={{ fontSize: '1.6rem', color: '#eee' }}>{contactData?.contactInfoTitle || t.contactInfo}</strong>
                                         </h4>
                                     </div>
-                                    <div className="panel_body">
+                                    <div className="panel_body" style={{ fontSize: '1.15rem' }}>
                                         <address>
                                             {" "}
                                             <strong>{globalSettings?.siteName || 'News'}</strong>
-                                            <br /> {contactData?.contactAddress || 'Address not set'}
-                                            <br /> <abbr title="Phone">P:</abbr> {contactData?.contactPhone || 'Phone not set'}{" "}
-                                        </address>
-                                        <address>
-                                            {" "}
-                                            <strong>Email</strong>
-                                            <br /> <a href={`mailto:${contactData?.contactEmail}`}>
-                                                {contactData?.contactEmail || 'Email not set'}
+                                            <br /> <strong>{t.addressLabel}:</strong> {contactData?.contactAddress || t.addressNotSet}
+                                            <br /> <strong>{t.phoneLabel}:</strong> {contactData?.contactPhone || t.phoneNotSet}{" "}
+                                            <br /> <strong>{t.emailLabel}:</strong> <a href={`mailto:${contactData?.contactEmail}`}>
+                                                {contactData?.contactEmail || t.emailNotSet}
                                             </a>{" "}
                                         </address>
                                     </div>

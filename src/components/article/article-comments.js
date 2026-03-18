@@ -152,9 +152,26 @@ const ArticleComments = ({ articleSlug, articleDocumentId, locale = 'bn' }) => {
         )}
       </div>
 
+      <style dangerouslySetInnerHTML={{ __html: `
+        .comment-form h3 {
+          font-size: 1.15rem !important;
+          font-weight: 400 !important;
+          margin-bottom: 20px !important;
+        }
+        .comment-form label {
+          font-size: 13px !important;
+          font-weight: 400 !important;
+          text-transform: uppercase !important;
+          letter-spacing: 0.5px !important;
+        }
+        .comment-form .form-control::placeholder {
+          font-size: 17px !important;
+          opacity: 0.7 !important;
+        }
+      ` }} />
       <form className="comment-form" id="comment-form" onSubmit={handleSubmit}>
         <h3>
-          <strong>{t('leaveAComment').split(' ')[0]}</strong> {t('leaveAComment').split(' ').slice(1).join(' ')} {replyTo && <span style={{ fontSize: '0.6em' }}>({t('replyingTo')} {replyTo.name} - <button type="button" onClick={handleCancelReply} style={{ background: 'none', border: 'none', color: 'red', cursor: 'pointer' }}>{t('cancel')}</button>)</span>}
+          {t('leaveAComment')} {replyTo && <span style={{ fontSize: '0.6em' }}>({t('replyingTo')} {replyTo.name} - <button type="button" onClick={handleCancelReply} style={{ background: 'none', border: 'none', color: 'red', cursor: 'pointer' }}>{t('cancel')}</button>)</span>}
         </h3>
         <div className="row">
           <div className="col-sm-6">

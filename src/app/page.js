@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getTopNewsArticles, getHeadlineArticles, getTopSliderArticles, getMiddleSliderArticles, getMostReadArticles, getPopularNewsArticles, getTechInnovationArticles, getEditorChoiceArticles, getRecentPostArticles, getRecentReviewArticles, getLatestArticles, getArticlesByCategory } from "@/services/articleService";
 import { getYoutubeVideos, getActivePoll } from "@/services/mediaService";
-import { getGlobalSettings, getTags, getCategories, getTrendingCategories, getAdsManagement } from "@/services/globalService";
+import { getGlobalSettings, getTags, getCategories, getTrendingCategories, getSidebarCategories, getAdsManagement } from "@/services/globalService";
 import { getWeatherForecast } from "@/services/weatherService";
 import { resolveClientLocation } from "@/services/locationService";
 import { getStrapiMedia, formatDate, toBengaliNumber } from "@/lib/strapi";
@@ -156,6 +156,7 @@ export default function Home() {
   const [adsData, setAdsData] = useState(null);
   const [categories, setCategories] = useState([]);
   const [trendingCategories, setTrendingCategories] = useState([]);
+  const [sidebarCategories, setSidebarCategories] = useState([]);
   const [showAllCategories, setShowAllCategories] = useState(false);
   const [weatherData, setWeatherData] = useState({
     currentTemp: null,
@@ -293,7 +294,7 @@ export default function Home() {
 
         releaseSkeleton();
 
-        const [youtubeRes, pollRes, globalRes, tagsRes, topNewsRes, mostReadRes, popularNewsRes, techRes, editorRes, recentPostRes, reviewRes, categoriesRes, trendingRes, adsRes, weatherRes] = await Promise.allSettled([
+        const [youtubeRes, pollRes, globalRes, tagsRes, topNewsRes, mostReadRes, popularNewsRes, techRes, editorRes, recentPostRes, reviewRes, categoriesRes, trendingRes, sidebarRes, adsRes, weatherRes] = await Promise.allSettled([
           getYoutubeVideos(locale),
           getActivePoll(locale),
           getGlobalSettings(locale),
@@ -307,6 +308,7 @@ export default function Home() {
           getRecentReviewArticles(7, locale),
           getCategories(20, locale),
           getTrendingCategories(20, locale),
+          getSidebarCategories(20, locale),
           getAdsManagement(),
           getWeatherForecast(weatherLat, weatherLon, locale),
         ]);
@@ -329,6 +331,7 @@ export default function Home() {
         setLatestReviews(reviewRes.value?.data || []);
         setCategories(categoriesRes.value?.data || []);
         setTrendingCategories(trendingRes.value?.data || []);
+        setSidebarCategories(sidebarRes.value?.data || []);
         const adsRaw = adsRes.value?.data || adsRes.value || null;
         setAdsData(adsRaw);
         if (weatherRes.status === 'fulfilled' && weatherRes.value) {
@@ -679,7 +682,7 @@ export default function Home() {
                   </div>
                   <div className="panel_body">
                     {(() => {
-                      const sourceCategories = trendingCategories.length > 0 ? trendingCategories : (categories.length > 0 ? categories : (loading ? Array(5).fill(null) : []));
+                      const sourceCategories = sidebarCategories.length > 0 ? sidebarCategories : (trendingCategories.length > 0 ? trendingCategories : (categories.length > 0 ? categories : (loading ? Array(5).fill(null) : [])));
                       const displayCategories = showAllCategories ? sourceCategories : sourceCategories.slice(0, 5);
                       
                       return (

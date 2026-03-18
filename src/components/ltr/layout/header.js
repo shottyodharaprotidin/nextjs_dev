@@ -296,7 +296,7 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
         if (component === 'navigation.dropdown-menu') {
             const subMenus = data.subMenus || [];
             return (
-                <li className="nav-item dropdown" key={index}>
+                <li className={`nav-item dropdown ${visibilityClass}`} key={index}>
                     <Link className="nav-link dropdown-toggle" href="#" id={`dropdown-${index}`} data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
                         {data.title}
                     </Link>
@@ -355,7 +355,7 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
             // Auto-populate from categories API when no sections are configured
             if (sections.length === 0 && categoryTree.length > 0) {
                 return (
-                    <li className={`nav-item dropdown mega-menu-content d-none d-lg-block ${visibilityClass}`} key={index}>
+                    <li className={`nav-item dropdown mega-menu-content ${visibilityClass}`} key={index}>
                         <Link className="nav-link dropdown-toggle" href="#" id={`mega-${index}`} data-bs-toggle="dropdown" aria-expanded="false">
                             {data.title}
                         </Link>
@@ -389,7 +389,7 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
 
             // Manual sections from CMS
             return (
-                <li className={`nav-item dropdown mega-menu-content d-none d-lg-block ${visibilityClass}`} key={index}>
+                <li className={`nav-item dropdown mega-menu-content ${visibilityClass}`} key={index}>
                     <Link className="nav-link dropdown-toggle" href="#" id={`mega-${index}`} data-bs-toggle="dropdown" aria-expanded="false">
                         {data.title}
                     </Link>
@@ -505,6 +505,20 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
                 </Link>
             </li>
         );
+    };
+
+    const renderDate = () => {
+        if (!currentDate) return null;
+        const parts = currentDate.split(', ');
+        if (parts.length > 1) {
+            return (
+                <>
+                    <span style={{ color: '#e6005c' }}>{parts[0]}</span>
+                    {', ' + parts.slice(1).join(', ')}
+                </>
+            );
+        }
+        return currentDate;
     };
 
     return (
@@ -655,14 +669,14 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
                                         </div>
                                     </div>
                                 </div>
-                                <div className={`col text-end text-uppercase date-text ${locale === 'bn' ? 'date-text-bn' : ''}`}>{currentDate}</div>
+                                <div className={`col text-end text-uppercase date-text ${locale === 'bn' ? 'date-text-bn' : ''}`}>{renderDate()}</div>
                             </div>
                         </div>
                     </div>
                 )}
 
                 {/* START NAVIGATION */}
-                <style>{`
+                <style dangerouslySetInnerHTML={{ __html: `
                     .custom-navbar .nav-link {
                         padding-top: 0 !important;
                         padding-bottom: 0 !important;
@@ -673,7 +687,18 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
                     .custom-navbar .navbar-nav {
                         margin-bottom: 0 !important;
                     }
-                `}</style>
+                    @media (max-width: 991.98px) {
+                        .custom-navbar .dropdown-menu .dropdown-item:hover,
+                        .custom-navbar .dropdown-menu .dropdown-item:focus,
+                        .custom-navbar .dropdown-menu .dropdown-item:active,
+                        .custom-navbar .dropdown-item.active {
+                            color: #ffffff !important;
+                        }
+                        .dropdown-menu li:hover > .dropdown-item {
+                            color: #ffffff !important;
+                        }
+                    }
+                ` }} />
                 <nav 
                     className="custom-navbar navbar navbar-expand-lg sticky-top flex-column no-logo border-top border-bottom"
                     style={{ minHeight: '53.61px', maxHeight: '53.61px', padding: 0 }}
@@ -705,7 +730,7 @@ const Header = ({ hideMiddleHeader = false, globalSettings }) => {
                                 />
                             </Link>
                             <div className={`date-text-mobile fw-medium ${locale === 'bn' ? 'date-text-bn' : ''}`}>
-                                {currentDate}
+                                {renderDate()}
                             </div>
                         </div>
                         <button type="button" className="btn btn-search_two  ms-auto ms-md-0 d-lg-none" onClick={handleSearchButtonClick}><i className="fa fa-search" /></button>

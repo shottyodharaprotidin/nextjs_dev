@@ -148,7 +148,7 @@ const PollWidget = ({ data = null, isLoading = false }) => {
                                         disabled={hasVoted || isVoting}
                                         style={{ marginRight: '10px', transform: 'scale(1.5)', accentColor: '#eb0254' }}
                                     />
-                                    <label htmlFor={`poll_${index}`} style={{ cursor: hasVoted ? 'default' : 'pointer', width: '90%', fontWeight: '500' }}>
+                                    <label htmlFor={`poll_${index}`} style={{ cursor: hasVoted ? 'default' : 'pointer', width: '90%', fontWeight: '500', fontSize: locale === 'bn' ? '15px' : 'inherit' }}>
                                         {option.text || option.optionText} 
                                         {hasVoted && (
                                             <div style={{ marginTop: '5px', width: '100%', backgroundColor: '#eee', borderRadius: '4px', height: '10px' }}>

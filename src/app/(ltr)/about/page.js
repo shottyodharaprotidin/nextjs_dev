@@ -34,15 +34,12 @@ const AboutPage = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [aboutRes, articlesRes, globalRes] = await Promise.all([
+                const [aboutRes, globalRes] = await Promise.all([
                     getAboutData(locale),
-                    getAboutPageArticles(4, locale),
                     getGlobalSettings(locale),
                 ]);
                 const about = aboutRes?.data?.attributes || aboutRes?.data || null;
                 if (about) setAboutData(about);
-                const articles = articlesRes?.data || [];
-                if (articles.length > 0) setRelatedArticles(articles);
                 const settings = globalRes?.data || null;
                 if (settings) setGlobalSettings(settings);
             } catch (error) {
@@ -73,12 +70,12 @@ const AboutPage = () => {
                                         {aboutData.heroDescription}
                                     </p>
                                 )}
-                                <div className="breadcrumb">
-                                    <ul className="clearfix">
+                                <div className="breadcrumb d-flex justify-content-start mt-2">
+                                    <ul className="clearfix d-flex align-items-center mb-0 p-0" style={{ listStyle: 'none' }}>
                                         <li className="ib">
                                             <Link href="/">{t.home}</Link>
                                         </li>
-                                        <li className="ib current-page">{aboutData?.title || t.about}</li>
+                                        <li className="ib current-page ms-2">{aboutData?.title || t.about}</li>
                                     </ul>
                                 </div>
                             </div>
@@ -165,43 +162,7 @@ const AboutPage = () => {
                         )}
                 
 
-                        {/* RELATED ARTICLES - only if there are articles */}
-                        {relatedArticles.length > 0 && (
-                            <>
-                                <h2>{t.relatedTitle}</h2>
-                                <div className="news-grid-2">
-                                    <div className="row">
-                                        {relatedArticles.map((article) => {
-                                            const data = article.attributes || article;
-                                            const imageUrl = getStrapiMedia(data.cover);
-                                            return (
-                                                <div className="col-6 col-md-3" key={article.id}>
-                                                    <div className="grid-item">
-                                                        <div className="grid-item-img">
-                                                            <Link href={`/article/${data.slug}`}>
-                                                                <img
-                                                                    src={imageUrl || '/default.jpg'}
-                                                                    className="img-fluid"
-                                                                    alt={data.title}
-                                                                />
-                                                            </Link>
-                                                        </div>
-                                                        <h5>
-                                                            <Link href={`/article/${data.slug}`} className="title">
-                                                                {data.title && data.title.length > 60 ? data.title.substring(0, 60) + '...' : data.title}
-                                                            </Link>
-                                                        </h5>
-                                                        <ul className="authar-info d-flex flex-wrap">
-                                                            <li>{formatDate(data.publishedAt, locale)}</li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            );
-                                        })}
-                                    </div>
-                                </div>
-                            </>
-                        )}
+                        
                     </div>
                 </div>
             </main>

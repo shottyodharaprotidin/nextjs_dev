@@ -27,6 +27,16 @@ export async function getTrendingCategories(limit = 5, locale = 'bn') {
   }
 }
 
+export async function getSidebarCategories(limit = 10, locale = 'bn') {
+  const strapiLocale = getStrapiLocale(locale);
+  try {
+      return await fetchAPI(`/categories?populate=*&filters[isSidebar][$eq]=true&pagination[limit]=${limit}&locale=${strapiLocale}`);
+  } catch (e) {
+      console.warn("getSidebarCategories failed. Returning empty.", e);
+      return { data: [] };
+  }
+}
+
 export async function getCategories(limit = 10, locale = 'bn') {
   const strapiLocale = getStrapiLocale(locale);
   try {

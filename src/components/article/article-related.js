@@ -66,20 +66,22 @@ const ArticleRelated = ({ articles, locale = 'bn', articleSlug = '', articleTitl
         window.open(url, 'share', 'width=600,height=400,menubar=no,toolbar=no');
     };
 
-    const handleCopyLink = (e) => {
+    const toggleSaveArticle = (e) => {
         e.preventDefault();
-        if (articleUrl) {
-            navigator.clipboard.writeText(articleUrl).then(() => {
+        try {
+            const saved = JSON.parse(localStorage.getItem('rasel_saved_articles') || '[]');
+            if (isSaved) {
+                const updated = saved.filter(slug => slug !== articleSlug);
+                localStorage.setItem('rasel_saved_articles', JSON.stringify(updated));
+                setIsSaved(false);
+            } else {
+                if (!saved.includes(articleSlug)) {
+                    saved.push(articleSlug);
+                    localStorage.setItem('rasel_saved_articles', JSON.stringify(saved));
+                }
                 setIsSaved(true);
-                try {
-                    const saved = JSON.parse(localStorage.getItem('rasel_saved_articles') || '[]');
-                    if (!saved.includes(articleSlug)) {
-                        saved.push(articleSlug);
-                        localStorage.setItem('rasel_saved_articles', JSON.stringify(saved));
-                    }
-                } catch (e) {}
-            });
-        }
+            }
+        } catch (e) {}
     };
 
     return (
@@ -182,8 +184,8 @@ const ArticleRelated = ({ articles, locale = 'bn', articleSlug = '', articleTitl
                                     <button
                                         type="button"
                                         className="bg-transparent border-0 p-0"
-                                        onClick={handleCopyLink}
-                                        title={isSaved ? "Saved!" : "Save article"}
+                                        onClick={toggleSaveArticle}
+                                        title={isSaved ? "Unsave article" : "Save article"}
                                     >
                                         <i className={isSaved ? "ti ti-heart" : "ti ti-heart"} style={{ color: isSaved ? '#eb0254' : 'inherit' }} />
                                     </button>

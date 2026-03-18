@@ -4406,6 +4406,11 @@ abbr[title] {
     line-height: 1.6;
 }
 
+.main-footer.footer-locale-bn p.footer-description {
+    font-size: 24px !important;
+    font-weight: 500 !important;
+}
+
 .sub-footer.footer-locale-bn .copy {
     font-size: 18px !important;
 }
@@ -5682,7 +5687,8 @@ blockquote.no-sign p {
     display: block;
     position: absolute;
     left: 100%;
-    top: 4px;
+    top: 50%;
+    transform: translateY(-50%);
     color: #cecfd2;
     font-weight: 900;
 }
@@ -8059,7 +8065,8 @@ body.layout-rtl .style-settings-content ul li select {
 /* --- Typography Updates based on Client Request --- */
 
 /* 1. Headline (H1): 32-36px */
-.locale-bn h1, .locale-bn .h1 { font-size: 34px !important; font-weight: 700 !important; color: #111 !important; }
+.locale-bn h1, .locale-bn .h1 { font-size: 34px !important; font-weight: 700 !important; color: #111; }
+[data-theme=skin-dark] .locale-bn h1, [data-theme=skin-dark] .locale-bn .h1 { color: #fff !important; }
 
 /* 2. Sub-headline (H2): 24-28px */
 .locale-bn h2, .locale-bn .h2, .locale-bn .post-head .title { font-size: 26px !important; }

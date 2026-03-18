@@ -11,10 +11,14 @@ export default async function FaqPage() {
     const locale = cookieStore.get('NEXT_LOCALE')?.value || 'bn';
     const translations = {
         en: {
+            home: 'Home',
+            faq: 'F.A.Q',
             title: 'Frequently Asked Questions',
             description: 'Find answers to your common questions.',
         },
         bn: {
+            home: 'হোম',
+            faq: 'সাধারণ জিজ্ঞাসা',
             title: 'সচরাচর জিজ্ঞাসিত প্রশ্ন',
             description: 'আপনার বিভিন্ন প্রশ্নের উত্তর এখানে পাবেন।',
         }
@@ -37,18 +41,26 @@ export default async function FaqPage() {
             <main className="page_main_wrapper">
                 <BodyClassCleaner remove={['home-nine', 'home-six', 'home-seven', 'home-two', 'boxed-layout', 'layout-rtl']} />
                 {/* START PAGE HEADER */}
-                <section className="inner-head bg-dark">
+                <section 
+                    className="inner-head bg-img"
+                    style={{ 
+                        backgroundImage: `url(${headerImage})`, 
+                        backgroundSize: 'cover', 
+                        backgroundPosition: 'center',
+                        position: 'relative'
+                    }}
+                >
                     <div className="container position-relative">
                         <div className="row">
                             <div className="col-sm-12">
-                                <h1 className="entry-title text-white">{t.title}</h1>
-                                {t.description && <p className="text-white mt-2">{t.description}</p>}
-                                <div className="breadcrumb">
-                                    <ul className="clearfix">
+                                <h2 className="entry-title text-white">{faqData?.title || t.title}</h2>
+                                {t.description && <p className="description text-white mt-2">{t.description}</p>}
+                                <div className="breadcrumb d-flex justify-content-start mt-2">
+                                    <ul className="clearfix d-flex align-items-center mb-0 p-0" style={{ listStyle: 'none' }}>
                                         <li className="ib">
-                                            <Link href="/">Home</Link>
+                                            <Link href="/">{t.home}</Link>
                                         </li>
-                                        <li className="ib current-page">F.A.Q</li>
+                                        <li className="ib current-page ms-2 text-white">{t.faq}</li>
                                     </ul>
                                 </div>
                             </div>
@@ -105,14 +117,7 @@ export default async function FaqPage() {
                             </div>
                         </div>
                         
-                        {/* HEADER IMAGE MOVED UNDER FAQ PER CLIENT REQUEST */}
-                        {headerImage && headerImage !== '/default.jpg' && (
-                            <div className="row mt-5">
-                                <div className="col-12 text-center">
-                                    <img src={headerImage} alt="FAQ Header" className="img-fluid rounded" />
-                                </div>
-                            </div>
-                        )}
+
                     </div>
                 </section>
             </main>

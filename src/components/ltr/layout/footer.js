@@ -245,7 +245,7 @@ const Footer = ({ hideMiddleHeader = false }) => {
               />
             </div>
             <div className="col-md-5">
-              <p className="text-white mb-0">
+              <p className="text-white mb-0 footer-description">
                 {footerAttrs?.description || t.description}
               </p>
             </div>
@@ -482,7 +482,7 @@ const Footer = ({ hideMiddleHeader = false }) => {
         <div className="container">
           <div className="align-items-center g-1 g-sm-3 row">
             <div className="col text-center text-sm-start">
-              <div className="copy">{t.copyright}</div>
+              <div className="copy" dangerouslySetInnerHTML={{ __html: footerAttrs?.copyrightText || t.copyright }}></div>
             </div>
             <div className="col-sm-auto">
               <ul className="footer-nav list-unstyled text-center mb-0">
