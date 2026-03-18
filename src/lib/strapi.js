@@ -1,20 +1,21 @@
 const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || 'https://app.shottyodharaprotidin.com';
-const API_TOKEN = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
+const SERVER_API_TOKEN = process.env.STRAPI_API_TOKEN;
 const DEFAULT_TIMEOUT_MS = Number(process.env.NEXT_PUBLIC_API_TIMEOUT_MS || 8000);
 
 /**
  * Helper to make requests to Strapi API
  */
 export async function fetchAPI(path, options = {}) {
+  const isServer = typeof window === 'undefined';
   const defaultOptions = {
     headers: {
       'Content-Type': 'application/json',
     },
   };
 
-  // Add authorization if token is available
-  if (API_TOKEN) {
-    defaultOptions.headers.Authorization = `Bearer ${API_TOKEN}`;
+  // Add authorization only on the server side
+  if (isServer && SERVER_API_TOKEN) {
+    defaultOptions.headers.Authorization = `Bearer ${SERVER_API_TOKEN}`;
   }
 
   const { silent, timeoutMs = DEFAULT_TIMEOUT_MS, signal: externalSignal, ...fetchOptions } = options;
@@ -30,7 +31,9 @@ export async function fetchAPI(path, options = {}) {
     signal,
   };
 
-  const requestUrl = `${STRAPI_URL}/api${path}`;
+  const requestUrl = isServer
+    ? `${STRAPI_URL}/api${path}`
+    : `/api/strapi${path}`;
   
   try {
     const response = await fetch(requestUrl, mergedOptions);

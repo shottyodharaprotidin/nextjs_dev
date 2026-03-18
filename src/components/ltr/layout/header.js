@@ -1,6 +1,7 @@
 "use client";
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { formatDate, getStrapiMedia, toBengaliNumber } from '@/lib/strapi';
 import { getCurrentWeather } from '@/services/weatherService';
@@ -8,8 +9,14 @@ import { getIpLocation } from '@/services/locationService';
 import { getMenuItems, getAdsManagement, getHeaderTop } from '@/services/globalService';
 import { getCategoriesWithChildren } from '@/services/categoryService';
 import { useLanguage } from '@/lib/LanguageContext';
-import { WiDaySunny, WiCloud, WiRain, WiSnow, WiThunderstorm, WiFog } from 'weather-icons-react';
 import ThemeChanger from '../style-selectors/style-selector';
+
+const WiDaySunny = dynamic(() => import('weather-icons-react').then((mod) => mod.WiDaySunny), { ssr: false });
+const WiCloud = dynamic(() => import('weather-icons-react').then((mod) => mod.WiCloud), { ssr: false });
+const WiRain = dynamic(() => import('weather-icons-react').then((mod) => mod.WiRain), { ssr: false });
+const WiSnow = dynamic(() => import('weather-icons-react').then((mod) => mod.WiSnow), { ssr: false });
+const WiThunderstorm = dynamic(() => import('weather-icons-react').then((mod) => mod.WiThunderstorm), { ssr: false });
+const WiFog = dynamic(() => import('weather-icons-react').then((mod) => mod.WiFog), { ssr: false });
 
 // Helper function to get weather icon
 const getWeatherIcon = (iconName) => {
