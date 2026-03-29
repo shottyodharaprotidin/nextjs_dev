@@ -144,11 +144,7 @@ const YoutubeVideo = ({ data = [], isLoading = false }) => {
       try { playerRef.current.destroy(); } catch (_) {}
       playerRef.current = null;
     }
-    // Clear inner HTML so YT.Player gets a fresh div
-    playerContainerRef.current.innerHTML = '';
-    const div = document.createElement('div');
-    playerContainerRef.current.appendChild(div);
-    playerRef.current = new window.YT.Player(div, {
+    playerRef.current = new window.YT.Player(playerContainerRef.current, {
       videoId,
       playerVars: { autoplay: 1, rel: 0, modestbranding: 1 },
       events: {
@@ -292,8 +288,10 @@ const YoutubeVideo = ({ data = [], isLoading = false }) => {
             </div>
           </div>
         </div>
-        <div className="RYPP-video">
-          <div ref={playerContainerRef} className="RYPP-video-player-container" />
+        <div className="RYPP-video-col">
+          <div className="RYPP-video">
+            <div ref={playerContainerRef} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', zIndex: 2 }} />
+          </div>
           <div className="yt-volume-bar">
             <button
               type="button"

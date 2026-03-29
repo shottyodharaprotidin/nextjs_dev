@@ -336,16 +336,17 @@ a {
     flex-shrink: 0;
 }
 .RYPP-video-player-container {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    background: #000;
+    display: none;
 }
-.RYPP-video-player-container iframe {
-    position: absolute;
-    inset: 0;
-    width: 100% !important;
-    height: 100% !important;
+
+/* Column wrapper: holds .RYPP-video + volume bar */
+.RYPP-video-col {
+    overflow: hidden;
+    float: left;
+    width: 100%;
+}
+.RYPP .RYPP-video {
+    float: none;
 }
 
 .featured-inner,
